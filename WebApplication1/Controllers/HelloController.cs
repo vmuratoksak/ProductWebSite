@@ -18,15 +18,23 @@ namespace WebApplication1.Controllers
             return View(model);
         }
 
+
         [HttpPost]
         public IActionResult Index(HelloViewModel model)
         {
-            // 👇 BU SATIRI EKLE
-            model.Message = "POST ACTION ÇALIŞTI";
+            if (!ModelState.IsValid)
+            {
+                model.Message = "Lütfen adınızı girin";
+                model.Date = DateTime.Now;
+                return View(model);
+            }
 
+            model.Message = $"Merhaba {model.Name} 👋";
             model.Date = DateTime.Now;
+
             return View(model);
         }
+
 
 
 
