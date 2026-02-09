@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
+using System;
 
 namespace WebApplication1.Controllers
 {
     public class HelloController : Controller
     {
-        // SAYFA AÇILIRKEN (GET)
+        // SAYFA İLK AÇILDIĞINDA
         [HttpGet]
         public IActionResult Index()
         {
@@ -18,7 +19,7 @@ namespace WebApplication1.Controllers
             return View(model);
         }
 
-
+        // FORM GÖNDERİLDİĞİNDE
         [HttpPost]
         public IActionResult Index(HelloViewModel model)
         {
@@ -34,9 +35,5 @@ namespace WebApplication1.Controllers
 
             return View(model);
         }
-
-
-
-
     }
 }
