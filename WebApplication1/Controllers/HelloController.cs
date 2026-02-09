@@ -6,27 +6,36 @@ namespace WebApplication1.Controllers
 {
     public class HelloController : Controller
     {
+        // 1️⃣ SAYFA İLK AÇILDIĞINDA (GET)
         [HttpGet]
         public IActionResult Index()
         {
-            ViewBag.Message = TempData["Message"] ?? "Lütfen adınızı girin";
-            ViewBag.Date = DateTime.Now;
+            var model = new HelloViewModel
+            {
+                Message = TempData["Message"] as string ?? "Lütfen adınızı girin",
+                Date = DateTime.Now
+            };
 
-            return View();
+            return View(model);
         }
 
+        // 2️⃣ FORM GÖNDERİLDİĞİNDE (POST)
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Index(HelloViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                model.Message = "Lütfen adınızı girin";
+                model.Date = DateTime.Now;
+                return View(model); // ❗ redirect YOK
             }
 
+            // ✔️ Başarılıysa TempData
             TempData["Message"] = $"Merhaba {model.Name} 👋";
 
+            // ✔️ PRG
             return RedirectToAction("Index");
         }
-
     }
 }
