@@ -6,7 +6,11 @@ namespace WebApplication1.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.Message = "Merhaba MVC 👋";
+            ViewBag.Date = DateTime.Now;
+
             return View();
         }
+
     }
 }
