@@ -1,12 +1,19 @@
-﻿<h2 style="color:red">TEST DEĞİŞTİ</h2>
+﻿@model WebApplication1.Models.HelloViewModel
 
-@{
-    ViewData["Title"] = "Hello";
-}
+<h1>@Model.Message</h1>
 
-<h1>@ViewBag.Message</h1>
+<form asp-action="Index" method="post">
+    <div>
+        <label>Adınız:</label>
+        <input asp-for="Name" />
+    </div>
+
+    <br />
+
+    <button type="submit">Gönder</button>
+</form>
 
 <p>
     Sistem Tarihi:
-    <strong>@ViewBag.Date</strong>
+    <strong>@Model.Date</strong>
 </p>

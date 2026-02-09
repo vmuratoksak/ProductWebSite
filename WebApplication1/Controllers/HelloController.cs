@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     public class HelloController : Controller
     {
-        public IActionResult Index()
+        [HttpPost]
+        public IActionResult Index(HelloViewModel model)
         {
-            ViewBag.Message = "Merhaba MVC 👋";
-            ViewBag.Date = DateTime.Now;
+            model.Message = $"Merhaba {model.Name} 👋";
+            model.Date = DateTime.Now;
 
-            return View();
+            return View(model);
         }
 
     }
