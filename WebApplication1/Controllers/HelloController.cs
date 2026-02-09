@@ -23,17 +23,13 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Index(HelloViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                model.Message = "Lütfen adınızı girin";
-                model.Date = DateTime.Now;
-                return View(model);
-            }
-
+            // GEÇİCİ OLARAK ModelState KONTROLÜNÜ KALDIR
             model.Message = $"Merhaba {model.Name} 👋";
             model.Date = DateTime.Now;
 
             return View(model);
         }
+
     }
 }
+
