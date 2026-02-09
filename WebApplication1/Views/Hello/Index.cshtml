@@ -1,10 +1,15 @@
 ﻿@model WebApplication1.Models.HelloViewModel
 
-@{
-    ViewData["Title"] = "Hello";
-}
-
-<h1>@Model.Message</h1>
+<h1>
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        @Model.Message
+    }
+    else
+    {
+        <text>Lütfen adınızı girin</text>
+    }
+</h1>
 
 <form asp-action="Index" asp-controller="Hello" method="post">
     <div>
