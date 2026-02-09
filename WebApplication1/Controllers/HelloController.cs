@@ -56,7 +56,8 @@ namespace WebApplication1.Controllers
             else
             {
                 Names.Add(model.Name);
-                TempData["Message"] = "İsim eklendi ✅";
+                TempData["Message"] = $"Merhaba {model.Name} 👋";
+
             }
 
             return RedirectToAction("Index");
