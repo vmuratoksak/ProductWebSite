@@ -4,18 +4,14 @@
     ViewData["Title"] = "Hello";
 }
 
-@if (!string.IsNullOrEmpty(Model.Message))
-{
-    <h1>@Model.Message</h1>
-}
+<h1>@Model.Message</h1>
 
 <form asp-action="Index" method="post">
-    <div>
-        <label>Adınız:</label>
-        <input name="Name" />
+    <div class="mb-2">
+        <label>Adınız:</label><br />
+        <input asp-for="Name" class="form-control w-25" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-
-    <br />
 
     <button type="submit">Gönder</button>
 </form>
@@ -24,3 +20,7 @@
     Sistem Tarihi:
     <strong>@Model.Date</strong>
 </p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

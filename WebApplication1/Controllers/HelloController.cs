@@ -1,33 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
+using System;
 
 namespace WebApplication1.Controllers
 {
     public class HelloController : Controller
     {
+        // SAYFA İLK AÇILDIĞINDA
         [HttpGet]
         public IActionResult Index()
         {
-            var model = new HelloViewModel
+            return View(new HelloViewModel
             {
-                Message = TempData["Message"] as string,
+                Message = "Lütfen adınızı girin",
                 Date = DateTime.Now
-            };
-
-            return View(model);
+            });
         }
 
+        // FORM GÖNDERİLDİĞİNDE
         [HttpPost]
         public IActionResult Index(HelloViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(model.Name))
+            if (!ModelState.IsValid)
             {
-                TempData["Message"] = "İsim zorunludur";
-                return RedirectToAction("Index");
+                // SADECE TARİHİ GÜNCELLE
+                model.Date = DateTime.Now;
+                return View(model);
             }
 
-            TempData["Message"] = $"Merhaba {model.Name} 👋";
-            return RedirectToAction("Index");
+            model.Message = $"Merhaba {model.Name} 👋";
+            model.Date = DateTime.Now;
+
+            return View(model);
         }
     }
 }
