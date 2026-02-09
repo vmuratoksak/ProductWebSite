@@ -15,17 +15,19 @@ namespace WebApplication1.Controllers
         {
             var model = new HelloViewModel
             {
-                Message = TempData["Message"] as string ?? "Lütfen adınızı girin",
-                Date = DateTime.Now,
-                Names = Names
+                Names = Names,
+                Date = DateTime.Now
             };
 
+            // Başlık mesajı (PRG + TempData)
+            ViewBag.Message = TempData["Message"] ?? "Lütfen adınızı girin";
+
             // UPDATE için formu doldur
-            if (editIndex != null && editIndex >= 0 && editIndex < Names.Count)
+            if (editIndex.HasValue && editIndex >= 0 && editIndex < Names.Count)
             {
                 model.Name = Names[editIndex.Value];
                 model.EditIndex = editIndex;
-                model.Message = "İsmi güncelle";
+                ViewBag.Message = "İsmi güncelle";
             }
 
             return View(model);
@@ -40,18 +42,19 @@ namespace WebApplication1.Controllers
             {
                 model.Names = Names;
                 model.Date = DateTime.Now;
+                ViewBag.Message = "Lütfen adınızı girin";
                 return View(model);
             }
 
-            if (model.EditIndex != null)
+            // UPDATE
+            if (model.EditIndex.HasValue)
             {
-                // UPDATE
                 Names[model.EditIndex.Value] = model.Name;
                 TempData["Message"] = "İsim güncellendi ✅";
             }
+            // CREATE
             else
             {
-                // CREATE
                 Names.Add(model.Name);
                 TempData["Message"] = "İsim eklendi ✅";
             }

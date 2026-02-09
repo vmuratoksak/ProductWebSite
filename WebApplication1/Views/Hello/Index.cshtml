@@ -1,6 +1,6 @@
 ﻿@model WebApplication1.Models.HelloViewModel
 
-<h2>@Model.Message</h2>
+<h2>@ViewBag.Message</h2>
 
 <form asp-action="Index" method="post">
     @Html.AntiForgeryToken()
@@ -14,9 +14,13 @@
     </div>
 
     <button type="submit" class="btn btn-primary">
-        @(Model.EditIndex != null ? "Güncelle" : "Ekle")
+        @(Model.EditIndex.HasValue ? "Güncelle" : "Ekle")
     </button>
 </form>
+
+<p class="mt-2">
+    Sistem Tarihi: <strong>@Model.Date</strong>
+</p>
 
 <hr />
 
@@ -28,8 +32,12 @@
         {
             <li>
                 @Model.Names[i]
-                <a asp-action="Index" asp-route-editIndex="@i" style="margin-left:10px">Düzenle</a>
-                <a asp-action="Delete" asp-route-index="@i" style="color:red; margin-left:10px">Sil</a>
+                <a asp-action="Index" asp-route-editIndex="@i" style="margin-left:10px">
+                    Düzenle
+                </a>
+                <a asp-action="Delete" asp-route-index="@i" style="color:red; margin-left:10px">
+                    Sil
+                </a>
             </li>
         }
     </ul>
