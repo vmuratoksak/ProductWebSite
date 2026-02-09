@@ -4,7 +4,7 @@ namespace WebApplication1.Models
 {
     public class HelloViewModel
     {
-        [Required(ErrorMessage = "İsim zorunludur")]
+        [Required]
         public string Name { get; set; }
 
         public string Message { get; set; }
