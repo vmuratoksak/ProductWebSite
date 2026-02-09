@@ -1,24 +1,19 @@
 ﻿@model WebApplication1.Models.HelloViewModel
 
-@{
-    ViewData["Title"] = "Hello";
-}
-
-<h1>@Model.Message</h1>
+<h1>@ViewBag.Message</h1>
 
 <form asp-action="Index" method="post">
-    <div class="mb-2">
-        <label>Adınız:</label><br />
-        <input asp-for="Name" class="form-control w-25" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+    <div>
+        <label>Adınız:</label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name" style="color:red"></span>
     </div>
 
     <button type="submit">Gönder</button>
 </form>
 
 <p>
-    Sistem Tarihi:
-    <strong>@Model.Date</strong>
+    Sistem Tarihi: <strong>@ViewBag.Date</strong>
 </p>
 
 @section Scripts {

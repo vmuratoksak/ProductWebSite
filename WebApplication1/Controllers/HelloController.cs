@@ -6,32 +6,27 @@ namespace WebApplication1.Controllers
 {
     public class HelloController : Controller
     {
-        // SAYFA İLK AÇILDIĞINDA
         [HttpGet]
         public IActionResult Index()
         {
-            return View(new HelloViewModel
-            {
-                Message = "Lütfen adınızı girin",
-                Date = DateTime.Now
-            });
+            ViewBag.Message = TempData["Message"] ?? "Lütfen adınızı girin";
+            ViewBag.Date = DateTime.Now;
+
+            return View();
         }
 
-        // FORM GÖNDERİLDİĞİNDE
         [HttpPost]
         public IActionResult Index(HelloViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                // SADECE TARİHİ GÜNCELLE
-                model.Date = DateTime.Now;
                 return View(model);
             }
 
-            model.Message = $"Merhaba {model.Name} 👋";
-            model.Date = DateTime.Now;
+            TempData["Message"] = $"Merhaba {model.Name} 👋";
 
-            return View(model);
+            return RedirectToAction("Index");
         }
+
     }
 }
