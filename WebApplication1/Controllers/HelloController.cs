@@ -50,7 +50,8 @@ namespace WebApplication1.Controllers
             if (model.EditIndex.HasValue)
             {
                 Names[model.EditIndex.Value] = model.Name;
-                TempData["Message"] = "İsim güncellendi ✅";
+                TempData["Message"] = $"Merhaba {model.Name} (güncellendi) 👋";
+
             }
             // CREATE
             else
