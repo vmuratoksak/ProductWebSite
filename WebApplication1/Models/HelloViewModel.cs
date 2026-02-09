@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication1.Models
@@ -6,12 +7,14 @@ namespace WebApplication1.Models
     public class HelloViewModel
     {
         [Required(ErrorMessage = "İsim zorunludur")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
-        public string? Message { get; set; }
+        // Güncelleme için
+        public int? EditIndex { get; set; }
+
+        public string Message { get; set; }
         public DateTime Date { get; set; }
 
-        // Listeyi View’a taşımak için
         public List<string> Names { get; set; } = new();
     }
 }

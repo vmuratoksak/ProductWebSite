@@ -7,51 +7,64 @@ namespace WebApplication1.Controllers
 {
     public class HelloController : Controller
     {
-        // RAM’de tutulacak isim listesi (Database yerine)
         private static List<string> Names = new List<string>();
 
-        // 1️⃣ SAYFA İLK AÇILDIĞINDA (GET)
+        // GET
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? editIndex)
         {
             var model = new HelloViewModel
             {
                 Message = TempData["Message"] as string ?? "Lütfen adınızı girin",
                 Date = DateTime.Now,
-                Names = Names   // 🔴 LİSTEYİ VIEW’A GÖNDER
+                Names = Names
             };
+
+            // UPDATE için formu doldur
+            if (editIndex != null && editIndex >= 0 && editIndex < Names.Count)
+            {
+                model.Name = Names[editIndex.Value];
+                model.EditIndex = editIndex;
+                model.Message = "İsmi güncelle";
+            }
 
             return View(model);
         }
 
-        // 2️⃣ FORM GÖNDERİLDİĞİNDE (POST)
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(HelloViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Message = "Lütfen adınızı girin";
+                model.Names = Names;
                 model.Date = DateTime.Now;
-                model.Names = Names; // 🔴 HATA DURUMUNDA DA LİSTEYİ GÖNDER
                 return View(model);
             }
 
-            // ✔️ CREATE (Ekle)
-            Names.Add(model.Name);
+            if (model.EditIndex != null)
+            {
+                // UPDATE
+                Names[model.EditIndex.Value] = model.Name;
+                TempData["Message"] = "İsim güncellendi ✅";
+            }
+            else
+            {
+                // CREATE
+                Names.Add(model.Name);
+                TempData["Message"] = "İsim eklendi ✅";
+            }
 
-            TempData["Message"] = $"Merhaba {model.Name} 👋";
-
-            // ✔️ PRG
             return RedirectToAction("Index");
         }
 
-        // 3️⃣ DELETE (Sil)
-        public IActionResult Delete(string name)
+        // DELETE
+        public IActionResult Delete(int index)
         {
-            if (!string.IsNullOrEmpty(name))
+            if (index >= 0 && index < Names.Count)
             {
-                Names.Remove(name);
+                Names.RemoveAt(index);
             }
 
             return RedirectToAction("Index");

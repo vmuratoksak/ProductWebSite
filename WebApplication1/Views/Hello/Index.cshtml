@@ -1,43 +1,35 @@
 ﻿@model WebApplication1.Models.HelloViewModel
 
-@{
-    ViewData["Title"] = "Hello";
-}
-
 <h2>@Model.Message</h2>
 
-<form asp-action="Index" asp-controller="Hello" method="post">
+<form asp-action="Index" method="post">
     @Html.AntiForgeryToken()
 
+    <input type="hidden" asp-for="EditIndex" />
+
     <div class="mb-2">
-        <label>Adınız:</label><br />
+        <label>Adınız:</label>
         <input asp-for="Name" class="form-control" style="max-width:300px;" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-secondary">Gönder</button>
+    <button type="submit" class="btn btn-primary">
+        @(Model.EditIndex != null ? "Güncelle" : "Ekle")
+    </button>
 </form>
-
-<p class="mt-3">
-    Sistem Tarihi: <strong>@Model.Date</strong>
-</p>
 
 <hr />
 
-@if (Model.Names != null && Model.Names.Any())
+@if (Model.Names.Any())
 {
-    <h4>Eklenen İsimler</h4>
-
+    <h4>İsimler</h4>
     <ul>
-        @foreach (var item in Model.Names)
+        @for (int i = 0; i < Model.Names.Count; i++)
         {
             <li>
-                @item
-                <a asp-action="Delete"
-                   asp-route-name="@item"
-                   style="color:red; margin-left:10px">
-                    Sil
-                </a>
+                @Model.Names[i]
+                <a asp-action="Index" asp-route-editIndex="@i" style="margin-left:10px">Düzenle</a>
+                <a asp-action="Delete" asp-route-index="@i" style="color:red; margin-left:10px">Sil</a>
             </li>
         }
     </ul>
