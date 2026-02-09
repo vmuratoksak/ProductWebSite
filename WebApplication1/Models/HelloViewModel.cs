@@ -10,5 +10,8 @@ namespace WebApplication1.Models
 
         public string? Message { get; set; }
         public DateTime Date { get; set; }
+
+        // Listeyi View’a taşımak için
+        public List<string> Names { get; set; } = new();
     }
 }
