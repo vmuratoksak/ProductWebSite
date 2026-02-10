@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApplication1.Models;
 
 namespace WebApplication1.Data
 {
@@ -9,7 +10,6 @@ namespace WebApplication1.Data
         {
         }
 
-        // Şimdilik boş bırakabiliriz
-        // public DbSet<Hello> Hellos { get; set; }
+        public DbSet<HelloEntity> Hellos { get; set; }
     }
 }

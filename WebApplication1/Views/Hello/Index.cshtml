@@ -1,26 +1,33 @@
 ﻿@model WebApplication1.Models.HelloViewModel
 
-@{
-    ViewData["Title"] = "Hello";
-}
-
-<h2>@Model.Message</h2>
+<h2>@ViewBag.Message</h2>
 
 <form asp-action="Index" method="post">
     @Html.AntiForgeryToken()
 
-    <div class="mb-2" style="max-width:300px;">
-        <label class="form-label">Adınız:</label>
-        <input asp-for="Name" class="form-control" />
+    <div style="max-width:300px">
+        <input asp-for="Name" class="form-control" placeholder="Adınızı girin" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-secondary">Gönder</button>
+    <button class="btn btn-primary mt-2">Gönder</button>
 </form>
 
-<p class="mt-3">
-    Sistem Tarihi: <strong>@Model.Date</strong>
-</p>
+<hr />
+
+@if (Model.Hellos.Any())
+{
+    <h4>Kayıtlı İsimler</h4>
+    <ul>
+        @foreach (var item in Model.Hellos)
+        {
+            <li>
+                @item.Name
+                <small>(@item.CreatedAt)</small>
+            </li>
+        }
+    </ul>
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
