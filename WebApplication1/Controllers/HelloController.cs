@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
 using WebApplication1.Models;
-using System;
-using System.Linq;
 
 namespace WebApplication1.Controllers
 {
@@ -15,42 +13,74 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
-        // GET
+        // LIST + FORM
+        [HttpGet]
         public IActionResult Index()
         {
-            var model = new HelloViewModel
+            var vm = new HelloIndexViewModel
             {
-                Hellos = _context.Hellos
-                                 .OrderByDescending(x => x.CreatedAt)
-                                 .ToList()
+                Names = _context.Names
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToList()
             };
 
-            ViewBag.Message = TempData["Message"] ?? "Lütfen adınızı girin";
-            return View(model);
+            return View(vm);
         }
 
-        // POST
+        // CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(HelloViewModel model)
+        public IActionResult Index(HelloIndexViewModel vm)
         {
             if (!ModelState.IsValid)
             {
-                model.Hellos = _context.Hellos.ToList();
-                ViewBag.Message = "Lütfen adınızı girin";
-                return View(model);
+                vm.Names = _context.Names
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToList();
+
+                return View(vm);
             }
 
-            var entity = new HelloEntity
-            {
-                Name = model.Name,
-                CreatedAt = DateTime.Now
-            };
-
-            _context.Hellos.Add(entity);
+            vm.NewName.CreatedAt = DateTime.Now;
+            _context.Names.Add(vm.NewName);
             _context.SaveChanges();
 
-            TempData["Message"] = $"Merhaba {model.Name} 👋";
+            return RedirectToAction(nameof(Index)); // PRG
+        }
+
+        // EDIT
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var name = _context.Names.Find(id);
+            if (name == null) return NotFound();
+
+            return View(name);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(NameEntity model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            _context.Names.Update(model);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // DELETE
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var name = _context.Names.Find(id);
+            if (name == null) return NotFound();
+
+            _context.Names.Remove(name);
+            _context.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
     }

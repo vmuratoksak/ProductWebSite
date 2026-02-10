@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WebApplication1.Models;
 
 namespace WebApplication1.Models
 {
@@ -8,6 +9,8 @@ namespace WebApplication1.Models
         [Required(ErrorMessage = "İsim zorunludur")]
         public string Name { get; set; }
 
-        public List<HelloEntity> Hellos { get; set; } = new();
+        public int? EditId { get; set; }
+
+        public List<NameEntity> Names { get; set; } = new();
     }
 }

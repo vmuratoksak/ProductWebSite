@@ -10,6 +10,6 @@ namespace WebApplication1.Data
         {
         }
 
-        public DbSet<HelloEntity> Hellos { get; set; }
+        public DbSet<NameEntity> Names { get; set; }
     }
 }

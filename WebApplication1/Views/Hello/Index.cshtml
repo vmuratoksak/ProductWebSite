@@ -1,33 +1,35 @@
-﻿@model WebApplication1.Models.HelloViewModel
+﻿@model WebApplication1.Models.HelloIndexViewModel
 
-<h2>@ViewBag.Message</h2>
+<h2>İsim Ekle</h2>
 
 <form asp-action="Index" method="post">
     @Html.AntiForgeryToken()
 
-    <div style="max-width:300px">
-        <input asp-for="Name" class="form-control" placeholder="Adınızı girin" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+    <div>
+        <input asp-for="NewName.Name" class="form-control" style="max-width:300px" />
+        <span asp-validation-for="NewName.Name" class="text-danger"></span>
     </div>
 
-    <button class="btn btn-primary mt-2">Gönder</button>
+    <button type="submit" class="btn btn-primary mt-2">Ekle</button>
 </form>
 
 <hr />
 
-@if (Model.Hellos.Any())
-{
-    <h4>Kayıtlı İsimler</h4>
-    <ul>
-        @foreach (var item in Model.Hellos)
-        {
-            <li>
-                @item.Name
-                <small>(@item.CreatedAt)</small>
-            </li>
-        }
-    </ul>
-}
+<h3>Kayıtlı İsimler</h3>
+
+<ul>
+    @foreach (var item in Model.Names)
+    {
+        <li>
+            <strong>@item.Name</strong>
+            <small>(@item.CreatedAt)</small>
+            |
+            <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a>
+            |
+            <a asp-action="Delete" asp-route-id="@item.Id" class="text-danger">Sil</a>
+        </li>
+    }
+</ul>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
