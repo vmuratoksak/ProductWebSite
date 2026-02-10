@@ -1,47 +1,26 @@
 ﻿@model WebApplication1.Models.HelloViewModel
 
-<h2>@ViewBag.Message</h2>
+@{
+    ViewData["Title"] = "Hello";
+}
+
+<h2>@Model.Message</h2>
 
 <form asp-action="Index" method="post">
     @Html.AntiForgeryToken()
 
-    <input type="hidden" asp-for="EditIndex" />
-
-    <div class="mb-2">
-        <label>Adınız:</label>
-        <input asp-for="Name" class="form-control" style="max-width:300px;" />
+    <div class="mb-2" style="max-width:300px;">
+        <label class="form-label">Adınız:</label>
+        <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">
-        @(Model.EditIndex.HasValue ? "Güncelle" : "Ekle")
-    </button>
+    <button type="submit" class="btn btn-secondary">Gönder</button>
 </form>
 
-<p class="mt-2">
+<p class="mt-3">
     Sistem Tarihi: <strong>@Model.Date</strong>
 </p>
-
-<hr />
-
-@if (Model.Names.Any())
-{
-    <h4>İsimler</h4>
-    <ul>
-        @for (int i = 0; i < Model.Names.Count; i++)
-        {
-            <li>
-                @Model.Names[i]
-                <a asp-action="Index" asp-route-editIndex="@i" style="margin-left:10px">
-                    Düzenle
-                </a>
-                <a asp-action="Delete" asp-route-index="@i" style="color:red; margin-left:10px">
-                    Sil
-                </a>
-            </li>
-        }
-    </ul>
-}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
