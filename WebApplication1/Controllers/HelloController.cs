@@ -1,78 +1,87 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Data;
 using WebApplication1.Models;
-using System;
-using System.Collections.Generic;
 
 namespace WebApplication1.Controllers
 {
     public class HelloController : Controller
     {
-        private static List<string> Names = new List<string>();
+        private readonly AppDbContext _context;
 
-        // GET
-        [HttpGet]
-        public IActionResult Index(int? editIndex)
+        public HelloController(AppDbContext context)
         {
-            var model = new HelloViewModel
-            {
-                Names = Names,
-                Date = DateTime.Now
-            };
-
-            // Başlık mesajı (PRG + TempData)
-            ViewBag.Message = TempData["Message"] ?? "Lütfen adınızı girin";
-
-            // UPDATE için formu doldur
-            if (editIndex.HasValue && editIndex >= 0 && editIndex < Names.Count)
-            {
-                model.Name = Names[editIndex.Value];
-                model.EditIndex = editIndex;
-                ViewBag.Message = "İsmi güncelle";
-            }
-
-            return View(model);
+            _context = context;
         }
 
-        // POST
+        // LIST + FORM
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var vm = new HelloIndexViewModel
+            {
+                Names = _context.Names
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToList()
+            };
+
+            return View(vm);
+        }
+
+        // CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(HelloViewModel model)
+        public IActionResult Index(HelloIndexViewModel vm)
         {
             if (!ModelState.IsValid)
             {
-                model.Names = Names;
-                model.Date = DateTime.Now;
-                ViewBag.Message = "Lütfen adınızı girin";
+                vm.Names = _context.Names
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToList();
+
+                return View(vm);
+            }
+
+            vm.NewName.CreatedAt = DateTime.Now;
+            _context.Names.Add(vm.NewName);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index)); // PRG
+        }
+
+        // EDIT
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var name = _context.Names.Find(id);
+            if (name == null) return NotFound();
+
+            return View(name);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(NameEntity model)
+        {
+            if (!ModelState.IsValid)
                 return View(model);
-            }
 
-            // UPDATE
-            if (model.EditIndex.HasValue)
-            {
-                Names[model.EditIndex.Value] = model.Name;
-                TempData["Message"] = $"Merhaba {model.Name} (güncellendi) 👋";
+            _context.Names.Update(model);
+            _context.SaveChanges();
 
-            }
-            // CREATE
-            else
-            {
-                Names.Add(model.Name);
-                TempData["Message"] = $"Merhaba {model.Name} 👋";
-
-            }
-
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         // DELETE
-        public IActionResult Delete(int index)
+        [HttpGet]
+        public IActionResult Delete(int id)
         {
-            if (index >= 0 && index < Names.Count)
-            {
-                Names.RemoveAt(index);
-            }
+            var name = _context.Names.Find(id);
+            if (name == null) return NotFound();
 
-            return RedirectToAction("Index");
+            _context.Names.Remove(name);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
