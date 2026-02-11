@@ -1,44 +1,30 @@
-﻿@model WebApplication1.Models.HelloIndexViewModel
-
-@{
+﻿@{
     ViewData["Title"] = "Dashboard";
 }
 
-<h2 class="mb-4">📊 Yönetim Paneli</h2>
+<div class="container mt-4">
 
-<div class="row mb-4">
+    <h2>Yönetim Paneli</h2>
+    <hr />
 
-    <div class="col-md-4">
-        <div class="dashboard-stat stat-blue">
-            <h4>Toplam Kayıt</h4>
-            <h2>@Model.Names.Count</h2>
+    <div class="row mt-4">
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+                <h5>İsim Yönetimi</h5>
+                <p>Eklenen isimleri görüntüleyin, düzenleyin ve silin.</p>
+                <a href="/Hello" class="btn btn-primary">Git</a>
+            </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+                <h5>Gizlilik</h5>
+                <p>Uygulama gizlilik ayarları.</p>
+                <a href="/Home/Privacy" class="btn btn-secondary">Git</a>
+            </div>
+        </div>
+
     </div>
 
-    <div class="col-md-4">
-        <div class="dashboard-stat stat-green">
-            <h4>Bugün Eklenen</h4>
-            <h2>@Model.Names.Count(n => n.CreatedAt.Date == DateTime.Now.Date)</h2>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="dashboard-stat stat-orange">
-            <h4>Son Güncellenen</h4>
-            <h6>
-                @(Model.Names.OrderByDescending(n => n.UpdatedAt).FirstOrDefault()?.Name ?? "Yok")
-            </h6>
-        </div>
-    </div>
-
-</div>
-
-<div class="card card-modern p-4">
-    <h5>Proje Özeti</h5>
-    <ul>
-        <li>✔ CRUD işlemleri aktif</li>
-        <li>✔ Validation sistemi var</li>
-        <li>✔ SQL Server bağlantısı</li>
-        <li>✔ Modern Admin Panel UI</li>
-    </ul>
 </div>
