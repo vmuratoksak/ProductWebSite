@@ -1,137 +1,34 @@
-﻿@model WebApplication1.Models.HelloIndexViewModel
-
-@{
+﻿@{
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mt-4">
+<h2>Dashboard</h2>
 
-    <!-- HEADER -->
-    <div class="mb-4">
-        <h2 class="fw-bold">📊 Admin Dashboard</h2>
-        <p class="text-muted">Proje genel durumu ve hızlı erişim paneli</p>
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h4>Toplam İsim</h4>
+            <h2>@ViewBag.TotalNames</h2>
+        </div>
     </div>
 
-
-    <!-- STATISTICS -->
-    <div class="row mb-4">
-
-        <div class="col-md-4">
-            <div class="card bg-primary text-white shadow p-3">
-                <h5>👤 Toplam İsim</h5>
-                <h2>@Model.Names.Count</h2>
-                <small>Sistemde kayıtlı toplam isim</small>
-            </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h4>Bugün Eklenen</h4>
+            <h2>@ViewBag.TodayAdded</h2>
         </div>
-
-        <div class="col-md-4">
-            <div class="card bg-success text-white shadow p-3">
-                <h5>🕒 Son Eklenen</h5>
-                <h6>
-                    @(Model.Names.OrderByDescending(x => x.CreatedAt)
-                                        .FirstOrDefault()?.Name ?? "Yok")
-                </h6>
-                <small>En son eklenen kayıt</small>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card bg-warning text-dark shadow p-3">
-                <h5>⚙️ Güncellenen Kayıt</h5>
-                <h6>
-                    @(Model.Names
-                                        .Where(x => x.UpdatedAt != DateTime.MinValue)
-                                        .OrderByDescending(x => x.UpdatedAt)
-                                        .FirstOrDefault()?.Name ?? "Yok")
-                </h6>
-                <small>Son düzenlenen kayıt</small>
-            </div>
-        </div>
-
     </div>
 
-
-    <!-- QUICK ACCESS -->
-    <div class="row mb-4">
-
-        <div class="col-md-6">
-            <div class="card shadow p-4 text-center">
-                <h4>📁 İsim Yönetimi</h4>
-                <p>İsim ekleme, silme, düzenleme işlemleri</p>
-                <a asp-controller="Hello"
-                   asp-action="Index"
-                   class="btn btn-dark">
-                    Yönet
-                </a>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card shadow p-4 text-center">
-                <h4>🛠 Yönetim Paneli</h4>
-                <p>Genel sistem kontrolleri</p>
-                <a asp-controller="Home"
-                   asp-action="Privacy"
-                   class="btn btn-secondary">
-                    Panele Git
-                </a>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- PROJECT INFO -->
-    <div class="card shadow p-4 mb-4">
-        <h4>🚀 Proje Hakkında</h4>
-        <p>
-            Bu proje ASP.NET Core MVC ile geliştirilmiş
-            basit bir CRUD ve yönetim paneli uygulamasıdır.
-        </p>
-
-        <ul>
-            <li>İsim ekleme / silme / güncelleme</li>
-            <li>Validation (max 50 karakter)</li>
-            <li>Aynı isim tekrar engelleme</li>
-            <li>CreatedAt / UpdatedAt takibi</li>
-        </ul>
-    </div>
-
-
-    <!-- TECHNOLOGIES -->
-    <div class="card shadow p-4 mb-4">
-        <h4>🧠 Kullanılan Teknolojiler</h4>
-
-        <div class="row mt-3">
-
-            <div class="col-md-3">
-                <div class="border p-3 text-center rounded">
-                    <h6>ASP.NET Core</h6>
-                    <small>MVC mimarisi</small>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="border p-3 text-center rounded">
-                    <h6>Entity Framework</h6>
-                    <small>Code First</small>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="border p-3 text-center rounded">
-                    <h6>SQL Server</h6>
-                    <small>Veritabanı</small>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="border p-3 text-center rounded">
-                    <h6>Bootstrap 5</h6>
-                    <small>Frontend UI</small>
-                </div>
-            </div>
-
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h4>Teknolojiler</h4>
+            <ul>
+                <li>ASP.NET Core MVC</li>
+                <li>Entity Framework Core</li>
+                <li>SQL Server</li>
+                <li>Bootstrap</li>
+            </ul>
         </div>
     </div>
 

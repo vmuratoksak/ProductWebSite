@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Models;
-using System;
-using System.Linq;
 
 namespace WebApplication1.Controllers
 {
@@ -15,20 +14,17 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
-        // INDEX (Liste + Arama + Sayfalama)
-        public IActionResult Index(string searchTerm, int page = 1)
+        // LIST + SEARCH + PAGINATION
+        public IActionResult Index(string search, int page = 1)
         {
             int pageSize = 5;
 
             var query = _context.Names.AsQueryable();
 
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(x => x.Name.Contains(searchTerm));
-            }
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(x => x.Name.Contains(search));
 
-            int totalItems = query.Count();
-            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            int totalCount = query.Count();
 
             var names = query
                 .OrderByDescending(x => x.CreatedAt)
@@ -39,30 +35,31 @@ namespace WebApplication1.Controllers
             var vm = new HelloIndexViewModel
             {
                 Names = names,
-                SearchTerm = searchTerm,
+                Search = search,
                 CurrentPage = page,
-                TotalPages = totalPages
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
             };
 
             return View(vm);
         }
 
-        // CREATE
-        public IActionResult Create()
+        // ADD PAGE
+        public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(NameEntity model)
+        public IActionResult Add(NameEntity model)
         {
-            if (_context.Names.Any(x => x.Name == model.Name))
-            {
-                ModelState.AddModelError("Name", "Bu isim zaten mevcut.");
-            }
-
             if (!ModelState.IsValid)
                 return View(model);
+
+            if (_context.Names.Any(x => x.Name == model.Name))
+            {
+                ModelState.AddModelError("", "Bu isim zaten mevcut.");
+                return View(model);
+            }
 
             model.CreatedAt = DateTime.Now;
             model.UpdatedAt = DateTime.Now;
@@ -76,10 +73,9 @@ namespace WebApplication1.Controllers
         // EDIT
         public IActionResult Edit(int id)
         {
-            var entity = _context.Names.Find(id);
-            if (entity == null) return NotFound();
-
-            return View(entity);
+            var item = _context.Names.Find(id);
+            if (item == null) return NotFound();
+            return View(item);
         }
 
         [HttpPost]
@@ -102,10 +98,10 @@ namespace WebApplication1.Controllers
         // DELETE
         public IActionResult Delete(int id)
         {
-            var entity = _context.Names.Find(id);
-            if (entity == null) return NotFound();
+            var item = _context.Names.Find(id);
+            if (item == null) return NotFound();
 
-            _context.Names.Remove(entity);
+            _context.Names.Remove(item);
             _context.SaveChanges();
 
             return RedirectToAction("Index");
