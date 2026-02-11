@@ -83,5 +83,19 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public IActionResult Update(int id)
+        {
+            var record = _context.Names.Find(id);
+
+            record.Name = "Updated Name";
+
+            _context.Names.Update(record);
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
