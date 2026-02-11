@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
 using WebApplication1.Models;
+using System;
 using System.Linq;
 
 namespace WebApplication1.Controllers
@@ -8,34 +9,65 @@ namespace WebApplication1.Controllers
     public class HelloController : Controller
     {
         private readonly AppDbContext _context;
+        private const int PageSize = 5;
 
         public HelloController(AppDbContext context)
         {
             _context = context;
         }
 
-        // LIST
-        public IActionResult Index()
+        // GET
+        public IActionResult Index(string searchTerm, int page = 1)
         {
+            var query = _context.Names.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(x => x.Name.Contains(searchTerm));
+            }
+
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+
+            var names = query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
             var vm = new HelloIndexViewModel
             {
-                Names = _context.Names
-                                .OrderByDescending(x => x.CreatedAt)
-                                .ToList(),
+                Names = names,
+                SearchTerm = searchTerm,
+                CurrentPage = page,
+                TotalPages = totalPages,
                 NewName = new NameEntity()
             };
 
             return View(vm);
         }
 
-        // CREATE
+        // POST (CREATE)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(HelloIndexViewModel model)
         {
+            if (model.NewName == null || string.IsNullOrWhiteSpace(model.NewName.Name))
+            {
+                ModelState.AddModelError("NewName.Name", "İsim zorunludur.");
+            }
+
             if (!ModelState.IsValid)
             {
-                model.Names = _context.Names.ToList();
+                // Pagination tekrar doldurulmalı
+                model.Names = _context.Names
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Take(PageSize)
+                    .ToList();
+
+                model.TotalPages = 1;
+                model.CurrentPage = 1;
+
                 return View(model);
             }
 
@@ -43,32 +75,6 @@ namespace WebApplication1.Controllers
             model.NewName.UpdatedAt = DateTime.Now;
 
             _context.Names.Add(model.NewName);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
-        }
-
-        // EDIT
-        public IActionResult Edit(int id)
-        {
-            var item = _context.Names.Find(id);
-            if (item == null) return NotFound();
-            return View(item);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(NameEntity model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var item = _context.Names.Find(model.Id);
-            if (item == null) return NotFound();
-
-            item.Name = model.Name;
-            item.UpdatedAt = DateTime.Now;
-
             _context.SaveChanges();
 
             return RedirectToAction("Index");
