@@ -5,55 +5,51 @@
 <div class="container mt-5">
 
     <!-- HERO -->
-    <div class="p-5 mb-4 bg-dark text-white rounded-3 shadow">
-        <div class="container-fluid py-4 text-center">
-            <h1 class="display-5 fw-bold">ASP.NET Core MVC CRUD Projesi</h1>
-            <p class="col-md-8 fs-5 mx-auto">
-                Entity Framework Core ile veritabanı bağlantılı,
-                Validation destekli ve tam CRUD işlemleri içeren
-                modern bir web uygulaması.
-            </p>
+    <div class="hero-box text-center">
+        <h1 class="display-4 fw-bold mb-3">
+            Modern ASP.NET Core MVC Projesi
+        </h1>
 
-            <a asp-controller="Hello" asp-action="Index"
-               class="btn btn-light btn-lg mt-3">
-                İsim Yönetim Paneline Git
-            </a>
-        </div>
+        <p class="lead mb-4">
+            Entity Framework Core ile veritabanı bağlantılı,
+            Validation destekli ve tam CRUD yapısına sahip modern web uygulaması.
+        </p>
+
+        <a asp-controller="Hello" asp-action="Index"
+           class="btn btn-light btn-lg">
+            İsim Yönetim Paneli
+        </a>
     </div>
 
     <!-- ÖZELLİKLER -->
-    <div class="row text-center">
+    <div class="row mt-5 text-center">
 
         <div class="col-md-4 mb-4">
-            <div class="card shadow border-0 h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-primary">✔ CRUD İşlemleri</h5>
-                    <p class="card-text">
-                        Create, Read, Update ve Delete işlemleri aktif olarak çalışmaktadır.
-                    </p>
-                </div>
+            <div class="feature-card">
+                <h4 class="text-warning">CRUD İşlemleri</h4>
+                <p>
+                    Create, Read, Update, Delete işlemleri
+                    Entity Framework Core ile yapılmaktadır.
+                </p>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
-            <div class="card shadow border-0 h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-success">✔ Validation</h5>
-                    <p class="card-text">
-                        Boş geçilemez alan ve 50 karakter sınırı uygulanmıştır.
-                    </p>
-                </div>
+            <div class="feature-card">
+                <h4 class="text-info">Validation</h4>
+                <p>
+                    50 karakter sınırı ve boş alan kontrolü
+                    hem client hem server tarafında uygulanmaktadır.
+                </p>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
-            <div class="card shadow border-0 h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-danger">✔ Database</h5>
-                    <p class="card-text">
-                        SQL Server + EF Core Migration sistemi kullanılmaktadır.
-                    </p>
-                </div>
+            <div class="feature-card">
+                <h4 class="text-success">SQL Server</h4>
+                <p>
+                    Migration sistemi ile veritabanı otomatik oluşturulmaktadır.
+                </p>
             </div>
         </div>
 
@@ -61,13 +57,13 @@
 
     <!-- TEKNOLOJİLER -->
     <div class="text-center mt-4">
-        <h4 class="mb-3">Kullanılan Teknolojiler</h4>
+        <h5 class="mb-3">Kullanılan Teknolojiler</h5>
 
-        <span class="badge bg-dark p-2 m-1">ASP.NET Core 8</span>
+        <span class="badge bg-light text-dark p-2 m-1">ASP.NET Core 8</span>
         <span class="badge bg-secondary p-2 m-1">MVC</span>
-        <span class="badge bg-primary p-2 m-1">Entity Framework Core</span>
+        <span class="badge bg-primary p-2 m-1">Entity Framework</span>
         <span class="badge bg-success p-2 m-1">SQL Server</span>
-        <span class="badge bg-info p-2 m-1 text-dark">Bootstrap 5</span>
+        <span class="badge bg-warning text-dark p-2 m-1">Bootstrap 5</span>
     </div>
 
 </div>
