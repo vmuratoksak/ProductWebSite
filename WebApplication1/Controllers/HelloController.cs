@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
 using WebApplication1.Models;
-using System;
 using System.Linq;
 
 namespace WebApplication1.Controllers
@@ -9,16 +8,19 @@ namespace WebApplication1.Controllers
     public class HelloController : Controller
     {
         private readonly AppDbContext _context;
-        private const int PageSize = 5;
 
         public HelloController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET
+        // =======================
+        // LİSTE + ARAMA
+        // =======================
         public IActionResult Index(string searchTerm, int page = 1)
         {
+            int pageSize = 5;
+
             var query = _context.Names.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchTerm))
@@ -26,13 +28,12 @@ namespace WebApplication1.Controllers
                 query = query.Where(x => x.Name.Contains(searchTerm));
             }
 
-            int totalItems = query.Count();
-            int totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+            var totalCount = query.Count();
 
             var names = query
                 .OrderByDescending(x => x.CreatedAt)
-                .Skip((page - 1) * PageSize)
-                .Take(PageSize)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             var vm = new HelloIndexViewModel
@@ -40,56 +41,52 @@ namespace WebApplication1.Controllers
                 Names = names,
                 SearchTerm = searchTerm,
                 CurrentPage = page,
-                TotalPages = totalPages,
-                NewName = new NameEntity()
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
             };
 
             return View(vm);
         }
 
-        // POST (CREATE)
+        // =======================
+        // CREATE GET
+        // =======================
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // =======================
+        // CREATE POST
+        // =======================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(HelloIndexViewModel model)
+        public IActionResult Create(NameEntity model)
         {
-            if (model.NewName == null || string.IsNullOrWhiteSpace(model.NewName.Name))
-            {
-                ModelState.AddModelError("NewName.Name", "İsim zorunludur.");
-            }
-
             if (!ModelState.IsValid)
-            {
-                // Pagination tekrar doldurulmalı
-                model.Names = _context.Names
-                    .OrderByDescending(x => x.CreatedAt)
-                    .Take(PageSize)
-                    .ToList();
-
-                model.TotalPages = 1;
-                model.CurrentPage = 1;
-
                 return View(model);
-            }
 
-            model.NewName.CreatedAt = DateTime.Now;
-            model.NewName.UpdatedAt = DateTime.Now;
+            model.CreatedAt = DateTime.Now;
+            model.UpdatedAt = DateTime.Now;
 
-            _context.Names.Add(model.NewName);
+            _context.Names.Add(model);
             _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
+        // =======================
         // DELETE
+        // =======================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            var item = _context.Names.Find(id);
-            if (item == null) return NotFound();
-
-            _context.Names.Remove(item);
-            _context.SaveChanges();
+            var entity = _context.Names.Find(id);
+            if (entity != null)
+            {
+                _context.Names.Remove(entity);
+                _context.SaveChanges();
+            }
 
             return RedirectToAction("Index");
         }

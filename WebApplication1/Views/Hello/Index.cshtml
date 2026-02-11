@@ -1,12 +1,16 @@
 ﻿@model WebApplication1.Models.HelloIndexViewModel
 
 @{
-    ViewData["Title"] = "İsim Yönetimi";
+    ViewData["Title"] = "İsim Listesi";
 }
 
 <div class="container mt-4">
 
-    <h2 class="mb-4">İsim Yönetimi</h2>
+    <h2>İsim Listesi</h2>
+
+    <a asp-action="Create" class="btn btn-primary mb-3">
+        Yeni İsim Ekle
+    </a>
 
     <!-- ARAMA -->
     <form method="get" class="mb-3">
@@ -20,90 +24,32 @@
         </div>
     </form>
 
-    <!-- YENİ İSİM EKLE -->
-    <div class="card mb-4">
-        <div class="card-body">
-
-            <form asp-action="Index" method="post">
-                @Html.AntiForgeryToken()
-
-                <div class="mb-2">
-                    <input asp-for="NewName.Name"
-                           class="form-control"
-                           placeholder="Yeni isim girin..." />
-
-                    <span asp-validation-for="NewName.Name"
-                          class="text-danger"></span>
-                </div>
-
-                <button class="btn btn-primary">
-                    İsim Ekle
-                </button>
-            </form>
-
-        </div>
-    </div>
-
-    <!-- LİSTE -->
-    <div class="card">
-        <div class="card-body">
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>İsim</th>
-                        <th>Oluşturulma</th>
-                        <th>Güncellenme</th>
-                        <th style="width:120px;">İşlem</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Names)
-                    {
-                        <tr>
-                            <td>@item.Name</td>
-                            <td>@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                            <td>@item.UpdatedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                            <td>
-                                <form asp-action="Delete"
-                                      method="post"
-                                      style="display:inline;">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@item.Id" />
-                                    <button class="btn btn-sm btn-danger">
-                                        Sil
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-        </div>
-    </div>
-
-    <!-- PAGINATION -->
-    <nav class="mt-3">
-        <ul class="pagination">
-
-            @for (int i = 1; i <= Model.TotalPages; i++)
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>İsim</th>
+                <th>Oluşturulma</th>
+                <th>Güncellenme</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Names)
             {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link"
-                       href="?page=@i&searchTerm=@Model.SearchTerm">
-                        @i
-                    </a>
-                </li>
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@item.UpdatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>
+                        <form asp-action="Delete" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-sm btn-danger">Sil</button>
+                        </form>
+                    </td>
+                </tr>
             }
-
-        </ul>
-    </nav>
+        </tbody>
+    </table>
 
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
