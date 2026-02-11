@@ -1,19 +1,32 @@
 ﻿@model WebApplication1.Models.NameEntity
 
-<h2>Düzenle</h2>
+@{
+    ViewData["Title"] = "İsim Düzenle";
+}
 
-<form asp-action="Edit" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="Id" />
+<div class="container mt-4">
 
-    <div>
-        <input asp-for="Name" class="form-control" style="max-width:300px" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+    <h2>İsim Düzenle</h2>
 
-    <button type="submit" class="btn btn-success mt-2">Kaydet</button>
-</form>
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label class="form-label">İsim</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <button class="btn btn-success">Güncelle</button>
+        <a asp-action="Index" class="btn btn-secondary">Geri</a>
+    </form>
+
+</div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
