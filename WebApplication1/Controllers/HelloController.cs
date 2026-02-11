@@ -52,13 +52,16 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Add(NameEntity model)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            if (string.IsNullOrWhiteSpace(model.Name))
+            {
+                TempData["Error"] = "İsim boş olamaz.";
+                return RedirectToAction("Add");
+            }
 
             if (_context.Names.Any(x => x.Name == model.Name))
             {
-                ModelState.AddModelError("", "Bu isim zaten mevcut.");
-                return View(model);
+                TempData["Error"] = "Bu isim zaten mevcut.";
+                return RedirectToAction("Add");
             }
 
             model.CreatedAt = DateTime.Now;
@@ -67,8 +70,10 @@ namespace WebApplication1.Controllers
             _context.Names.Add(model);
             _context.SaveChanges();
 
+            TempData["Success"] = "İsim başarıyla eklendi.";
             return RedirectToAction("Index");
         }
+
 
         // EDIT
         public IActionResult Edit(int id)
