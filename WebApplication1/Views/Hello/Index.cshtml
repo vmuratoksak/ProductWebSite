@@ -1,35 +1,64 @@
 ﻿@model WebApplication1.Models.HelloIndexViewModel
 
-<h2>İsim Ekle</h2>
+@{
+    ViewData["Title"] = "İsim Yönetimi";
+}
 
-<form asp-action="Index" method="post">
-    @Html.AntiForgeryToken()
+<h2 class="mb-4">👤 İsim Yönetimi</h2>
 
-    <div>
-        <input asp-for="NewName.Name" class="form-control" style="max-width:300px" />
-        <span asp-validation-for="NewName.Name" class="text-danger"></span>
-    </div>
+<div class="card card-modern p-4 mb-4">
+    <form asp-action="Index" method="post">
+        @Html.AntiForgeryToken()
 
-    <button type="submit" class="btn btn-primary mt-2">Ekle</button>
-</form>
+        <div class="row">
+            <div class="col-md-6">
+                <input asp-for="NewName.Name"
+                       class="form-control"
+                       placeholder="Yeni isim girin..." />
+                <span asp-validation-for="NewName.Name" class="text-danger"></span>
+            </div>
 
-<hr />
+            <div class="col-md-3">
+                <button class="btn btn-primary w-100">Ekle</button>
+            </div>
+        </div>
+    </form>
+</div>
 
-<h3>Kayıtlı İsimler</h3>
+<div class="card card-modern p-3">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>İsim</th>
+                <th>Oluşturma</th>
+                <th>Güncelleme</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Names)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.CreatedAt</td>
+                    <td>@item.UpdatedAt</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id"
+                           class="btn btn-sm btn-warning">Düzenle</a>
 
-<ul>
-    @foreach (var item in Model.Names)
-    {
-        <li>
-            <strong>@item.Name</strong>
-            <small>(@item.CreatedAt)</small>
-            |
-            <a asp-action="Edit" asp-route-id="@item.Id">Düzenle</a>
-            |
-            <a asp-action="Delete" asp-route-id="@item.Id" class="text-danger">Sil</a>
-        </li>
-    }
-</ul>
+                        <form asp-action="Delete" asp-route-id="@item.Id"
+                              method="post" style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-sm btn-danger">
+                                Sil
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

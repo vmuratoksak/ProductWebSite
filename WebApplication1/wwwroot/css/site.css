@@ -1,50 +1,49 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
-}
-/* Gradient arka plan */
-body {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: #fff;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f6f9;
 }
 
-/* Hero card */
-.hero-box {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(8px);
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+.sidebar {
+    width: 230px;
+    min-height: 100vh;
 }
 
-/* Modern kart */
-.feature-card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    transition: 0.3s ease;
-    padding: 25px;
-    height: 100%;
-}
-
-    .feature-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    .sidebar .nav-link {
+        border-radius: 8px;
+        padding: 10px;
+        transition: 0.3s;
     }
+
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+        }
+
+.content-area {
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.card-modern {
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    border: none;
+}
+
+.dashboard-stat {
+    padding: 20px;
+    border-radius: 15px;
+    color: white;
+}
+
+.stat-blue {
+    background: linear-gradient(45deg,#007bff,#00c6ff);
+}
+
+.stat-green {
+    background: linear-gradient(45deg,#28a745,#85e085);
+}
+
+.stat-orange {
+    background: linear-gradient(45deg,#ff8c00,#ffc107);
+}

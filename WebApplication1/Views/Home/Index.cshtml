@@ -1,69 +1,44 @@
-﻿@{
-    ViewData["Title"] = "Ana Sayfa";
+﻿@model WebApplication1.Models.HelloIndexViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mt-5">
+<h2 class="mb-4">📊 Yönetim Paneli</h2>
 
-    <!-- HERO -->
-    <div class="hero-box text-center">
-        <h1 class="display-4 fw-bold mb-3">
-            Modern ASP.NET Core MVC Projesi
-        </h1>
+<div class="row mb-4">
 
-        <p class="lead mb-4">
-            Entity Framework Core ile veritabanı bağlantılı,
-            Validation destekli ve tam CRUD yapısına sahip modern web uygulaması.
-        </p>
-
-        <a asp-controller="Hello" asp-action="Index"
-           class="btn btn-light btn-lg">
-            İsim Yönetim Paneli
-        </a>
+    <div class="col-md-4">
+        <div class="dashboard-stat stat-blue">
+            <h4>Toplam Kayıt</h4>
+            <h2>@Model.Names.Count</h2>
+        </div>
     </div>
 
-    <!-- ÖZELLİKLER -->
-    <div class="row mt-5 text-center">
-
-        <div class="col-md-4 mb-4">
-            <div class="feature-card">
-                <h4 class="text-warning">CRUD İşlemleri</h4>
-                <p>
-                    Create, Read, Update, Delete işlemleri
-                    Entity Framework Core ile yapılmaktadır.
-                </p>
-            </div>
+    <div class="col-md-4">
+        <div class="dashboard-stat stat-green">
+            <h4>Bugün Eklenen</h4>
+            <h2>@Model.Names.Count(n => n.CreatedAt.Date == DateTime.Now.Date)</h2>
         </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="feature-card">
-                <h4 class="text-info">Validation</h4>
-                <p>
-                    50 karakter sınırı ve boş alan kontrolü
-                    hem client hem server tarafında uygulanmaktadır.
-                </p>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="feature-card">
-                <h4 class="text-success">SQL Server</h4>
-                <p>
-                    Migration sistemi ile veritabanı otomatik oluşturulmaktadır.
-                </p>
-            </div>
-        </div>
-
     </div>
 
-    <!-- TEKNOLOJİLER -->
-    <div class="text-center mt-4">
-        <h5 class="mb-3">Kullanılan Teknolojiler</h5>
-
-        <span class="badge bg-light text-dark p-2 m-1">ASP.NET Core 8</span>
-        <span class="badge bg-secondary p-2 m-1">MVC</span>
-        <span class="badge bg-primary p-2 m-1">Entity Framework</span>
-        <span class="badge bg-success p-2 m-1">SQL Server</span>
-        <span class="badge bg-warning text-dark p-2 m-1">Bootstrap 5</span>
+    <div class="col-md-4">
+        <div class="dashboard-stat stat-orange">
+            <h4>Son Güncellenen</h4>
+            <h6>
+                @(Model.Names.OrderByDescending(n => n.UpdatedAt).FirstOrDefault()?.Name ?? "Yok")
+            </h6>
+        </div>
     </div>
 
+</div>
+
+<div class="card card-modern p-4">
+    <h5>Proje Özeti</h5>
+    <ul>
+        <li>✔ CRUD işlemleri aktif</li>
+        <li>✔ Validation sistemi var</li>
+        <li>✔ SQL Server bağlantısı</li>
+        <li>✔ Modern Admin Panel UI</li>
+    </ul>
 </div>

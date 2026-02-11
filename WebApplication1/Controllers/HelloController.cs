@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
 using WebApplication1.Models;
+using System.Linq;
 
 namespace WebApplication1.Controllers
 {
@@ -13,15 +14,15 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
-        // LIST + FORM
-        [HttpGet]
+        // LIST
         public IActionResult Index()
         {
             var vm = new HelloIndexViewModel
             {
                 Names = _context.Names
-                    .OrderByDescending(x => x.CreatedAt)
-                    .ToList()
+                                .OrderByDescending(x => x.CreatedAt)
+                                .ToList(),
+                NewName = new NameEntity()
             };
 
             return View(vm);
@@ -30,32 +31,29 @@ namespace WebApplication1.Controllers
         // CREATE
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(HelloIndexViewModel vm)
+        public IActionResult Index(HelloIndexViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                vm.Names = _context.Names
-                    .OrderByDescending(x => x.CreatedAt)
-                    .ToList();
-
-                return View(vm);
+                model.Names = _context.Names.ToList();
+                return View(model);
             }
 
-            vm.NewName.CreatedAt = DateTime.Now;
-            _context.Names.Add(vm.NewName);
+            model.NewName.CreatedAt = DateTime.Now;
+            model.NewName.UpdatedAt = DateTime.Now;
+
+            _context.Names.Add(model.NewName);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index)); // PRG
+            return RedirectToAction("Index");
         }
 
         // EDIT
-        [HttpGet]
         public IActionResult Edit(int id)
         {
-            var name = _context.Names.Find(id);
-            if (name == null) return NotFound();
-
-            return View(name);
+            var item = _context.Names.Find(id);
+            if (item == null) return NotFound();
+            return View(item);
         }
 
         [HttpPost]
@@ -65,39 +63,29 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            _context.Names.Update(model);
+            var item = _context.Names.Find(model.Id);
+            if (item == null) return NotFound();
+
+            item.Name = model.Name;
+            item.UpdatedAt = DateTime.Now;
+
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         // DELETE
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            var name = _context.Names.Find(id);
-            if (name == null) return NotFound();
+            var item = _context.Names.Find(id);
+            if (item == null) return NotFound();
 
-            _context.Names.Remove(name);
+            _context.Names.Remove(item);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
-
-        [HttpPost]
-        public IActionResult Update(int id)
-        {
-            var record = _context.Names.Find(id);
-
-            record.Name = "Updated Name";
-
-            _context.Names.Update(record);
-
-            _context.SaveChanges();
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        //test
     }
 }
