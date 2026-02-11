@@ -4,60 +4,59 @@
     ViewData["Title"] = "İsim Yönetimi";
 }
 
-<div class="container mt-4">
+<h2 class="mb-4">İsim Yönetimi</h2>
 
-    <h2>İsim Yönetimi</h2>
+<form method="get" class="mb-3">
+    <div class="input-group" style="max-width:400px;">
+        <input type="text" name="searchTerm" value="@Model.SearchTerm"
+               class="form-control" placeholder="İsim ara..." />
+        <button class="btn btn-primary">Ara</button>
+    </div>
+</form>
 
-    <a asp-action="Create" class="btn btn-primary mb-3">
-        + Yeni İsim
-    </a>
+<a asp-action="Create" class="btn btn-success mb-3">Yeni İsim Ekle</a>
 
-    <form method="get" class="mb-3">
-        <div class="input-group">
-            <input type="text"
-                   name="searchTerm"
-                   value="@Model.SearchTerm"
-                   class="form-control"
-                   placeholder="İsim ara..." />
-            <button class="btn btn-outline-secondary">Ara</button>
-        </div>
-    </form>
-
-    <table class="table table-bordered table-hover">
-        <thead class="table-dark">
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>İsim</th>
+            <th>Oluşturulma</th>
+            <th>Güncellenme</th>
+            <th style="width:150px;">İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Names)
+        {
             <tr>
-                <th>İsim</th>
-                <th>Oluşturulma</th>
-                <th>Güncellenme</th>
-                <th width="180"></th>
+                <td>@item.Name</td>
+                <td>@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@item.UpdatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Düzenle</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Silmek istediğinize emin misiniz?');">
+                        Sil
+                    </a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Names)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                    <td>@item.UpdatedAt.ToString("dd.MM.yyyy HH:mm")</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id"
-                           class="btn btn-sm btn-warning">
-                            Düzenle
-                        </a>
+        }
+    </tbody>
+</table>
 
-                        <form asp-action="Delete"
-                              method="post"
-                              style="display:inline;">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <button class="btn btn-sm btn-danger">
-                                Sil
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-</div>
+<!-- SAYFALAMA -->
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@i"
+                   asp-route-searchTerm="@Model.SearchTerm">
+                    @i
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

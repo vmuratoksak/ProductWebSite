@@ -4,9 +4,7 @@ namespace WebApplication1.Models
 {
     public class HelloIndexViewModel
     {
-        public List<NameEntity> Names { get; set; }
-
-        public NameEntity NewName { get; set; }
+        public List<NameEntity> Names { get; set; } = new();
 
         public string SearchTerm { get; set; }
 
