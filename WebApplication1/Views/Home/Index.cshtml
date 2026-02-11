@@ -2,29 +2,22 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="container mt-4">
+<div class="row">
 
-    <h2>Yönetim Paneli</h2>
-    <hr />
-
-    <div class="row mt-4">
-
-        <div class="col-md-4">
-            <div class="card p-3 shadow-sm">
-                <h5>İsim Yönetimi</h5>
-                <p>Eklenen isimleri görüntüleyin, düzenleyin ve silin.</p>
-                <a href="/Hello" class="btn btn-primary">Git</a>
-            </div>
+    <div class="col-md-4">
+        <div class="card p-4 shadow">
+            <h4>👤 İsim Yönetimi</h4>
+            <p>İsim ekleme, düzenleme ve silme işlemleri.</p>
+            <a href="/Hello" class="btn btn-primary">Yönet</a>
         </div>
+    </div>
 
-        <div class="col-md-4">
-            <div class="card p-3 shadow-sm">
-                <h5>Gizlilik</h5>
-                <p>Uygulama gizlilik ayarları.</p>
-                <a href="/Home/Privacy" class="btn btn-secondary">Git</a>
-            </div>
+    <div class="col-md-4">
+        <div class="card p-4 shadow">
+            <h4>📈 İstatistik</h4>
+            <p>Sistemde kayıtlı isim sayısı.</p>
+            <a href="/Hello" class="btn btn-warning">Görüntüle</a>
         </div>
-
     </div>
 
 </div>
