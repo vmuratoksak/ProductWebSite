@@ -85,13 +85,13 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateAsync(int id)
+        public IActionResult Update(int id)
         {
-            var recordData = _context.Names.Find(id);
+            var record = _context.Names.Find(id);
 
-            recordData.Name = "Updated Name";
+            record.Name = "Updated Name";
 
-            _context.Names.Update(recordData);
+            _context.Names.Update(record);
 
             _context.SaveChanges();
 
