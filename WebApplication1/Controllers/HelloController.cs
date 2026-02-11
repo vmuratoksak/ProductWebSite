@@ -14,50 +14,35 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
-        // =======================
-        // LİSTE + ARAMA
-        // =======================
-        public IActionResult Index(string searchTerm, int page = 1)
+        // ======================
+        // LIST + SEARCH
+        // ======================
+        public IActionResult Index(string searchTerm)
         {
-            int pageSize = 5;
-
             var query = _context.Names.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchTerm))
-            {
                 query = query.Where(x => x.Name.Contains(searchTerm));
-            }
-
-            var totalCount = query.Count();
-
-            var names = query
-                .OrderByDescending(x => x.CreatedAt)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
 
             var vm = new HelloIndexViewModel
             {
-                Names = names,
-                SearchTerm = searchTerm,
-                CurrentPage = page,
-                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+                Names = query
+                        .OrderByDescending(x => x.CreatedAt)
+                        .ToList(),
+                SearchTerm = searchTerm
             };
 
             return View(vm);
         }
 
-        // =======================
-        // CREATE GET
-        // =======================
+        // ======================
+        // CREATE
+        // ======================
         public IActionResult Create()
         {
             return View();
         }
 
-        // =======================
-        // CREATE POST
-        // =======================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(NameEntity model)
@@ -74,9 +59,40 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index");
         }
 
-        // =======================
+        // ======================
+        // EDIT
+        // ======================
+        public IActionResult Edit(int id)
+        {
+            var entity = _context.Names.Find(id);
+            if (entity == null)
+                return NotFound();
+
+            return View(entity);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(NameEntity model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var entity = _context.Names.Find(model.Id);
+            if (entity == null)
+                return NotFound();
+
+            entity.Name = model.Name;
+            entity.UpdatedAt = DateTime.Now;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        // ======================
         // DELETE
-        // =======================
+        // ======================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
