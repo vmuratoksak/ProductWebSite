@@ -2,54 +2,72 @@
     ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center mt-5">
-    <h1 class="display-4 fw-bold">Mini MVC CRUD Projesi</h1>
-    <p class="lead text-muted mt-3">
-        ASP.NET Core MVC + Entity Framework Core kullanılarak geliştirilmiştir.
-    </p>
-</div>
+<div class="container mt-5">
 
-<hr class="my-5" />
+    <!-- HERO -->
+    <div class="p-5 mb-4 bg-dark text-white rounded-3 shadow">
+        <div class="container-fluid py-4 text-center">
+            <h1 class="display-5 fw-bold">ASP.NET Core MVC CRUD Projesi</h1>
+            <p class="col-md-8 fs-5 mx-auto">
+                Entity Framework Core ile veritabanı bağlantılı,
+                Validation destekli ve tam CRUD işlemleri içeren
+                modern bir web uygulaması.
+            </p>
 
-<div class="row text-center">
-
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">✔ CRUD İşlemleri</h5>
-                <p class="card-text">
-                    İsim ekleme, listeleme, güncelleme ve silme işlemleri yapılmaktadır.
-                </p>
-            </div>
+            <a asp-controller="Hello" asp-action="Index"
+               class="btn btn-light btn-lg mt-3">
+                İsim Yönetim Paneline Git
+            </a>
         </div>
     </div>
 
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">✔ Validation</h5>
-                <p class="card-text">
-                    Boş geçilemez alan kontrolü ve 50 karakter sınırı uygulanmıştır.
-                </p>
+    <!-- ÖZELLİKLER -->
+    <div class="row text-center">
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">✔ CRUD İşlemleri</h5>
+                    <p class="card-text">
+                        Create, Read, Update ve Delete işlemleri aktif olarak çalışmaktadır.
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">✔ Database</h5>
-                <p class="card-text">
-                    SQL Server ve EF Core Migration sistemi kullanılmıştır.
-                </p>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-success">✔ Validation</h5>
+                    <p class="card-text">
+                        Boş geçilemez alan ve 50 karakter sınırı uygulanmıştır.
+                    </p>
+                </div>
             </div>
         </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">✔ Database</h5>
+                    <p class="card-text">
+                        SQL Server + EF Core Migration sistemi kullanılmaktadır.
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-</div>
+    <!-- TEKNOLOJİLER -->
+    <div class="text-center mt-4">
+        <h4 class="mb-3">Kullanılan Teknolojiler</h4>
 
-<div class="text-center mt-4">
-    <a asp-controller="Hello" asp-action="Index" class="btn btn-dark btn-lg">
-        İsim Yönetim Paneline Git
-    </a>
+        <span class="badge bg-dark p-2 m-1">ASP.NET Core 8</span>
+        <span class="badge bg-secondary p-2 m-1">MVC</span>
+        <span class="badge bg-primary p-2 m-1">Entity Framework Core</span>
+        <span class="badge bg-success p-2 m-1">SQL Server</span>
+        <span class="badge bg-info p-2 m-1 text-dark">Bootstrap 5</span>
+    </div>
+
 </div>
