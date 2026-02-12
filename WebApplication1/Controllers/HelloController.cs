@@ -1,17 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data;
+using MongoDB.Driver;
+using Microsoft.Extensions.Options;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     public class HelloController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IMongoCollection<NameEntity> _collection;
 
-        public HelloController(AppDbContext context)
+        public HelloController(IMongoClient client, IOptions<MongoSettings> settings)
         {
-            _context = context;
+            var database = client.GetDatabase(settings.Value.DatabaseName);
+            _collection = database.GetCollection<NameEntity>("Names");
+
+            // UNIQUE INDEX (Name alanı için)
+            var indexKeys = Builders<NameEntity>.IndexKeys.Ascending(x => x.Name);
+            var indexOptions = new CreateIndexOptions { Unique = true };
+            _collection.Indexes.CreateOne(new CreateIndexModel<NameEntity>(indexKeys, indexOptions));
         }
 
         // LIST + SEARCH + PAGINATION
@@ -19,17 +25,23 @@ namespace WebApplication1.Controllers
         {
             int pageSize = 5;
 
-            var query = _context.Names.AsQueryable();
+            var filter = Builders<NameEntity>.Filter.Empty;
 
             if (!string.IsNullOrEmpty(search))
-                query = query.Where(x => x.Name.Contains(search));
+            {
+                filter = Builders<NameEntity>.Filter.Regex(
+                    x => x.Name,
+                    new MongoDB.Bson.BsonRegularExpression(search, "i")
+                );
+            }
 
-            int totalCount = query.Count();
+            var totalCount = _collection.CountDocuments(filter);
 
-            var names = query
-                .OrderByDescending(x => x.CreatedAt)
+            var names = _collection
+                .Find(filter)
+                .SortByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Limit(pageSize)
                 .ToList();
 
             var vm = new HelloIndexViewModel
@@ -52,13 +64,10 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Add(NameEntity model)
         {
-            if (string.IsNullOrWhiteSpace(model.Name))
-            {
-                TempData["Error"] = "İsim boş olamaz.";
-                return RedirectToAction("Add");
-            }
+            if (!ModelState.IsValid)
+                return View(model);
 
-            if (_context.Names.Any(x => x.Name == model.Name))
+            if (_collection.Find(x => x.Name == model.Name).Any())
             {
                 TempData["Error"] = "Bu isim zaten mevcut.";
                 return RedirectToAction("Add");
@@ -67,18 +76,16 @@ namespace WebApplication1.Controllers
             model.CreatedAt = DateTime.Now;
             model.UpdatedAt = DateTime.Now;
 
-            _context.Names.Add(model);
-            _context.SaveChanges();
+            _collection.InsertOne(model);
 
             TempData["Success"] = "İsim başarıyla eklendi.";
             return RedirectToAction("Index");
         }
 
-
         // EDIT
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
-            var item = _context.Names.Find(id);
+            var item = _collection.Find(x => x.Id == id).FirstOrDefault();
             if (item == null) return NotFound();
             return View(item);
         }
@@ -89,26 +96,19 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var entity = _context.Names.Find(model.Id);
-            if (entity == null) return NotFound();
+            var update = Builders<NameEntity>.Update
+                .Set(x => x.Name, model.Name)
+                .Set(x => x.UpdatedAt, DateTime.Now);
 
-            entity.Name = model.Name;
-            entity.UpdatedAt = DateTime.Now;
-
-            _context.SaveChanges();
+            _collection.UpdateOne(x => x.Id == model.Id, update);
 
             return RedirectToAction("Index");
         }
 
         // DELETE
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
-            var item = _context.Names.Find(id);
-            if (item == null) return NotFound();
-
-            _context.Names.Remove(item);
-            _context.SaveChanges();
-
+            _collection.DeleteOne(x => x.Id == id);
             return RedirectToAction("Index");
         }
     }
