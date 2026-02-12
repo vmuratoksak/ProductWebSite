@@ -68,20 +68,23 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            if (_collection.Find(x => x.Name == model.Name).Any())
+            try
             {
-                TempData["Error"] = "Bu isim zaten mevcut.";
+                model.CreatedAt = DateTime.Now;
+                model.UpdatedAt = DateTime.Now;
+
+                _collection.InsertOne(model);
+
+                TempData["Success"] = "İsim başarıyla eklendi.";
+                return RedirectToAction("Index");
+            }
+            catch (MongoWriteException)
+            {
+                TempData["Error"] = "Bu isim zaten mevcut (Unique constraint).";
                 return RedirectToAction("Add");
             }
-
-            model.CreatedAt = DateTime.Now;
-            model.UpdatedAt = DateTime.Now;
-
-            _collection.InsertOne(model);
-
-            TempData["Success"] = "İsim başarıyla eklendi.";
-            return RedirectToAction("Index");
         }
+
 
         // EDIT
         public IActionResult Edit(string id)
