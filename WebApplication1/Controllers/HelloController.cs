@@ -116,6 +116,21 @@ namespace WebApplication1.Controllers
         {
             Console.WriteLine("POST ÇALIŞTI");
 
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("MODEL INVALID");
+
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"HATA: {error.ErrorMessage}");
+                    }
+                }
+
+                return View(model);
+            }
+
             model.CreatedAt = DateTime.Now;
             model.UpdatedAt = DateTime.Now;
 
@@ -125,6 +140,9 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
 
     }
 }

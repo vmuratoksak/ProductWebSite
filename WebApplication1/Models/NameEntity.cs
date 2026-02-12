@@ -9,7 +9,7 @@ namespace WebApplication1.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }   // ← BURASI DEĞİŞTİ
 
         [Required(ErrorMessage = "İsim zorunludur.")]
         [StringLength(50, ErrorMessage = "İsim en fazla 50 karakter olabilir.")]

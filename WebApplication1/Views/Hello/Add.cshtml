@@ -2,33 +2,15 @@
 
 <h2>Yeni İsim Ekle</h2>
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Error"]
-    </div>
-}
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["Success"]
-    </div>
-}
-
 <form asp-action="Add" method="post">
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
+    <div>
+        <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
+    <br />
     <button type="submit" class="btn btn-success">Kaydet</button>
-    <a asp-action="Index" class="btn btn-secondary">Geri</a>
 </form>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+<div asp-validation-summary="All" class="text-danger"></div>
