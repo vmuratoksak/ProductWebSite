@@ -13,9 +13,14 @@ namespace WebApplication1.Controllers
         {
             var database = client.GetDatabase(settings.Value.DatabaseName);
             _collection = database.GetCollection<NameEntity>(settings.Value.CollectionName);
+
+            // UNIQUE INDEX (Name alanı için)
+            var indexKeys = Builders<NameEntity>.IndexKeys.Ascending(x => x.Name);
+            var indexOptions = new CreateIndexOptions { Unique = true };
+            _collection.Indexes.CreateOne(new CreateIndexModel<NameEntity>(indexKeys, indexOptions));
         }
 
-        // LIST
+        // LIST + SEARCH + PAGINATION
         public IActionResult Index(string search, int page = 1)
         {
             int pageSize = 5;
@@ -56,22 +61,28 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public IActionResult Add(NameEntity model)
         {
             if (!ModelState.IsValid)
+                return View(model);
+
+            try
             {
+                model.CreatedAt = DateTime.Now;
+                model.UpdatedAt = DateTime.Now;
+
+                _collection.InsertOne(model);
+
+                TempData["Success"] = "İsim başarıyla eklendi.";
+                return RedirectToAction("Index");
+            }
+            catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+            {
+                TempData["Error"] = "Bu isim zaten mevcut.";
                 return View(model);
             }
-
-            model.CreatedAt = DateTime.Now;
-            model.UpdatedAt = DateTime.Now;
-
-            _collection.InsertOne(model);
-
-            TempData["Success"] = "İsim başarıyla eklendi.";
-            return RedirectToAction("Index");
-        }
+        } */
 
         // EDIT
         public IActionResult Edit(string id)
@@ -87,11 +98,9 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var update = Builders<NameEntity>.Update
-                .Set(x => x.Name, model.Name)
-                .Set(x => x.UpdatedAt, DateTime.Now);
+            model.UpdatedAt = DateTime.Now;
 
-            _collection.UpdateOne(x => x.Id == model.Id, update);
+            _collection.ReplaceOne(x => x.Id == model.Id, model);
 
             return RedirectToAction("Index");
         }
@@ -102,5 +111,48 @@ namespace WebApplication1.Controllers
             _collection.DeleteOne(x => x.Id == id);
             return RedirectToAction("Index");
         }
+        /*[HttpPost]
+        public IActionResult Add(NameEntity model)
+        {
+            Console.WriteLine("POST ÇALIŞTI");
+
+            model.CreatedAt = DateTime.Now;
+            model.UpdatedAt = DateTime.Now;
+
+            _collection.InsertOne(model);
+
+            Console.WriteLine("KAYIT ATILDI");
+
+            return RedirectToAction("Index");
+        }*/
+        [HttpPost]
+        public IActionResult Add(NameEntity model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            try
+            {
+                model.CreatedAt = DateTime.Now;
+                model.UpdatedAt = DateTime.Now;
+
+                _collection.InsertOne(model);
+
+                TempData["Success"] = "İsim başarıyla eklendi.";
+                return RedirectToAction("Index");
+            }
+            catch (MongoWriteException ex)
+            {
+                // Duplicate key error code
+                if (ex.WriteError?.Code == 11000)
+                {
+                    ModelState.AddModelError("Name", "Bu isim zaten mevcut.");
+                    return View(model);
+                }
+
+                throw; // başka hata varsa fırlat
+            }
+        }
+
     }
 }
