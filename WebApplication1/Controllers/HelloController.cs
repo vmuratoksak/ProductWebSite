@@ -111,7 +111,7 @@ namespace WebApplication1.Controllers
             _collection.DeleteOne(x => x.Id == id);
             return RedirectToAction("Index");
         }
-        /*[HttpPost]
+        [HttpPost]
         public IActionResult Add(NameEntity model)
         {
             Console.WriteLine("POST ÇALIŞTI");
@@ -124,34 +124,6 @@ namespace WebApplication1.Controllers
             Console.WriteLine("KAYIT ATILDI");
 
             return RedirectToAction("Index");
-        }*/
-        [HttpPost]
-        public IActionResult Add(NameEntity model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            try
-            {
-                model.CreatedAt = DateTime.Now;
-                model.UpdatedAt = DateTime.Now;
-
-                _collection.InsertOne(model);
-
-                TempData["Success"] = "İsim başarıyla eklendi.";
-                return RedirectToAction("Index");
-            }
-            catch (MongoWriteException ex)
-            {
-                // Duplicate key error code
-                if (ex.WriteError?.Code == 11000)
-                {
-                    ModelState.AddModelError("Name", "Bu isim zaten mevcut.");
-                    return View(model);
-                }
-
-                throw; // başka hata varsa fırlat
-            }
         }
 
     }
