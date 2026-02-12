@@ -1,5 +1,9 @@
-﻿public class MongoSettings
+﻿namespace WebApplication1.Models
 {
-    public string ConnectionString { get; set; }
-    public string DatabaseName { get; set; }
+    public class MongoSettings
+    {
+        public string ConnectionString { get; set; }
+        public string DatabaseName { get; set; }
+        public string CollectionName { get; set; }
+    }
 }

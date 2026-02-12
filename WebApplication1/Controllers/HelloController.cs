@@ -12,7 +12,8 @@ namespace WebApplication1.Controllers
         public HelloController(IMongoClient client, IOptions<MongoSettings> settings)
         {
             var database = client.GetDatabase(settings.Value.DatabaseName);
-            _collection = database.GetCollection<NameEntity>("Names");
+            _collection = database.GetCollection<NameEntity>(settings.Value.CollectionName);
+
 
             // UNIQUE INDEX (Name alanı için)
             var indexKeys = Builders<NameEntity>.IndexKeys.Ascending(x => x.Name);
