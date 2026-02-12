@@ -13,15 +13,9 @@ namespace WebApplication1.Controllers
         {
             var database = client.GetDatabase(settings.Value.DatabaseName);
             _collection = database.GetCollection<NameEntity>(settings.Value.CollectionName);
-
-
-            // UNIQUE INDEX (Name alanı için)
-            var indexKeys = Builders<NameEntity>.IndexKeys.Ascending(x => x.Name);
-            var indexOptions = new CreateIndexOptions { Unique = true };
-            _collection.Indexes.CreateOne(new CreateIndexModel<NameEntity>(indexKeys, indexOptions));
         }
 
-        // LIST + SEARCH + PAGINATION
+        // LIST
         public IActionResult Index(string search, int page = 1)
         {
             int pageSize = 5;
@@ -66,25 +60,18 @@ namespace WebApplication1.Controllers
         public IActionResult Add(NameEntity model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
-
-            try
-            {
-                model.CreatedAt = DateTime.Now;
-                model.UpdatedAt = DateTime.Now;
-
-                _collection.InsertOne(model);
-
-                TempData["Success"] = "İsim başarıyla eklendi.";
-                return RedirectToAction("Index");
             }
-            catch (MongoWriteException)
-            {
-                TempData["Error"] = "Bu isim zaten mevcut (Unique constraint).";
-                return RedirectToAction("Add");
-            }
+
+            model.CreatedAt = DateTime.Now;
+            model.UpdatedAt = DateTime.Now;
+
+            _collection.InsertOne(model);
+
+            TempData["Success"] = "İsim başarıyla eklendi.";
+            return RedirectToAction("Index");
         }
-
 
         // EDIT
         public IActionResult Edit(string id)

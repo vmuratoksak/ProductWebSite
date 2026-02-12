@@ -2,13 +2,6 @@
 
 <h2>Yeni İsim Ekle</h2>
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Error"]
-    </div>
-}
-
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success">
@@ -20,8 +13,13 @@
     <div>
         <label>İsim</label>
         <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <br />
     <button type="submit" class="btn btn-success">Kaydet</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
