@@ -119,26 +119,26 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
             {
                 Console.WriteLine("MODEL INVALID");
-
-                foreach (var state in ModelState)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"HATA: {error.ErrorMessage}");
-                    }
-                }
-
                 return View(model);
             }
 
-            model.CreatedAt = DateTime.Now;
-            model.UpdatedAt = DateTime.Now;
+            try
+            {
+                model.CreatedAt = DateTime.Now;
+                model.UpdatedAt = DateTime.Now;
 
-            _collection.InsertOne(model);
+                _collection.InsertOne(model);
 
-            Console.WriteLine("KAYIT ATILDI");
+                TempData["Success"] = "İsim başarıyla eklendi.";
+                return RedirectToAction("Index");
+            }
+            catch (MongoWriteException ex) when (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
+            {
+                Console.WriteLine("DUPLICATE HATA YAKALANDI");
 
-            return RedirectToAction("Index");
+                ModelState.AddModelError("Name", "Bu isim zaten mevcut.");
+                return View(model);
+            }
         }
 
 
