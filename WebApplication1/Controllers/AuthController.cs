@@ -2,22 +2,23 @@
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using WebApplication1.Models;
+using System;
 
 namespace WebApplication1.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly IMongoCollection<UserEntity> _users;
-
+        
+        private readonly IMongoCollection<UserEntity> _collection;
         public AuthController(IMongoClient client, IOptions<MongoSettings> settings)
         {
             var database = client.GetDatabase(settings.Value.DatabaseName);
-            _users = database.GetCollection<UserEntity>("Users");
+            _collection = database.GetCollection<UserEntity>("Users");
 
             // Email için unique index
             var indexKeys = Builders<UserEntity>.IndexKeys.Ascending(x => x.Email);
             var indexOptions = new CreateIndexOptions { Unique = true };
-            _users.Indexes.CreateOne(new CreateIndexModel<UserEntity>(indexKeys, indexOptions));
+            _collection.Indexes.CreateOne(new CreateIndexModel<UserEntity>(indexKeys, indexOptions));
         }
 
         // REGISTER PAGE
@@ -29,49 +30,56 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Register(UserEntity model)
         {
+            Console.WriteLine("REGISTER POST ÇALIŞTI");
+
             if (!ModelState.IsValid)
-                return View(model);
-
-            try
             {
-                model.CreatedAt = DateTime.Now;
-                model.Role = "User";
-
-                _users.InsertOne(model);
-
-                TempData["Success"] = "Kayıt başarılı. Giriş yapabilirsiniz.";
-                return RedirectToAction("Login");
-            }
-            catch
-            {
-                ModelState.AddModelError("", "Bu email zaten kayıtlı.");
+                Console.WriteLine("MODEL INVALID");
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
                 return View(model);
             }
+
+            Console.WriteLine("MODEL VALID");
+
+            model.CreatedAt = DateTime.Now;
+
+            _collection.InsertOne(model);
+
+            Console.WriteLine("KAYIT ATILDI");
+
+            return RedirectToAction("Login");
         }
 
         // LOGIN PAGE
+        // LOGIN GET
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        // LOGIN POST
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public IActionResult Login(string Email, string password)
         {
-            var user = _users.Find(x => x.Email == email && x.Password == password).FirstOrDefault();
+            var user = _collection
+                .Find(x => x.Email == Email && x.Password == password)
+                .FirstOrDefault();
 
             if (user == null)
             {
-                ViewBag.Error = "Email veya şifre hatalı.";
+                ViewBag.Error = "Email veya şifre yanlış.";
                 return View();
             }
 
-            HttpContext.Session.SetString("UserId", user.Id);
-            HttpContext.Session.SetString("Username", user.Username);
-            HttpContext.Session.SetString("Role", user.Role);
-
             return RedirectToAction("Index", "Home");
         }
+
+
+
 
         public IActionResult Logout()
         {

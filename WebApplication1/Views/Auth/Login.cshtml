@@ -1,4 +1,5 @@
-﻿<h2>Giriş Yap</h2>
+﻿@model WebApplication1.Models.UserEntity
+<h2>Giriş Yap</h2>
 
 @if (ViewBag.Error != null)
 {
@@ -8,16 +9,24 @@
 <form method="post">
     <div>
         <label>Email</label>
-        <input name="email" class="form-control" />
+        <input asp-for="Email" class="form-control" />
     </div>
 
     <div>
-        <label>Şifre</label>
-        <input name="password" type="password" class="form-control" />
+        <label>Password</label>
+        <input asp-for="Password" type="password" class="form-control" />
     </div>
 
     <br />
-    <button type="submit" class="btn btn-primary">Giriş Yap</button>
+    <button type="submit">Giriş Yap</button>
 </form>
+
+@if (ViewBag.Error != null)
+{
+    <div style="color:red">
+        @ViewBag.Error
+    </div>
+}
+
 
 <a href="/Auth/Register">Kayıt Ol</a>
