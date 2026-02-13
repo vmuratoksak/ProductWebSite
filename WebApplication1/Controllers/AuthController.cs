@@ -30,25 +30,18 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Register(UserEntity model)
         {
-            Console.WriteLine("REGISTER POST ÇALIŞTI");
-
             if (!ModelState.IsValid)
-            {
-                Console.WriteLine("MODEL INVALID");
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
                 return View(model);
-            }
-
-            Console.WriteLine("MODEL VALID");
 
             model.CreatedAt = DateTime.Now;
 
-            _collection.InsertOne(model);
+            // Eğer özel bir email ise admin yap (geçici sistem)
+            if (model.Email == "admin@site.com")
+                model.Role = "Admin";
+            else
+                model.Role = "User";
 
-            Console.WriteLine("KAYIT ATILDI");
+            _collection.InsertOne(model);
 
             return RedirectToAction("Login");
         }
@@ -63,23 +56,25 @@ namespace WebApplication1.Controllers
 
         // LOGIN POST
         [HttpPost]
-        public IActionResult Login(UserEntity model)
+        public IActionResult Login(string Email, string password)
         {
             var user = _collection
-                .Find(x => x.Email == model.Email && x.Password == model.Password)
+                .Find(x => x.Email == Email && x.Password == password)
                 .FirstOrDefault();
 
             if (user == null)
             {
-                ViewBag.Error = "Email veya şifre yanlış.";
-                return View(model);
+                ViewBag.Error = "Kullanıcı adı veya şifre yanlış.";
+                return View();
             }
 
             HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetString("Username", user.Username ?? user.Email);
+            HttpContext.Session.SetString("Username", user.Username);
+            HttpContext.Session.SetString("UserRole", user.Role);
 
             return RedirectToAction("Index", "Home");
         }
+
 
 
 
