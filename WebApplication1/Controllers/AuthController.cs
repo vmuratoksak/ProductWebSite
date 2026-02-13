@@ -63,20 +63,26 @@ namespace WebApplication1.Controllers
 
         // LOGIN POST
         [HttpPost]
-        public IActionResult Login(string Email, string password)
+        public IActionResult Login(UserEntity model)
         {
             var user = _collection
-                .Find(x => x.Email == Email && x.Password == password)
+                .Find(x => x.Email == model.Email && x.Password == model.Password)
                 .FirstOrDefault();
 
             if (user == null)
             {
                 ViewBag.Error = "Email veya şifre yanlış.";
-                return View();
+                return View(model);
             }
+
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("Username", user.Username ?? user.Email);
 
             return RedirectToAction("Index", "Home");
         }
+
+
+
 
 
 
@@ -86,5 +92,6 @@ namespace WebApplication1.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+
     }
 }

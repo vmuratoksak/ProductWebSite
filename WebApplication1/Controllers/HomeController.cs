@@ -19,6 +19,11 @@ namespace WebApplication1.Controllers
         // Dashboard
         public IActionResult Index()
         {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+
+            if (string.IsNullOrEmpty(userEmail))
+                return RedirectToAction("Login", "Auth");
+
             var totalNames = _collection.CountDocuments(_ => true);
 
             var today = DateTime.Today;
@@ -32,6 +37,7 @@ namespace WebApplication1.Controllers
 
             return View();
         }
+
 
         // Yönetim Paneli
         public IActionResult Privacy()

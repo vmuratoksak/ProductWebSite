@@ -23,6 +23,11 @@ namespace WebApplication1.Controllers
         // LIST + SEARCH + PAGINATION
         public IActionResult Index(string search, int page = 1)
         {
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+
+            if (string.IsNullOrEmpty(userEmail))
+                return RedirectToAction("Login", "Auth");
+
             int pageSize = 5;
 
             var filter = Builders<NameEntity>.Filter.Empty;

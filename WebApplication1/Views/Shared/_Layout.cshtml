@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
@@ -35,32 +37,15 @@
             background-color: #1e293b;
             padding: 10px 20px;
             border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .card {
             background-color: #1e293b;
             border: none;
             color: #f1f5f9;
-        }
-
-        .btn-primary {
-            background-color: #3b82f6;
-            border: none;
-        }
-
-        .btn-danger {
-            background-color: #ef4444;
-            border: none;
-        }
-
-        .btn-warning {
-            background-color: #f59e0b;
-            border: none;
-        }
-
-        .btn-secondary {
-            background-color: #64748b;
-            border: none;
         }
     </style>
 </head>
@@ -81,8 +66,25 @@
             <!-- Content -->
             <div class="col-md-10 p-0">
 
+                <!-- Topbar -->
                 <div class="topbar">
                     <h5>@ViewData["Title"]</h5>
+
+                    <!-- LOGIN AREA BURADA OLMALI -->
+                    <div>
+                        @if (Context.Session.GetString("UserEmail") == null)
+                        {
+                            <a class="btn btn-outline-light btn-sm" href="/Auth/Login">Giriş</a>
+                            <a class="btn btn-primary btn-sm" href="/Auth/Register">Kayıt</a>
+                        }
+                        else
+                        {
+                            <span class="me-3">
+                                👋 Hoşgeldin @Context.Session.GetString("Username")
+                            </span>
+                            <a class="btn btn-danger btn-sm" href="/Auth/Logout">Çıkış</a>
+                        }
+                    </div>
                 </div>
 
                 <div class="p-4">
@@ -95,7 +97,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
     @RenderSection("Scripts", required: false)
 
 </body>
