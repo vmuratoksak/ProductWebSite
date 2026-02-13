@@ -71,6 +71,7 @@ namespace WebApplication1.Controllers
             HttpContext.Session.SetString("UserEmail", user.Email);
             HttpContext.Session.SetString("Username", user.Username);
             HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("UserId", user.Id);
 
             return RedirectToAction("Index", "Home");
         }

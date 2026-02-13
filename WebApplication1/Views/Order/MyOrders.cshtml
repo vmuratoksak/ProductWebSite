@@ -1,0 +1,29 @@
+﻿@model List<WebApplication1.Models.OrderEntity>
+
+<h2>Siparişlerim</h2>
+
+@if (!Model.Any())
+{
+    <p>Henüz siparişiniz yok.</p>
+}
+else
+{
+    foreach (var order in Model)
+    {
+        <div class="card mb-3 p-3">
+            <h5>Sipariş Tarihi: @order.CreatedAt</h5>
+            <p><strong>Toplam:</strong> @order.TotalAmount ₺</p>
+
+            <ul>
+                @foreach (var item in order.Items)
+                {
+                    <li>
+                        @item.ProductName -
+                        @item.Quantity adet -
+                        @item.Price ₺
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+}
