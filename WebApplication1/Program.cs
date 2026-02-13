@@ -15,12 +15,15 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
     return new MongoClient(settings.ConnectionString);
 });
 
+builder.Services.AddSession();
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
