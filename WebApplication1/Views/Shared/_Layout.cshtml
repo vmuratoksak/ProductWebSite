@@ -86,6 +86,12 @@
                             </span>
                             <a class="btn btn-danger btn-sm" href="/Auth/Logout">Çıkış</a>
                         }
+                        @if (Context.Session.GetString("UserId") != null)
+                        {
+                            <a href="/Cart/Index" class="btn btn-warning ms-2">🛒 Sepetim</a>
+                            <a href="/Order/MyOrders" class="btn btn-info ms-2">📦 Siparişlerim</a>
+                        }
+
                     </div>
                 </div>
 

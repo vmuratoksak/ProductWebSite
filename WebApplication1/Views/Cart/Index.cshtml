@@ -9,7 +9,7 @@
             <th>Fiyat</th>
             <th>Adet</th>
             <th>Toplam</th>
-            <th></th>
+            <th>İşlem</th>
         </tr>
     </thead>
     <tbody>
@@ -18,7 +18,11 @@
             <tr>
                 <td>@item.ProductName</td>
                 <td>@item.Price ₺</td>
-                <td>@item.Quantity</td>
+                <td>
+                    <a href="/Cart/Decrease/@item.CartId" class="btn btn-sm btn-warning">-</a>
+                    @item.Quantity
+                    <a href="/Cart/Increase/@item.CartId" class="btn btn-sm btn-success">+</a>
+                </td>
                 <td>@item.TotalPrice ₺</td>
                 <td>
                     <a href="/Cart/Remove/@item.CartId" class="btn btn-danger btn-sm">Sil</a>
@@ -28,6 +32,6 @@
     </tbody>
 </table>
 
-<h4>Toplam Tutar: @ViewBag.GrandTotal ₺</h4>
+<h4>Genel Toplam: @ViewBag.GrandTotal ₺</h4>
 
-<a href="/Cart/Checkout" class="btn btn-success">Siparişi Tamamla</a>
+<a href="/Cart/Checkout" class="btn btn-primary">Siparişi Tamamla</a>

@@ -62,9 +62,21 @@ namespace WebApplication1.Controllers
         public IActionResult Add(string productId)
         {
             var userId = HttpContext.Session.GetString("UserId");
-
             if (userId == null)
                 return RedirectToAction("Login", "Auth");
+
+            var product = _productCollection
+                .Find(x => x.Id == productId)
+                .FirstOrDefault();
+
+            if (product == null)
+                return RedirectToAction("Index", "Product");
+
+            if (product.Stock <= 0)
+            {
+                TempData["Error"] = "Bu ürün stokta yok.";
+                return RedirectToAction("Index", "Product");
+            }
 
             var existingItem = _cartCollection
                 .Find(x => x.UserId == userId && x.ProductId == productId)
@@ -72,6 +84,12 @@ namespace WebApplication1.Controllers
 
             if (existingItem != null)
             {
+                if (existingItem.Quantity >= product.Stock)
+                {
+                    TempData["Error"] = "Stok limitine ulaştınız.";
+                    return RedirectToAction("Index", "Product");
+                }
+
                 var update = Builders<CartEntity>.Update
                     .Inc(x => x.Quantity, 1);
 
@@ -79,19 +97,18 @@ namespace WebApplication1.Controllers
             }
             else
             {
-                var cartItem = new CartEntity
+                _cartCollection.InsertOne(new CartEntity
                 {
                     UserId = userId,
                     ProductId = productId,
                     Quantity = 1,
                     AddedAt = DateTime.Now
-                };
-
-                _cartCollection.InsertOne(cartItem);
+                });
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Product");
         }
+
 
         // SEPETTEN SİL
         public IActionResult Remove(string id)
@@ -109,7 +126,9 @@ namespace WebApplication1.Controllers
             if (userId == null)
                 return RedirectToAction("Login", "Auth");
 
-            var cartItems = _cartCollection.Find(x => x.UserId == userId).ToList();
+            var cartItems = _cartCollection
+                .Find(x => x.UserId == userId)
+                .ToList();
 
             if (!cartItems.Any())
                 return RedirectToAction("Index");
@@ -117,24 +136,42 @@ namespace WebApplication1.Controllers
             var orderItems = new List<OrderItem>();
             decimal total = 0;
 
-            foreach (var item in cartItems)
+            foreach (var cartItem in cartItems)
             {
-                var product = _productCollection.Find(x => x.Id == item.ProductId).FirstOrDefault();
+                var product = _productCollection
+                    .Find(x => x.Id == cartItem.ProductId)
+                    .FirstOrDefault();
 
-                if (product != null)
+                if (product == null)
+                    continue;
+
+                // ✅ STOK KONTROLÜ
+                if (product.Stock < cartItem.Quantity)
                 {
-                    var orderItem = new OrderItem
-                    {
-                        ProductId = product.Id,
-                        ProductName = product.Name,
-                        Price = product.Price,
-                        Quantity = item.Quantity
-                    };
-
-                    total += product.Price * item.Quantity;
-
-                    orderItems.Add(orderItem);
+                    TempData["Error"] = $"{product.Name} için yeterli stok yok.";
+                    return RedirectToAction("Index");
                 }
+
+                // ✅ STOK DÜŞÜR
+                var stockUpdate = Builders<ProductEntity>.Update
+                    .Inc(x => x.Stock, -cartItem.Quantity);
+
+                var updateResult = _productCollection.UpdateOne(
+                    x => x.Id == product.Id,
+                    stockUpdate
+                );
+
+                Console.WriteLine("STOK UPDATE COUNT: " + updateResult.ModifiedCount);
+
+                total += product.Price * cartItem.Quantity;
+
+                orderItems.Add(new OrderItem
+                {
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    Price = product.Price,
+                    Quantity = cartItem.Quantity
+                });
             }
 
             var order = new OrderEntity
@@ -152,5 +189,37 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction("MyOrders", "Order");
         }
+
+
+        
+            
+            public IActionResult Increase(string id)
+        {
+            var cartItem = _cartCollection.Find(x => x.Id == id).FirstOrDefault();
+            var product = _productCollection.Find(x => x.Id == cartItem.ProductId).FirstOrDefault();
+
+            if (cartItem.Quantity < product.Stock)
+            {
+                var update = Builders<CartEntity>.Update.Inc(x => x.Quantity, 1);
+                _cartCollection.UpdateOne(x => x.Id == id, update);
+            }
+
+            return RedirectToAction("Index");
+        }
+        public IActionResult Decrease(string id)
+        {
+            var cartItem = _cartCollection.Find(x => x.Id == id).FirstOrDefault();
+
+            if (cartItem.Quantity > 1)
+            {
+                var update = Builders<CartEntity>.Update.Inc(x => x.Quantity, -1);
+                _cartCollection.UpdateOne(x => x.Id == id, update);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }
+
