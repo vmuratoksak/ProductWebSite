@@ -14,6 +14,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddHttpContextAccessor();
 
 // Mongo ayarları
 builder.Services.Configure<MongoSettings>(
@@ -31,6 +32,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
 
 // SESSION MIDDLEWARE ÇOK ÖNEMLİ
 app.UseSession();

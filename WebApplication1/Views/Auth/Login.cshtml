@@ -1,32 +1,31 @@
 ﻿@model WebApplication1.Models.UserEntity
-<h2>Giriş Yap</h2>
-
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger">@ViewBag.Error</div>
+@{
+    ViewData["Title"] = "Giriş";
 }
 
-<form method="post">
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" class="form-control" />
-    </div>
+<div class="card-premium mx-auto" style="max-width:400px;">
 
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" type="password" class="form-control" />
-    </div>
+    <h3 class="mb-4 text-center">Giriş Yap</h3>
 
-    <br />
-    <button type="submit">Giriş Yap</button>
-</form>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
 
-@if (ViewBag.Error != null)
-{
-    <div style="color:red">
-        @ViewBag.Error
-    </div>
-}
+    <form method="post">
+        <div class="mb-3">
+            <label>Email</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
 
+        <div class="mb-3">
+            <label>Şifre</label>
+            <input asp-for="Password" type="password" class="form-control" />
+        </div>
 
-<a href="/Auth/Register">Kayıt Ol</a>
+        <button type="submit" class="btn btn-primary w-100">
+            Giriş Yap
+        </button>
+    </form>
+
+</div>

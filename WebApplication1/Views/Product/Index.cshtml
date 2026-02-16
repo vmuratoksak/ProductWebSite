@@ -1,43 +1,77 @@
 ﻿@model List<WebApplication1.Models.ProductEntity>
 @using Microsoft.AspNetCore.Http
 
-<h2>Ürünler</h2>
-
-@if (Context.Session.GetString("UserRole") == "Admin")
-{
-    <a href="/Product/Add" class="btn btn-success mb-3">Yeni Ürün</a>
+@{
+    ViewData["Title"] = "Ürünler";
 }
 
-<table class="table table-dark table-striped">
-    <thead>
-        <tr>
-            <th>Ürün</th>
-            <th>Fiyat</th>
-            <th>İşlem</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Price ₺</td>
-                <td>
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2 class="fw-bold">📦 Ürünler</h2>
+
+    @if (Context.Session.GetString("UserRole") == "Admin")
+    {
+        <a href="/Product/Add" class="btn btn-success">
+            + Yeni Ürün
+        </a>
+    }
+
+</div>
+
+
+<div class="row">
+
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+
+            <div class="card-premium h-100">
+
+                <h4 class="fw-bold mb-2">@item.Name</h4>
+
+                <div class="mb-2">
+                    <span class="badge bg-info">
+                        Stok: @item.Stock
+                    </span>
+                </div>
+
+                <h5 class="text-success mb-3">
+                    @item.Price ₺
+                </h5>
+
+                <div class="d-flex justify-content-between">
+
                     @if (Context.Session.GetString("UserRole") == "User")
                     {
-                        <a href="/Cart/Add?productId=@item.Id" class="btn btn-primary btn-sm">
-                            Sepete Ekle
-                        </a>
+                        if (item.Stock > 0)
+                        {
+                            <a href="/Cart/Add?productId=@item.Id"
+                               class="btn btn-primary btn-sm">
+                                🛒 Sepete Ekle
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary btn-sm" disabled>
+                                Stok Yok
+                            </button>
+                        }
                     }
 
                     @if (Context.Session.GetString("UserRole") == "Admin")
                     {
-                        <a href="/Product/Delete/@item.Id" class="btn btn-danger btn-sm">
-                            Sil
-                        </a>
+                        <div class="d-flex gap-2">
+                            <a href="/Product/Delete/@item.Id"
+                               class="btn btn-danger btn-sm">
+                                Sil
+                            </a>
+                        </div>
                     }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+</div>

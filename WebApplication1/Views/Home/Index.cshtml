@@ -1,34 +1,36 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
+    @if (Context.Session.GetString("Username") != null)
+    {
+        <div class="card-premium mb-4">
+            👋 Hoşgeldin @Context.Session.GetString("Username")
+        </div>
+    }
+
 }
 
-<h2>Dashboard</h2>
+<h2 class="mb-4">📊 Dashboard</h2>
 
 <div class="row">
 
     <div class="col-md-4">
-        <div class="card p-3">
-            <h4>Toplam İsim</h4>
-            <h2>@ViewBag.TotalNames</h2>
+        <div class="card-premium text-center">
+            <h3>@ViewBag.TotalNames</h3>
+            <p>Toplam İsim</p>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card p-3">
-            <h4>Bugün Eklenen</h4>
-            <h2>@ViewBag.TodayAdded</h2>
+        <div class="card-premium text-center">
+            <h3>@ViewBag.TodayAdded</h3>
+            <p>Bugün Eklenen</p>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card p-3">
-            <h4>Teknolojiler</h4>
-            <ul>
-                <li>ASP.NET Core MVC</li>
-                <li>Entity Framework Core</li>
-                <li>SQL Server</li>
-                <li>Bootstrap</li>
-            </ul>
+        <div class="card-premium text-center">
+            <h3>MongoDB</h3>
+            <p>Aktif Veritabanı</p>
         </div>
     </div>
 

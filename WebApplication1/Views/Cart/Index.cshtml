@@ -1,37 +1,43 @@
 ﻿@model List<WebApplication1.Models.CartViewModel>
 
-<h2>Sepetim</h2>
+@{
+    ViewData["Title"] = "Sepetim";
+}
 
-<table class="table table-dark">
-    <thead>
-        <tr>
-            <th>Ürün</th>
-            <th>Fiyat</th>
-            <th>Adet</th>
-            <th>Toplam</th>
-            <th>İşlem</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.ProductName</td>
-                <td>@item.Price ₺</td>
-                <td>
-                    <a href="/Cart/Decrease/@item.CartId" class="btn btn-sm btn-warning">-</a>
-                    @item.Quantity
-                    <a href="/Cart/Increase/@item.CartId" class="btn btn-sm btn-success">+</a>
-                </td>
-                <td>@item.TotalPrice ₺</td>
-                <td>
-                    <a href="/Cart/Remove/@item.CartId" class="btn btn-danger btn-sm">Sil</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h2 class="mb-4">🛒 Sepetim</h2>
 
-<h4>Genel Toplam: @ViewBag.GrandTotal ₺</h4>
+@if (!Model.Any())
+{
+    <div class="card-premium">
+        Sepetiniz boş.
+    </div>
+}
+else
+{
+    foreach (var item in Model)
+    {
+        <div class="card-premium mb-3 d-flex justify-content-between align-items-center">
 
-<a href="/Cart/Checkout" class="btn btn-primary">Siparişi Tamamla</a>
+            <div>
+                <h5>@item.ProductName</h5>
+                <div>Fiyat: @item.Price ₺</div>
+                <div>Adet: @item.Quantity</div>
+                <div class="text-success fw-bold">
+                    Toplam: @item.TotalPrice ₺
+                </div>
+            </div>
+
+            <div>
+                <a href="/Cart/Increase/@item.CartId" class="btn btn-success btn-sm">+</a>
+                <a href="/Cart/Decrease/@item.CartId" class="btn btn-warning btn-sm">-</a>
+                <a href="/Cart/Remove/@item.CartId" class="btn btn-danger btn-sm">Sil</a>
+            </div>
+
+        </div>
+    }
+
+    <div class="card-premium text-end mt-3">
+        <h4>Genel Toplam: @ViewBag.GrandTotal ₺</h4>
+        <a href="/Cart/Checkout" class="btn btn-primary mt-2">Siparişi Tamamla</a>
+    </div>
+}

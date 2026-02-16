@@ -1,111 +1,80 @@
 ﻿@using Microsoft.AspNetCore.Http
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"] - Admin Panel</title>
+    <title>@ViewData["Title"] - E-Ticaret</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
         body {
-            background-color: #0f172a;
-            color: #f1f5f9;
+            background: #0f172a;
+            color: #e2e8f0;
         }
 
-        .sidebar {
-            height: 100vh;
-            background-color: #1e293b;
-            padding-top: 20px;
+        .navbar {
+            background: #1e293b;
         }
 
-            .sidebar a {
-                color: #cbd5e1;
-                display: block;
-                padding: 12px 20px;
-                text-decoration: none;
+        .card-premium {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.4);
+            transition: 0.3s;
+        }
+
+            .card-premium:hover {
+                transform: translateY(-5px);
             }
 
-                .sidebar a:hover {
-                    background-color: #334155;
-                    color: white;
-                }
-
-        .topbar {
-            background-color: #1e293b;
-            padding: 10px 20px;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .btn-primary {
+            background: #3b82f6;
+            border: none;
         }
 
-        .card {
-            background-color: #1e293b;
+        .btn-success {
+            background: #10b981;
             border: none;
-            color: #f1f5f9;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            border: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="container-fluid">
-        <div class="row">
+    <nav class="navbar navbar-expand-lg navbar-dark px-4">
+        <a class="navbar-brand fw-bold" href="/Home/Index">🛍 MyShop</a>
 
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar">
-                <h4 class="text-center mb-4">Admin Panel</h4>
-               
-                <a asp-controller="Product" asp-action="Index">🛒 Ürünler</a>
+        <div class="ms-auto d-flex gap-3 align-items-center">
+			<a href="/Hello/Index" class="text-light"Isim Yonetimi</a>
+            <a href="/Product/Index" class="text-light">Ürünler</a>
+            <a href="/Cart/Index" class="text-light">Sepetim</a>
+            <a href="/Order/MyOrders" class="text-light">Siparişlerim</a>
+            <a href="/Home/Technologies" class="text-light">Teknolojiler</a>
 
-                <a asp-controller="Home" asp-action="Index">📊 Dashboard</a>
-                <a asp-controller="Hello" asp-action="Index">👤 İsim Yönetimi</a>
-                <a asp-controller="Home" asp-action="Privacy">🛠 Yönetim Paneli</a>
-            </div>
-
-            <!-- Content -->
-            <div class="col-md-10 p-0">
-
-                <!-- Topbar -->
-                <div class="topbar">
-                    <h5>@ViewData["Title"]</h5>
-
-                    <!-- LOGIN AREA BURADA OLMALI -->
-                    <div>
-                        @if (Context.Session.GetString("UserEmail") == null)
-                        {
-                            <a class="btn btn-outline-light btn-sm" href="/Auth/Login">Giriş</a>
-                            <a class="btn btn-primary btn-sm" href="/Auth/Register">Kayıt</a>
-                        }
-                        else
-                        {
-                            <span class="me-3">
-                                👋 Hoşgeldin @Context.Session.GetString("Username")
-                            </span>
-                            <a class="btn btn-danger btn-sm" href="/Auth/Logout">Çıkış</a>
-                        }
-                        @if (Context.Session.GetString("UserId") != null)
-                        {
-                            <a href="/Cart/Index" class="btn btn-warning ms-2">🛒 Sepetim</a>
-                            <a href="/Order/MyOrders" class="btn btn-info ms-2">📦 Siparişlerim</a>
-                        }
-
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    @RenderBody()
-                </div>
-
-            </div>
+            @if (Context.Session.GetString("UserEmail") == null)
+            {
+                <a href="/Auth/Login" class="btn btn-primary btn-sm">Giriş</a>
+                <a href="/Auth/Register" class="btn btn-success btn-sm">Kayıt</a>
+            }
+            else
+            {
+                <span>👋 @Context.Session.GetString("Username")</span>
+                <a href="/Auth/Logout" class="btn btn-danger btn-sm">Çıkış</a>
+            }
 
         </div>
-    </div>
+    </nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    @RenderSection("Scripts", required: false)
+    <div class="container mt-4">
+        @RenderBody()
+    </div>
 
 </body>
 </html>

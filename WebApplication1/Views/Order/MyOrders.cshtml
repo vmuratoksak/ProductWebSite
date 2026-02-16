@@ -1,29 +1,38 @@
 ﻿@model List<WebApplication1.Models.OrderEntity>
 
-<h2>Siparişlerim</h2>
+@{
+    ViewData["Title"] = "Siparişlerim";
+}
+
+<h2 class="mb-4">📦 Siparişlerim</h2>
 
 @if (!Model.Any())
 {
-    <p>Henüz siparişiniz yok.</p>
+    <div class="card-premium">
+        Henüz siparişiniz yok.
+    </div>
 }
 else
 {
     foreach (var order in Model)
     {
-        <div class="card mb-3 p-3">
-            <h5>Sipariş Tarihi: @order.CreatedAt</h5>
-            <p><strong>Toplam:</strong> @order.TotalAmount ₺</p>
+        <div class="card-premium mb-4">
 
-            <ul>
-                @foreach (var item in order.Items)
-                {
-                    <li>
-                        @item.ProductName -
-                        @item.Quantity adet -
-                        @item.Price ₺
-                    </li>
-                }
-            </ul>
+            <div class="d-flex justify-content-between">
+                <h5>Sipariş Tarihi: @order.CreatedAt</h5>
+                <h5 class="text-success">Toplam: @order.TotalAmount ₺</h5>
+            </div>
+
+            <hr />
+
+            @foreach (var item in order.Items)
+            {
+                <div class="d-flex justify-content-between">
+                    <span>@item.ProductName</span>
+                    <span>@item.Quantity x @item.Price ₺</span>
+                </div>
+            }
+
         </div>
     }
 }
