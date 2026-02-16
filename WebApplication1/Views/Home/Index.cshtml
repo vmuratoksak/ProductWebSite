@@ -23,15 +23,29 @@
     <div class="col-md-4">
         <div class="card-premium text-center">
             <h3>@ViewBag.TodayAdded</h3>
-            <p>Bugün Eklenen</p>
+            <p>Bugün Eklenen Isim</p>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card-premium text-center">
-            <h3>MongoDB</h3>
-            <p>Aktif Veritabanı</p>
+    <div class="col-md-3">
+        <div class="card-premium">
+            <h5>Son Güncellenen İsim</h5>
+            <h4>@ViewBag.LastUpdatedName</h4>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-premium">
+            <h5>Toplam Ürün</h5>
+            <h3>@ViewBag.TotalProducts</h3>
         </div>
     </div>
 
+    <div class="col-md-3">
+        <div class="card-premium">
+            <h5>Toplam Sipariş</h5>
+            <h3>@ViewBag.TotalOrders</h3>
+        </div>
+    </div>
+
+</div>
 </div>
