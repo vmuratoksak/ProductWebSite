@@ -2,6 +2,8 @@
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using WebApplication1.Models;
+using WebApplication1.Models.Entities;
+using WebApplication1.Models.ViewModels;
 
 namespace WebApplication1.Controllers
 {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using WebApplication1.Models.Entities;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Models.ViewModels
 {
     public class HelloIndexViewModel
     {

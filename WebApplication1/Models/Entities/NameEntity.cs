@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Models.Entities
 {
     public class NameEntity
     {

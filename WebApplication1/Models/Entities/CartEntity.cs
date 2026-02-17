@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Models.Entities
 {
     public class CartEntity
     {

@@ -1,34 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using Microsoft.Extensions.Options;
-using WebApplication1.Models;
-using System.Linq;
+using WebApplication1.Services.Interfaces;
 
-namespace WebApplication1.Controllers
+public class OrderController : Controller
 {
-    public class OrderController : Controller
+    private readonly IOrderService _orderService;
+
+    public OrderController(IOrderService orderService)
     {
-        private readonly IMongoCollection<OrderEntity> _orderCollection;
+        _orderService = orderService;
+    }
 
-        public OrderController(IMongoClient client, IOptions<MongoSettings> settings)
+    public IActionResult Checkout()
+    {
+        var userId = HttpContext.Session.GetString("UserId");
+        var userEmail = HttpContext.Session.GetString("UserEmail");
+
+        try
         {
-            var database = client.GetDatabase(settings.Value.DatabaseName);
-            _orderCollection = database.GetCollection<OrderEntity>("Orders");
+            _orderService.Checkout(userId, userEmail);
+            return RedirectToAction("MyOrders");
         }
-
-        public IActionResult MyOrders()
+        catch (Exception ex)
         {
-            var userId = HttpContext.Session.GetString("UserId");
-
-            if (userId == null)
-                return RedirectToAction("Login", "Auth");
-
-            var orders = _orderCollection
-                .Find(x => x.UserId == userId)
-                .SortByDescending(x => x.CreatedAt)
-                .ToList();
-
-            return View(orders);
+            TempData["Error"] = ex.Message;
+            return RedirectToAction("Index", "Cart");
         }
     }
 }

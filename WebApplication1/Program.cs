@@ -1,6 +1,9 @@
-﻿using MongoDB.Driver;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using WebApplication1.Models;
+using WebApplication1.Models.Entities;
+using WebApplication1.Repositories;
+using WebApplication1.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,5 +45,25 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+builder.Services.AddScoped<IRepository<ProductEntity>>(sp =>
+    new GenericRepository<ProductEntity>(
+        sp.GetRequiredService<IMongoClient>(),
+        sp.GetRequiredService<IOptions<MongoSettings>>(),
+        "Products"));
+
+builder.Services.AddScoped<IRepository<CartEntity>>(sp =>
+    new GenericRepository<CartEntity>(
+        sp.GetRequiredService<IMongoClient>(),
+        sp.GetRequiredService<IOptions<MongoSettings>>(),
+        "Carts"));
+
+builder.Services.AddScoped<IRepository<OrderEntity>>(sp =>
+    new GenericRepository<OrderEntity>(
+        sp.GetRequiredService<IMongoClient>(),
+        sp.GetRequiredService<IOptions<MongoSettings>>(),
+        "Orders"));
+
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 app.Run();

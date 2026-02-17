@@ -5,6 +5,8 @@ using WebApplication1.Models;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using WebApplication1.Models.Entities;
+using WebApplication1.Models.ViewModels;
 
 namespace WebApplication1.Controllers
 {

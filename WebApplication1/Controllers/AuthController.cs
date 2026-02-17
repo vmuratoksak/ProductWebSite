@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using WebApplication1.Models;
 using System;
+using WebApplication1.Models.Entities;
 
 namespace WebApplication1.Controllers
 {
