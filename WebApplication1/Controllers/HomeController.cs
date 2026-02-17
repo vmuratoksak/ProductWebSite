@@ -20,6 +20,9 @@ namespace WebApplication1.Controllers
             _orderCollection = database.GetCollection<OrderEntity>("Orders");
         }
 
+        // bussines logic için orderController yerine orderService
+        //repository pattern 
+
         public IActionResult Index()
         {
             var userEmail = HttpContext.Session.GetString("UserEmail");
