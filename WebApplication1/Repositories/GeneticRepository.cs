@@ -1,6 +1,7 @@
-﻿using MongoDB.Driver;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using WebApplication1.Models;
+using WebApplication1.Repositories.Interfaces;
 
 namespace WebApplication1.Repositories
 {
@@ -19,12 +20,13 @@ namespace WebApplication1.Repositories
 
         public List<T> GetAll()
         {
-            return _collection.Find(_ => true).ToList();
+            return _collection.Find(Builders<T>.Filter.Empty).ToList();
         }
 
         public T GetById(string id)
         {
-            return _collection.Find("_id", id).FirstOrDefault();
+            var filter = Builders<T>.Filter.Eq("_id", id);
+            return _collection.Find(filter).FirstOrDefault();
         }
 
         public void Insert(T entity)
@@ -34,12 +36,14 @@ namespace WebApplication1.Repositories
 
         public void Update(string id, T entity)
         {
-            _collection.ReplaceOne("_id", id, entity);
+            var filter = Builders<T>.Filter.Eq("_id", id);
+            _collection.ReplaceOne(filter, entity);
         }
 
         public void Delete(string id)
         {
-            _collection.DeleteOne("_id", id);
+            var filter = Builders<T>.Filter.Eq("_id", id);
+            _collection.DeleteOne(filter);
         }
     }
 }
