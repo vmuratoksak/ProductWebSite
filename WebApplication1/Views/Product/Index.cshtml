@@ -24,7 +24,22 @@
                     @item.Price ₺
                 </h5>
 
-                @if (Context.Session.GetString("UserId") != null)
+                @* LOGIN & ROLE CONTROL *@
+
+                @if (Context.Session.GetString("UserId") == null)
+                {
+                    <a href="/Auth/Login"
+                       class="btn btn-warning btn-sm w-100">
+                        Giriş Yap
+                    </a>
+                }
+                else if (Context.Session.GetString("UserRole") == "Admin")
+                {
+                    <button class="btn btn-dark btn-sm w-100" disabled>
+                        Admin alışveriş yapamaz
+                    </button>
+                }
+                else
                 {
                     if (item.Stock > 0)
                     {
@@ -40,13 +55,7 @@
                         </button>
                     }
                 }
-                else
-                {
-                    <a href="/Auth/Login"
-                       class="btn btn-warning btn-sm w-100">
-                        Giriş Yap
-                    </a>
-                }
+
             </div>
         </div>
     }

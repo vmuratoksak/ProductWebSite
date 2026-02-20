@@ -29,9 +29,17 @@ public class CartController : Controller
     public IActionResult Add(string productId)
     {
         var userId = HttpContext.Session.GetString("UserId");
+        var role = HttpContext.Session.GetString("UserRole");
 
         if (string.IsNullOrEmpty(userId))
             return RedirectToAction("Login", "Auth");
+
+        // ✅ ADMIN SEPETE EKLEYEMEZ
+        if (role == "Admin")
+        {
+            TempData["Error"] = "Admin kullanıcı sepete ürün ekleyemez.";
+            return RedirectToAction("Index", "Product");
+        }
 
         try
         {
@@ -43,10 +51,8 @@ public class CartController : Controller
             TempData["Error"] = ex.Message;
         }
 
-        // ✅ BURASI DEĞİŞTİ
-        return RedirectToAction("Index"); // Cart/Index
+        return RedirectToAction("Index");
     }
-
     public IActionResult Remove(string id)
     {
         if (!IsUserLoggedIn())
