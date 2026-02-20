@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApplication1.Controllers
 {
@@ -23,11 +24,10 @@ namespace WebApplication1.Controllers
                 return RedirectToAction("Login", "Auth");
 
             var userId = HttpContext.Session.GetString("UserId");
-            var userEmail = HttpContext.Session.GetString("UserEmail");
 
             try
             {
-                _orderService.Checkout(userId, userEmail);
+                _orderService.Checkout(userId);
                 return RedirectToAction("MyOrders");
             }
             catch (Exception ex)
@@ -43,7 +43,6 @@ namespace WebApplication1.Controllers
                 return RedirectToAction("Login", "Auth");
 
             var userId = HttpContext.Session.GetString("UserId");
-
             var orders = _orderService.GetUserOrders(userId);
 
             return View(orders);

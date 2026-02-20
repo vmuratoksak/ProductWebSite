@@ -1,78 +1,53 @@
-﻿@model List<ProductEntity>
+﻿@model List<WebApplication1.Models.Entities.ProductEntity>
 @using Microsoft.AspNetCore.Http
-@using WebApplication1.Models.Entities
 
 @{
     ViewData["Title"] = "Ürünler";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-
-    <h2 class="fw-bold">📦 Ürünler</h2>
-
-    @if (Context.Session.GetString("UserRole") == "Admin")
-    {
-        <a href="/Product/Add" class="btn btn-success">
-            + Yeni Ürün
-        </a>
-    }
-
-</div>
-
+<h2 class="fw-bold mb-4">📦 Ürünler</h2>
 
 <div class="row">
-
     @foreach (var item in Model)
     {
         <div class="col-md-4 mb-4">
+            <div class="card p-4 shadow-lg h-100"
+                 style="background:#1e293b;color:#e2e8f0;border-radius:15px;">
 
-            <div class="card-premium h-100">
+                <h4>@item.Name</h4>
 
-                <h4 class="fw-bold mb-2">@item.Name</h4>
-
-                <div class="mb-2">
-                    <span class="badge bg-info">
-                        Stok: @item.Stock
-                    </span>
-                </div>
+                <span class="badge bg-info mb-2">
+                    Stok: @item.Stock
+                </span>
 
                 <h5 class="text-success mb-3">
                     @item.Price ₺
                 </h5>
 
-                <div class="d-flex justify-content-between">
-
-                    @if (Context.Session.GetString("UserRole") == "User")
+                @if (Context.Session.GetString("UserId") != null)
+                {
+                    if (item.Stock > 0)
                     {
-                        if (item.Stock > 0)
-                        {
-                            <a href="/Cart/Add?productId=@item.Id"
-                               class="btn btn-primary btn-sm">
-                                🛒 Sepete Ekle
-                            </a>
-                        }
-                        else
-                        {
-                            <button class="btn btn-secondary btn-sm" disabled>
-                                Stok Yok
-                            </button>
-                        }
+                        <a href="/Cart/Add?productId=@item.Id"
+                           class="btn btn-primary btn-sm w-100">
+                            🛒 Sepete Ekle
+                        </a>
                     }
-
-                    @if (Context.Session.GetString("UserRole") == "Admin")
+                    else
                     {
-                        <div class="d-flex gap-2">
-                            <a href="/Product/Delete/@item.Id"
-                               class="btn btn-danger btn-sm">
-                                Sil
-                            </a>
-                        </div>
+                        <button class="btn btn-secondary btn-sm w-100" disabled>
+                            Stok Yok
+                        </button>
                     }
-
-                </div>
-
+                }
+                else
+                {
+                    <a href="/Auth/Login"
+                       class="btn btn-warning btn-sm w-100">
+                        Giriş Yap
+                    </a>
+                }
             </div>
-
         </div>
     }
 </div>

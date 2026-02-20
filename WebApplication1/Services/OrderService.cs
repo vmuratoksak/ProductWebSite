@@ -1,6 +1,9 @@
 ﻿using WebApplication1.Models.Entities;
 using WebApplication1.Repositories.Interfaces;
 using WebApplication1.Services.Interfaces;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace WebApplication1.Services
 {
@@ -20,7 +23,7 @@ namespace WebApplication1.Services
             _orderRepo = orderRepo;
         }
 
-        public void Checkout(string userId, string userEmail)
+        public void Checkout(string userId)
         {
             var cartItems = _cartRepo.GetAll()
                 .Where(x => x.UserId == userId)
@@ -29,14 +32,12 @@ namespace WebApplication1.Services
             if (!cartItems.Any())
                 throw new Exception("Sepet boş.");
 
-            var products = _productRepo.GetAll();
-
             var orderItems = new List<OrderItem>();
             decimal total = 0;
 
             foreach (var item in cartItems)
             {
-                var product = products.FirstOrDefault(p => p.Id == item.ProductId);
+                var product = _productRepo.GetById(item.ProductId);
 
                 if (product == null)
                     throw new Exception("Ürün bulunamadı.");
@@ -61,7 +62,6 @@ namespace WebApplication1.Services
             var order = new OrderEntity
             {
                 UserId = userId,
-                UserEmail = userEmail,
                 Items = orderItems,
                 TotalAmount = total,
                 CreatedAt = DateTime.Now

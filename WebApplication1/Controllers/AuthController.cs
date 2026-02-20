@@ -47,12 +47,9 @@ public class AuthController : Controller
             return View();
         }
 
-        HttpContext.Session.SetString("UserId", existingUser.Id);
+        HttpContext.Session.SetString("UserId", existingUser.Id.ToString());
         HttpContext.Session.SetString("UserEmail", existingUser.Email);
         HttpContext.Session.SetString("Username", existingUser.Username);
-
-        // 🔥 BUNU EKLE
-        HttpContext.Session.SetString("UserRole", existingUser.Role);
 
         return RedirectToAction("Index", "Home");
     }

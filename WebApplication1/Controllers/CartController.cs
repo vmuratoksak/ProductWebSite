@@ -28,12 +28,12 @@ public class CartController : Controller
 
     public IActionResult Add(string productId)
     {
-        if (!IsUserLoggedIn())
+        var userId = HttpContext.Session.GetString("UserId");
+
+        if (string.IsNullOrEmpty(userId))
             return RedirectToAction("Login", "Auth");
 
-        var userEmail = HttpContext.Session.GetString("UserEmail");
-
-        _cartService.AddToCart(userEmail, productId);
+        _cartService.AddToCart(userId, productId);
 
         return RedirectToAction("Index");
     }
