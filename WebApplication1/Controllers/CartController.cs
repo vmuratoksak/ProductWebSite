@@ -12,17 +12,17 @@ public class CartController : Controller
 
     private bool IsUserLoggedIn()
     {
-        return !string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail"));
+        return !string.IsNullOrEmpty(HttpContext.Session.GetString("UserId"));
     }
 
     public IActionResult Index()
     {
-        if (!IsUserLoggedIn())
+        var userId = HttpContext.Session.GetString("UserId");
+
+        if (string.IsNullOrEmpty(userId))
             return RedirectToAction("Login", "Auth");
 
-        var userEmail = HttpContext.Session.GetString("UserEmail");
-        var cartItems = _cartService.GetCartItems(userEmail);
-
+        var cartItems = _cartService.GetCartItems(userId);
         return View(cartItems);
     }
 
@@ -33,9 +33,17 @@ public class CartController : Controller
         if (string.IsNullOrEmpty(userId))
             return RedirectToAction("Login", "Auth");
 
-        _cartService.AddToCart(userId, productId);
+        try
+        {
+            _cartService.AddToCart(userId, productId);
+            TempData["Success"] = "Ürün sepete eklendi.";
+        }
+        catch (Exception ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Product");
     }
 
     public IActionResult Remove(string id)

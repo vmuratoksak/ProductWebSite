@@ -11,6 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+// AUTH
+builder.Services.AddAuthentication("MyCookie")
+    .AddCookie("MyCookie", options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Auth/Login";
+    });
+
+builder.Services.AddAuthorization();
+
+// SESSION
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -23,7 +34,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddHttpContextAccessor();
 
 
-// 🔥 MONGO CONFIG
+// MONGO CONFIG
 builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("MongoSettings"));
 
@@ -34,8 +45,7 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
 });
 
 
-// 🔥 REPOSITORIES
-
+// REPOSITORIES
 builder.Services.AddScoped<IRepository<ProductEntity>>(sp =>
     new GenericRepository<ProductEntity>(
         sp.GetRequiredService<IMongoClient>(),
@@ -60,8 +70,6 @@ builder.Services.AddScoped<IRepository<UserEntity>>(sp =>
         sp.GetRequiredService<IOptions<MongoSettings>>(),
         "Users"));
 
-
-// 🔥 EKSIK OLAN BUYDU — NAMEENTITY REPO
 builder.Services.AddScoped<IRepository<NameEntity>>(sp =>
     new GenericRepository<NameEntity>(
         sp.GetRequiredService<IMongoClient>(),
@@ -69,7 +77,7 @@ builder.Services.AddScoped<IRepository<NameEntity>>(sp =>
         "Names"));
 
 
-// 🔥 SERVICES
+// SERVICES
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -85,8 +93,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// 🔥 SIRASI ÖNEMLİ
+app.UseAuthentication();   // EKLENDİ
 app.UseSession();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(

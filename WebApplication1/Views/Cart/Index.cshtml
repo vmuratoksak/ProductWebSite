@@ -4,21 +4,20 @@
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger shadow rounded-3 p-3 mb-4"
-         style="background:#7f1d1d;border:none;color:white;">
+    <div class="alert alert-danger">
         @TempData["Error"]
     </div>
 }
 
 @if (!Model.Any())
 {
-    <div class="alert alert-warning">
+    <div class="alert alert-info">
         Sepetiniz boş.
     </div>
 }
 else
 {
-    <table class="table table-dark table-bordered align-middle">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Ürün</th>
@@ -35,25 +34,22 @@ else
                     <td>@item.ProductName</td>
                     <td>@item.Price ₺</td>
                     <td>
-                        <a href="/Cart/Decrease/@item.Id" class="btn btn-warning btn-sm">-</a>
-                        <span class="mx-2">@item.Quantity</span>
-                        <a href="/Cart/Increase/@item.Id" class="btn btn-success btn-sm">+</a>
+                        <a asp-action="Decrease" asp-route-id="@item.Id" class="btn btn-warning btn-sm">-</a>
+                        @item.Quantity
+                        <a asp-action="Increase" asp-route-id="@item.Id" class="btn btn-success btn-sm">+</a>
                     </td>
-                    <td>@(item.Price* item.Quantity) ₺</td>
+                    <td>@item.TotalPrice ₺</td>
                     <td>
-                        <a href="/Cart/Remove/@item.Id" class="btn btn-danger btn-sm">
-                            Sil
-                        </a>
+                        <a asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Sil</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <div class="text-end mt-4">
-        <a href="/Order/Checkout"
-           class="btn btn-success btn-lg">
-            ✔ Sepeti Onayla
+    <div class="text-end mt-3">
+        <a asp-controller="Order" asp-action="Checkout" class="btn btn-success">
+            ✅ Sepeti Onayla
         </a>
     </div>
 }

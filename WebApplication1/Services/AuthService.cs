@@ -33,11 +33,8 @@ namespace WebApplication1.Services
 
         public UserEntity Login(string email, string password)
         {
-            var user = _userRepo
-                .GetAll()
+            return _userRepo.GetAll()
                 .FirstOrDefault(x => x.Email == email && x.Password == password);
-
-            return user; // null dönebilir, sorun değil
         }
     }
 }

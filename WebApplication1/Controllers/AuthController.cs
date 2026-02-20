@@ -1,62 +1,47 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Services.Interfaces;
-using WebApplication1.Models.Entities;
 
-public class AuthController : Controller
+namespace WebApplication1.Controllers
 {
-    private readonly IAuthService _authService;
-
-    public AuthController(IAuthService authService)
+    public class AuthController : Controller
     {
-        _authService = authService;
-    }
+        private readonly IAuthService _authService;
 
-    public IActionResult Register()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult Register(UserEntity user)
-    {
-        try
+        public AuthController(IAuthService authService)
         {
-            _authService.Register(user);
-            return RedirectToAction("Login");
+            _authService = authService;
         }
-        catch (Exception ex)
+
+        [HttpGet]
+        public IActionResult Login()
         {
-            TempData["Error"] = ex.Message;
-            return View(user);
-        }
-    }
-
-    public IActionResult Login()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult Login(UserEntity user)
-    {
-        var existingUser = _authService.Login(user.Email, user.Password);
-
-        if (existingUser == null)
-        {
-            TempData["Error"] = "Email veya şifre yanlış!";
             return View();
         }
 
-        HttpContext.Session.SetString("UserId", existingUser.Id.ToString());
-        HttpContext.Session.SetString("UserEmail", existingUser.Email);
-        HttpContext.Session.SetString("Username", existingUser.Username);
+        [HttpPost]
+        public IActionResult Login(string Email, string Password)
+        {
+            var user = _authService.Login(Email, Password);
 
-        return RedirectToAction("Index", "Home");
-    }
+            if (user == null)
+            {
+                TempData["Error"] = "Email veya şifre yanlış!";
+                return View();
+            }
 
-    public IActionResult Logout()
-    {
-        HttpContext.Session.Clear();
-        return RedirectToAction("Login");
+            // ✅ TÜM SESSION DEĞERLERİ SET EDİLİYOR
+            HttpContext.Session.SetString("UserId", user.Id);
+            HttpContext.Session.SetString("Username", user.Username);
+            HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("UserEmail", user.Email);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
+        }
     }
 }

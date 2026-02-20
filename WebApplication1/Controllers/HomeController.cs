@@ -12,13 +12,12 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var userEmail = HttpContext.Session.GetString("UserEmail");
+        var userId = HttpContext.Session.GetString("UserId");
 
-        if (string.IsNullOrEmpty(userEmail))
+        if (string.IsNullOrEmpty(userId))
             return RedirectToAction("Login", "Auth");
 
         var model = _homeService.GetDashboardData();
-
         return View(model);
     }
 
