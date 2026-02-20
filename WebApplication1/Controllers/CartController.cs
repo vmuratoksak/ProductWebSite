@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Services.Interfaces;
-[Authorize]
+
 public class CartController : Controller
 {
     private readonly ICartService _cartService;
@@ -11,33 +10,39 @@ public class CartController : Controller
         _cartService = cartService;
     }
 
+    private bool IsUserLoggedIn()
+    {
+        return !string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail"));
+    }
+
     public IActionResult Index()
     {
-        var userId = HttpContext.Session.GetString("UserId");
+        if (!IsUserLoggedIn())
+            return RedirectToAction("Login", "Auth");
 
-        if (string.IsNullOrEmpty(userId))
-            return RedirectToAction("Login", "Account");
+        var userEmail = HttpContext.Session.GetString("UserEmail");
+        var cartItems = _cartService.GetCartItems(userEmail);
 
-        var cartItems = _cartService.GetCartItems(userId);
         return View(cartItems);
     }
 
     public IActionResult Add(string productId)
     {
-        var userId = HttpContext.Session.GetString("UserId");
+        if (!IsUserLoggedIn())
+            return RedirectToAction("Login", "Auth");
 
-        if (string.IsNullOrEmpty(userId))
-            return RedirectToAction("Login", "Account");
+        var userEmail = HttpContext.Session.GetString("UserEmail");
 
-        _cartService.AddToCart(userId, productId);
+        _cartService.AddToCart(userEmail, productId);
 
         return RedirectToAction("Index");
     }
 
-
-
     public IActionResult Remove(string id)
     {
+        if (!IsUserLoggedIn())
+            return RedirectToAction("Login", "Auth");
+
         _cartService.RemoveFromCart(id);
         return RedirectToAction("Index");
     }
@@ -56,7 +61,6 @@ public class CartController : Controller
         return RedirectToAction("Index");
     }
 
-
     public IActionResult Decrease(string id)
     {
         try
@@ -70,5 +74,4 @@ public class CartController : Controller
 
         return RedirectToAction("Index");
     }
-
 }

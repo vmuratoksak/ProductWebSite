@@ -5,6 +5,6 @@ namespace WebApplication1.Services.Interfaces
     public interface IOrderService
     {
         void Checkout(string userId, string userEmail);
-        List<OrderEntity> GetUserOrders(string userId);   // 🔥 EKLE
+        List<OrderEntity> GetUserOrders(string userId);
     }
 }

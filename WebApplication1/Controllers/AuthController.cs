@@ -44,13 +44,15 @@ public class AuthController : Controller
         if (existingUser == null)
         {
             TempData["Error"] = "Email veya şifre yanlış!";
-            return RedirectToAction("Login");
+            return View();
         }
 
+        HttpContext.Session.SetString("UserId", existingUser.Id);
         HttpContext.Session.SetString("UserEmail", existingUser.Email);
         HttpContext.Session.SetString("Username", existingUser.Username);
 
-        TempData["Success"] = "Hoşgeldin " + existingUser.Username;
+        // 🔥 BUNU EKLE
+        HttpContext.Session.SetString("UserRole", existingUser.Role);
 
         return RedirectToAction("Index", "Home");
     }
@@ -58,9 +60,6 @@ public class AuthController : Controller
     public IActionResult Logout()
     {
         HttpContext.Session.Clear();
-
-        TempData["Info"] = "Çıkış yapıldı";
-
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Login");
     }
 }

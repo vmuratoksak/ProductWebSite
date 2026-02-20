@@ -11,26 +11,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthentication("MyCookie")
-    .AddCookie("MyCookie", options =>
-    {
-        options.LoginPath = "/Auth/Login";
-        options.AccessDeniedPath = "/Auth/Login";
-    });
-
-builder.Services.AddAuthorization();
-
-// SESSION EKLE
 builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
 builder.Services.AddHttpContextAccessor();
 
-// Mongo ayarları
+
+// 🔥 MONGO CONFIG
 builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("MongoSettings"));
 
@@ -39,6 +32,9 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
     var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
     return new MongoClient(settings.ConnectionString);
 });
+
+
+// 🔥 REPOSITORIES
 
 builder.Services.AddScoped<IRepository<ProductEntity>>(sp =>
     new GenericRepository<ProductEntity>(
@@ -58,14 +54,14 @@ builder.Services.AddScoped<IRepository<OrderEntity>>(sp =>
         sp.GetRequiredService<IOptions<MongoSettings>>(),
         "Orders"));
 
-
-
 builder.Services.AddScoped<IRepository<UserEntity>>(sp =>
     new GenericRepository<UserEntity>(
         sp.GetRequiredService<IMongoClient>(),
         sp.GetRequiredService<IOptions<MongoSettings>>(),
         "Users"));
 
+
+// 🔥 EKSIK OLAN BUYDU — NAMEENTITY REPO
 builder.Services.AddScoped<IRepository<NameEntity>>(sp =>
     new GenericRepository<NameEntity>(
         sp.GetRequiredService<IMongoClient>(),
@@ -73,13 +69,14 @@ builder.Services.AddScoped<IRepository<NameEntity>>(sp =>
         "Names"));
 
 
+// 🔥 SERVICES
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<INameService, NameService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
+builder.Services.AddScoped<INameService, NameService>();
+
 
 var app = builder.Build();
 
@@ -88,10 +85,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-
-// SESSION MIDDLEWARE ÇOK ÖNEMLİ
 app.UseSession();
-app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

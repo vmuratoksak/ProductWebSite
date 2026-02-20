@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Services.Interfaces;
-using WebApplication1.Models.Entities;
 
 namespace WebApplication1.Controllers
 {
@@ -13,8 +12,16 @@ namespace WebApplication1.Controllers
             _orderService = orderService;
         }
 
+        private bool IsUserLoggedIn()
+        {
+            return !string.IsNullOrEmpty(HttpContext.Session.GetString("UserId"));
+        }
+
         public IActionResult Checkout()
         {
+            if (!IsUserLoggedIn())
+                return RedirectToAction("Login", "Auth");
+
             var userId = HttpContext.Session.GetString("UserId");
             var userEmail = HttpContext.Session.GetString("UserEmail");
 
@@ -30,13 +37,12 @@ namespace WebApplication1.Controllers
             }
         }
 
-        // 🔥 BU YOKTU
         public IActionResult MyOrders()
         {
-            var userId = HttpContext.Session.GetString("UserId");
-
-            if (string.IsNullOrEmpty(userId))
+            if (!IsUserLoggedIn())
                 return RedirectToAction("Login", "Auth");
+
+            var userId = HttpContext.Session.GetString("UserId");
 
             var orders = _orderService.GetUserOrders(userId);
 

@@ -1,8 +1,5 @@
 ﻿using WebApplication1.Models.Entities;
 using WebApplication1.Repositories.Interfaces;
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Services
@@ -41,6 +38,9 @@ namespace WebApplication1.Services
             {
                 var product = products.FirstOrDefault(p => p.Id == item.ProductId);
 
+                if (product == null)
+                    throw new Exception("Ürün bulunamadı.");
+
                 if (product.Stock < item.Quantity)
                     throw new Exception($"{product.Name} için stok yetersiz.");
 
@@ -72,6 +72,7 @@ namespace WebApplication1.Services
             foreach (var item in cartItems)
                 _cartRepo.Delete(item.Id);
         }
+
         public List<OrderEntity> GetUserOrders(string userId)
         {
             return _orderRepo.GetAll()
@@ -79,6 +80,5 @@ namespace WebApplication1.Services
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
         }
-
     }
 }
