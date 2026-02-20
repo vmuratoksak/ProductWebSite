@@ -43,7 +43,8 @@ public class CartController : Controller
             TempData["Error"] = ex.Message;
         }
 
-        return RedirectToAction("Index", "Product");
+        // ✅ BURASI DEĞİŞTİ
+        return RedirectToAction("Index"); // Cart/Index
     }
 
     public IActionResult Remove(string id)
