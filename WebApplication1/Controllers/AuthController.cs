@@ -1,86 +1,66 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using Microsoft.Extensions.Options;
-using WebApplication1.Models;
-using System;
+using WebApplication1.Services.Interfaces;
 using WebApplication1.Models.Entities;
 
-namespace WebApplication1.Controllers
+public class AuthController : Controller
 {
-    public class AuthController : Controller
+    private readonly IAuthService _authService;
+
+    public AuthController(IAuthService authService)
     {
-        
-        private readonly IMongoCollection<UserEntity> _collection;
-        public AuthController(IMongoClient client, IOptions<MongoSettings> settings)
-        {
-            var database = client.GetDatabase(settings.Value.DatabaseName);
-            _collection = database.GetCollection<UserEntity>("Users");
+        _authService = authService;
+    }
 
-            // Email için unique index
-            var indexKeys = Builders<UserEntity>.IndexKeys.Ascending(x => x.Email);
-            var indexOptions = new CreateIndexOptions { Unique = true };
-            _collection.Indexes.CreateOne(new CreateIndexModel<UserEntity>(indexKeys, indexOptions));
+    public IActionResult Register()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Register(UserEntity user)
+    {
+        try
+        {
+            _authService.Register(user);
+            return RedirectToAction("Login");
         }
-
-        // REGISTER PAGE
-        public IActionResult Register()
+        catch (Exception ex)
         {
-            return View();
+            TempData["Error"] = ex.Message;
+            return View(user);
         }
+    }
 
-        [HttpPost]
-        public IActionResult Register(UserEntity model)
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Login(UserEntity user)
+    {
+        var existingUser = _authService.Login(user.Email, user.Password);
+
+        if (existingUser == null)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            model.CreatedAt = DateTime.Now;
-
-            // Eğer özel bir email ise admin yap (geçici sistem)
-            if (model.Email == "admin@site.com")
-                model.Role = "Admin";
-            else
-                model.Role = "User";
-
-            _collection.InsertOne(model);
-
+            TempData["Error"] = "Email veya şifre yanlış!";
             return RedirectToAction("Login");
         }
 
-        // LOGIN PAGE
-        // LOGIN GET
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        HttpContext.Session.SetString("UserEmail", existingUser.Email);
+        HttpContext.Session.SetString("Username", existingUser.Username);
 
-        // LOGIN POST
-        [HttpPost]
-        public IActionResult Login(string Email, string password)
-        {
-            var user = _collection
-                .Find(x => x.Email == Email && x.Password == password)
-                .FirstOrDefault();
+        TempData["Success"] = "Hoşgeldin " + existingUser.Username;
 
-            if (user == null)
-            {
-                ViewBag.Error = "Kullanıcı adı veya şifre yanlış.";
-                return View();
-            }
+        return RedirectToAction("Index", "Home");
+    }
 
-            HttpContext.Session.SetString("UserEmail", user.Email);
-            HttpContext.Session.SetString("Username", user.Username);
-            HttpContext.Session.SetString("UserRole", user.Role);
-            HttpContext.Session.SetString("UserId", user.Id);
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
 
-            return RedirectToAction("Index", "Home");
-        }
+        TempData["Info"] = "Çıkış yapıldı";
 
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Login");
-        }
+        return RedirectToAction("Index", "Home");
     }
 }

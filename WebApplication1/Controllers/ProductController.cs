@@ -1,63 +1,66 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using Microsoft.Extensions.Options;
-using WebApplication1.Models;
-using System;
+using WebApplication1.Services.Interfaces;
 using WebApplication1.Models.Entities;
 
-namespace WebApplication1.Controllers
+public class ProductController : Controller
 {
-    public class ProductController : Controller
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
     {
-        private readonly IMongoCollection<ProductEntity> _collection;
+        _productService = productService;
+    }
 
-        public ProductController(IMongoClient client, IOptions<MongoSettings> settings)
+    public IActionResult Index()
+    {
+        var products = _productService.GetAll();
+        return View(products);
+    }
+
+    public IActionResult Add()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Add(ProductEntity product)
+    {
+        try
         {
-            var database = client.GetDatabase(settings.Value.DatabaseName);
-            _collection = database.GetCollection<ProductEntity>("Products");
-        }
-
-        // LIST
-        public IActionResult Index()
-        {
-            var products = _collection
-                .Find(_ => true)
-                .SortByDescending(x => x.CreatedAt)
-                .ToList();
-
-            return View(products);
-        }
-
-        // ADD GET
-        public IActionResult Add()
-        {
-            if (HttpContext.Session.GetString("UserRole") != "Admin")
-                return Unauthorized();
-
-            return View();
-        }
-
-
-        // ADD POST
-        [HttpPost]
-        public IActionResult Add(ProductEntity model)
-        {
-            if (HttpContext.Session.GetString("UserRole") != "Admin")
-                return Unauthorized();
-
-            model.CreatedAt = DateTime.Now;
-            _collection.InsertOne(model);
-
+            _productService.Create(product);
             return RedirectToAction("Index");
         }
-
-
-
-        // DELETE
-        public IActionResult Delete(string id)
+        catch (Exception ex)
         {
-            _collection.DeleteOne(x => x.Id == id);
+            TempData["Error"] = ex.Message;
+            return View(product);
+        }
+    }
+
+    public IActionResult Edit(string id)
+    {
+        var product = _productService.GetById(id);
+        return View(product);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(ProductEntity product)
+    {
+        try
+        {
+            _productService.Update(product);
             return RedirectToAction("Index");
         }
+        catch (Exception ex)
+        {
+            TempData["Error"] = ex.Message;
+            return View(product);
+        }
+    }
+
+    public IActionResult Delete(string id)
+    {
+        _productService.Delete(id);
+        return RedirectToAction("Index");
     }
 }

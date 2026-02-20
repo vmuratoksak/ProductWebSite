@@ -1,44 +1,79 @@
-﻿@using WebApplication1.Models.ViewModels
-@model List<CartViewModel>
+﻿@model List<WebApplication1.Models.ViewModels.CartViewModel>
 
-@{
-    ViewData["Title"] = "Sepetim";
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
 }
 
-<h2 class="mb-4">🛒 Sepetim</h2>
+<h2>🛒 Sepetim</h2>
 
 @if (!Model.Any())
 {
-    <div class="card-premium">
+    <div class="alert alert-info">
         Sepetiniz boş.
     </div>
 }
 else
 {
-    foreach (var item in Model)
-    {
-        <div class="card-premium mb-3 d-flex justify-content-between align-items-center">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ürün</th>
+                <th>Fiyat</th>
+                <th>Adet</th>
+                <th>Toplam</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Price ₺</td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <a asp-controller="Cart"
+                               asp-action="Decrease"
+                               asp-route-id="@item.Id"
+                               class="btn btn-sm btn-warning">
+                                -
+                            </a>
 
-            <div>
-                <h5>@item.ProductName</h5>
-                <div>Fiyat: @item.Price ₺</div>
-                <div>Adet: @item.Quantity</div>
-                <div class="text-success fw-bold">
-                    Toplam: @item.TotalPrice ₺
-                </div>
-            </div>
+                            <span>@item.Quantity</span>
 
-            <div>
-                <a href="/Cart/Increase/@item.CartId" class="btn btn-success btn-sm">+</a>
-                <a href="/Cart/Decrease/@item.CartId" class="btn btn-warning btn-sm">-</a>
-                <a href="/Cart/Remove/@item.CartId" class="btn btn-danger btn-sm">Sil</a>
-            </div>
+                            <a asp-controller="Cart"
+                               asp-action="Increase"
+                               asp-route-id="@item.Id"
+                               class="btn btn-sm btn-success">
+                                +
+                            </a>
+                        </div>
+                    </td>
 
-        </div>
-    }
+                    <td>@item.TotalPrice ₺</td>
 
-    <div class="card-premium text-end mt-3">
-        <h4>Genel Toplam: @ViewBag.GrandTotal ₺</h4>
-        <a href="/Cart/Checkout" class="btn btn-primary mt-2">Siparişi Tamamla</a>
+                    <td>
+                        <a asp-controller="Cart"
+                           asp-action="Remove"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm btn-danger">
+                            Sil
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- 🔥 BUTON BURAYA TAŞINDI -->
+    <div class="text-end mt-3">
+        <a asp-controller="Order"
+           asp-action="Checkout"
+           class="btn btn-success btn-lg">
+            ✅ Sepeti Onayla
+        </a>
     </div>
 }

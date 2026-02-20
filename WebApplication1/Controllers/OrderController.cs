@@ -1,29 +1,46 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Services.Interfaces;
+using WebApplication1.Models.Entities;
 
-public class OrderController : Controller
+namespace WebApplication1.Controllers
 {
-    private readonly IOrderService _orderService;
-
-    public OrderController(IOrderService orderService)
+    public class OrderController : Controller
     {
-        _orderService = orderService;
-    }
+        private readonly IOrderService _orderService;
 
-    public IActionResult Checkout()
-    {
-        var userId = HttpContext.Session.GetString("UserId");
-        var userEmail = HttpContext.Session.GetString("UserEmail");
-
-        try
+        public OrderController(IOrderService orderService)
         {
-            _orderService.Checkout(userId, userEmail);
-            return RedirectToAction("MyOrders");
+            _orderService = orderService;
         }
-        catch (Exception ex)
+
+        public IActionResult Checkout()
         {
-            TempData["Error"] = ex.Message;
-            return RedirectToAction("Index", "Cart");
+            var userId = HttpContext.Session.GetString("UserId");
+            var userEmail = HttpContext.Session.GetString("UserEmail");
+
+            try
+            {
+                _orderService.Checkout(userId, userEmail);
+                return RedirectToAction("MyOrders");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Cart");
+            }
+        }
+
+        // 🔥 BU YOKTU
+        public IActionResult MyOrders()
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction("Login", "Auth");
+
+            var orders = _orderService.GetUserOrders(userId);
+
+            return View(orders);
         }
     }
 }

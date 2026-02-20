@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Repositories.Interfaces
 {
-    public interface IRepository<T>
+    public interface IRepository<T> where T : class
     {
         List<T> GetAll();
         T GetById(string id);

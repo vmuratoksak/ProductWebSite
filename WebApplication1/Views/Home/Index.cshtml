@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebApplication1.Models.ViewModels.DashboardViewModel
+@{
     ViewData["Title"] = "Dashboard";
     @if (Context.Session.GetString("Username") != null)
     {
@@ -15,14 +16,14 @@
 
     <div class="col-md-4">
         <div class="card-premium text-center">
-            <h3>@ViewBag.TotalNames</h3>
+            <h3>@Model.TotalNames</h3>
             <p>Toplam İsim</p>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="card-premium text-center">
-            <h3>@ViewBag.TodayAdded</h3>
+            <h3>@Model.TodayNames</h3>
             <p>Bugün Eklenen Isim</p>
         </div>
     </div>
@@ -30,20 +31,20 @@
     <div class="col-md-3">
         <div class="card-premium">
             <h5>Son Güncellenen İsim</h5>
-            <h4>@ViewBag.LastUpdatedName</h4>
+            <h4>@Model.LastUpdatedName</h4>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card-premium">
             <h5>Toplam Ürün</h5>
-            <h3>@ViewBag.TotalProducts</h3>
+            <h3>@Model.TotalProducts</h3>
         </div>
     </div>
 
     <div class="col-md-3">
         <div class="card-premium">
             <h5>Toplam Sipariş</h5>
-            <h3>@ViewBag.TotalOrders</h3>
+            <h3>@Model.TotalOrders</h3>
         </div>
     </div>
 

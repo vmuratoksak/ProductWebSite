@@ -4,7 +4,7 @@ using WebApplication1.Models.Entities;
 
 namespace WebApplication1.Models.ViewModels
 {
-    public class HelloViewModel
+    public class NameViewModel
     {
         [Required(ErrorMessage = "İsim zorunludur")]
         public string Name { get; set; }

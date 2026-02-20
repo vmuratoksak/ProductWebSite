@@ -1,9 +1,9 @@
 ﻿using WebApplication1.Models.Entities;
 using WebApplication1.Repositories.Interfaces;
-using WebApplication1.Services.Interfaces;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Services
 {
@@ -72,5 +72,13 @@ namespace WebApplication1.Services
             foreach (var item in cartItems)
                 _cartRepo.Delete(item.Id);
         }
+        public List<OrderEntity> GetUserOrders(string userId)
+        {
+            return _orderRepo.GetAll()
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
+        }
+
     }
 }

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - MyShop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body.auth-body {
+            margin: 0;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 85vh;
+        }
+
+        .auth-card {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 15px;
+            width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            color: white;
+        }
+
+        .form-control {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+        }
+
+        .btn-auth {
+            background-color: #2563eb;
+            border: none;
+        }
+
+            .btn-auth:hover {
+                background-color: #1d4ed8;
+            }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #94a3b8;
+        }
+
+            .password-toggle:hover {
+                color: #ffffff;
+            }
+
+    </style>
+</head>
+
+<body class="auth-body">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+            🛍 MyShop
+        </a>
+
+        <div class="ms-auto d-flex gap-3 align-items-center">
+
+            <a asp-controller="Cart" asp-action="Index" class="text-light text-decoration-none">
+                Sepetim
+            </a>
+
+            <a asp-controller="Order" asp-action="MyOrders" class="text-light text-decoration-none">
+                Siparişlerim
+            </a>
+
+            @if (Context.Session.GetString("Username") == null)
+            {
+                <a class="btn btn-outline-light ms-2" asp-controller="Auth" asp-action="Login">
+                    Giriş
+                </a>
+
+                <a class="btn btn-success" asp-controller="Auth" asp-action="Register">
+                    Kayıt
+                </a>
+            }
+            else
+            {
+                <span class="text-info fw-bold">
+                    @Context.Session.GetString("Username")
+                </span>
+
+                <a class="btn btn-danger" asp-controller="Auth" asp-action="Logout">
+                    Çıkış
+                </a>
+            }
+
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        @RenderBody()
+    </div>
+
+    <!-- GLOBAL ALERT SYSTEM -->
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '@Html.Raw(TempData["Success"])',
+                showConfirmButton: false,
+                timer: 1200
+            });
+        </script>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata',
+                text: '@Html.Raw(TempData["Error"])',
+                confirmButtonColor: '#ef4444'
+            });
+        </script>
+    }
+
+    @if (TempData["Info"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'info',
+                title: '@Html.Raw(TempData["Info"])',
+                timer: 1200,
+                showConfirmButton: false
+            });
+        </script>
+    }
+
+</body>
+</html>

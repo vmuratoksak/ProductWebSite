@@ -3,7 +3,7 @@ using WebApplication1.Models.Entities;
 
 namespace WebApplication1.Models.ViewModels
 {
-    public class HelloIndexViewModel
+    public class NameIndexViewModel
     {
         public List<NameEntity> Names { get; set; }
 

@@ -1,33 +1,56 @@
 ﻿@using WebApplication1.Models.Entities
 @model UserEntity
+
 @{
-    ViewData["Title"] = "Giriş";
-	Layout = null;
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Giriş Yap";
 }
 
-<div class="card-premium mx-auto" style="max-width:400px;">
+<div class="auth-card">
 
-    <h3 class="mb-4 text-center">Giriş Yap</h3>
-
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-danger">@ViewBag.Error</div>
-    }
+    <h2 class="text-center mb-4">Giriş Yap</h2>
 
     <form method="post">
-        <div class="mb-3">
-            <label>Email</label>
-            <input asp-for="Email" class="form-control" />
-        </div>
 
         <div class="mb-3">
-            <label>Şifre</label>
-            <input asp-for="Password" type="password" class="form-control" />
+            <label class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" required />
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">
+        <div class="mb-3 position-relative">
+            <label class="form-label">Şifre</label>
+
+            <input asp-for="Password"
+                   type="password"
+                   class="form-control pe-5"
+                   id="passwordInput"
+                   required />
+
+            <span class="password-toggle"
+                  onclick="togglePassword()">
+                👁
+            </span>
+        </div>
+
+        <button type="submit" class="btn btn-auth w-100">
             Giriş Yap
         </button>
+
     </form>
 
+    <div class="text-center mt-3">
+        <span class="text-secondary">Hesabın yok mu?</span>
+        <a asp-controller="Auth" asp-action="Register"
+           class="text-info fw-bold ms-1">
+            Kayıt Ol
+        </a>
+    </div>
+
 </div>
+
+<script>
+    function togglePassword() {
+        const input = document.getElementById("passwordInput");
+        input.type = input.type === "password" ? "text" : "password";
+    }
+</script>
