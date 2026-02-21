@@ -1,5 +1,7 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using Microsoft.AspNetCore.Http
+@using System.Globalization
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.Name">
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - MyShop</title>
@@ -45,57 +47,65 @@
             .btn-auth:hover {
                 background-color: #1d4ed8;
             }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 38px;
-            cursor: pointer;
-            font-size: 18px;
-            color: #94a3b8;
-        }
-
-            .password-toggle:hover {
-                color: #ffffff;
-            }
     </style>
 </head>
 
 <body class="auth-body">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+    <nav class="navbar navbar-expand-lg navbar-dark px-4" style="background:#1e293b;">
+        <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
             🛍 MyShop
         </a>
-        <div id="google_translate_element" class="me-3"></div>
 
-        <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-        <script>
-            function googleTranslateElementInit() {
-              new google.translate.TranslateElement({
-                pageLanguage: 'tr',
-                includedLanguages: 'en,tr',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-              }, 'google_translate_element');
-            }
-        </script>
         <div class="ms-auto d-flex gap-3 align-items-center">
 
-            <a asp-controller="Cart" asp-action="Index" class="text-light text-decoration-none">
-                Sepetim
-            </a>
+            <!-- Google Translate -->
+            <div id="google_translate_element"></div>
 
-            <a asp-controller="Order" asp-action="MyOrders" class="text-light text-decoration-none">
-                Siparişlerim
-            </a>
+            <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            <script>
+                function googleTranslateElementInit() {
+                    new google.translate.TranslateElement({
+                        pageLanguage: 'tr',
+                        includedLanguages: 'en,tr',
+                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                    }, 'google_translate_element');
+                }
+            </script>
+
+            <!-- Culture Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-outline-light dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown">
+                    🌍 @CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper()
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item"
+                           href="/Culture/SetLanguage?culture=tr-TR&returnUrl=@Context.Request.Path">
+                            🇹🇷 Türkçe
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item"
+                           href="/Culture/SetLanguage?culture=en-US&returnUrl=@Context.Request.Path">
+                            🇺🇸 English
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
             @if (Context.Session.GetString("Username") == null)
             {
-                <a class="btn btn-outline-light ms-2" asp-controller="Auth" asp-action="Login">
+                <a class="btn btn-outline-light"
+                   asp-controller="Auth" asp-action="Login">
                     Giriş
                 </a>
 
-                <a class="btn btn-success" asp-controller="Auth" asp-action="Register">
+                <a class="btn btn-success"
+                   asp-controller="Auth" asp-action="Register">
                     Kayıt
                 </a>
             }
@@ -105,11 +115,11 @@
                     @Context.Session.GetString("Username")
                 </span>
 
-                <a class="btn btn-danger" asp-controller="Auth" asp-action="Logout">
+                <a class="btn btn-danger"
+                   asp-controller="Auth" asp-action="Logout">
                     Çıkış
                 </a>
             }
-
         </div>
     </nav>
 
@@ -117,42 +127,6 @@
         @RenderBody()
     </div>
 
-    <!-- GLOBAL ALERT SYSTEM -->
-    @if (TempData["Success"] != null)
-    {
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: '@Html.Raw(TempData["Success"])',
-                showConfirmButton: false,
-                timer: 1200
-            });
-        </script>
-    }
-
-    @if (TempData["Error"] != null)
-    {
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Hata',
-                text: '@Html.Raw(TempData["Error"])',
-                confirmButtonColor: '#ef4444'
-            });
-        </script>
-    }
-
-    @if (TempData["Info"] != null)
-    {
-        <script>
-            Swal.fire({
-                icon: 'info',
-                title: '@Html.Raw(TempData["Info"])',
-                timer: 1200,
-                showConfirmButton: false
-            });
-        </script>
-    }
-
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

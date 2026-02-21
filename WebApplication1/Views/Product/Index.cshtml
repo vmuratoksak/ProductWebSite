@@ -1,17 +1,19 @@
 ﻿@model List<WebApplication1.Models.Entities.ProductEntity>
 @using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Ürünler";
+    ViewData["Title"] = Localizer["Products"];
 }
 
-<h2 class="fw-bold mb-4">📦 Ürünler</h2>
+<h2 class="fw-bold mb-4">📦 @Localizer["Products"]</h2>
 
 @if (Context.Session.GetString("UserRole") == "Admin")
 {
     <div class="mb-4">
         <a href="/Product/Add" class="btn btn-success">
-            ➕ Yeni Ürün Ekle
+            ➕ @Localizer["NewProduct"]
         </a>
     </div>
 }
@@ -26,11 +28,11 @@
                 <h4>@item.Name</h4>
 
                 <span class="badge bg-info mb-2">
-                    Stok: @item.Stock
+                    @Localizer["Stock"]: @item.Stock
                 </span>
 
                 <h5 class="text-success mb-3">
-                    @item.Price ₺
+                    @item.Price.ToString("C")
                 </h5>
 
                 @* USER NOT LOGGED IN *@
@@ -38,7 +40,7 @@
                 {
                     <a href="/Auth/Login"
                        class="btn btn-warning btn-sm w-100">
-                        Giriş Yap
+                        @Localizer["Login"]
                     </a>
                 }
 
@@ -50,24 +52,24 @@
                         <div class="d-flex gap-2">
                             <a href="/Product/IncreaseStock/@item.Id"
                                class="btn btn-success btn-sm w-50">
-                                ➕ Stok
+                                ➕ @Localizer["Increase"]
                             </a>
 
                             <a href="/Product/DecreaseStock/@item.Id"
                                class="btn btn-secondary btn-sm w-50">
-                                ➖ Stok
+                                ➖ @Localizer["Decrease"]
                             </a>
                         </div>
 
                         <div class="d-flex gap-2">
                             <a href="/Product/Edit/@item.Id"
                                class="btn btn-warning btn-sm w-50">
-                                ✏️ Düzenle
+                                ✏️ @Localizer["Edit"]
                             </a>
 
                             <a href="/Product/Delete/@item.Id"
                                class="btn btn-danger btn-sm w-50">
-                                🗑 Sil
+                                🗑 @Localizer["Delete"]
                             </a>
                         </div>
 
@@ -81,13 +83,13 @@
                     {
                         <a href="/Cart/Add?productId=@item.Id"
                            class="btn btn-primary btn-sm w-100">
-                            🛒 Sepete Ekle
+                            🛒 @Localizer["AddToCart"]
                         </a>
                     }
                     else
                     {
                         <button class="btn btn-secondary btn-sm w-100" disabled>
-                            Stok Yok
+                            @Localizer["OutOfStock"]
                         </button>
                     }
                 }

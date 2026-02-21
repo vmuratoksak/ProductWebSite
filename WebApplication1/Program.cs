@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 using MongoDB.Driver;
 using WebApplication1.Models;
 using WebApplication1.Models.Entities;
@@ -10,6 +12,26 @@ using WebApplication1.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+// 🌍 LOCALIZATION
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
+
+var supportedCultures = new[]
+{
+    new CultureInfo("tr-TR"),
+    new CultureInfo("en-US")
+};
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("tr-TR");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 
 // AUTH
 builder.Services.AddAuthentication("MyCookie")
@@ -23,7 +45,6 @@ builder.Services.AddAuthorization();
 
 // SESSION
 builder.Services.AddDistributedMemoryCache();
-
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -33,8 +54,7 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-
-// MONGO CONFIG
+// MONGO
 builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("MongoSettings"));
 
@@ -43,7 +63,6 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
     var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
     return new MongoClient(settings.ConnectionString);
 });
-
 
 // REPOSITORIES
 builder.Services.AddScoped<IRepository<ProductEntity>>(sp =>
@@ -76,7 +95,6 @@ builder.Services.AddScoped<IRepository<NameEntity>>(sp =>
         sp.GetRequiredService<IOptions<MongoSettings>>(),
         "Names"));
 
-
 // SERVICES
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICartService, CartService>();
@@ -85,16 +103,18 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<INameService, NameService>();
 
-
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// 🌍 LOCALIZATION MIDDLEWARE (Routing’den ÖNCE)
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(locOptions.Value);
+
 app.UseRouting();
 
-// 🔥 SIRASI ÖNEMLİ
-app.UseAuthentication();   // EKLENDİ
+app.UseAuthentication();
 app.UseSession();
 app.UseAuthorization();
 

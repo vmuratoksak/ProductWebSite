@@ -1,18 +1,18 @@
 ﻿@model WebApplication1.Models.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
-    @if (Context.Session.GetString("Username") != null)
-    {
-        <div class="card-premium mb-4">
-            👋 Hoşgeldin @Context.Session.GetString("Username")
-        </div>
-    }
+}
 
+@if (Context.Session.GetString("Username") != null)
+{
+    <div class="card-premium mb-4 text-center">
+        👋 Hoşgeldin @Context.Session.GetString("Username")
+    </div>
 }
 
 <h2 class="mb-4">📊 Dashboard</h2>
 
-<div class="row">
+<div class="row g-4">
 
     <div class="col-md-4">
         <div class="card-premium text-center">
@@ -24,29 +24,29 @@
     <div class="col-md-4">
         <div class="card-premium text-center">
             <h3>@Model.TodayNames</h3>
-            <p>Bugün Eklenen Isim</p>
+            <p>Bugün Eklenen İsim</p>
         </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-4">
+        <div class="card-premium text-center">
+            <h3>@Model.TotalProducts</h3>
+            <p>Toplam Ürün</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-premium text-center">
+            <h3>@Model.TotalOrders</h3>
+            <p>Toplam Sipariş</p>
+        </div>
+    </div>
+
+    <div class="col-md-8">
         <div class="card-premium">
             <h5>Son Güncellenen İsim</h5>
-            <h4>@Model.LastUpdatedName</h4>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card-premium">
-            <h5>Toplam Ürün</h5>
-            <h3>@Model.TotalProducts</h3>
+            <h4 class="text-info">@Model.LastUpdatedName</h4>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card-premium">
-            <h5>Toplam Sipariş</h5>
-            <h3>@Model.TotalOrders</h3>
-        </div>
-    </div>
-
-</div>
 </div>
