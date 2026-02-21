@@ -1,66 +1,136 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using WebApplication1.Services.Interfaces;
 using WebApplication1.Models.Entities;
 
-public class ProductController : Controller
+namespace WebApplication1.Controllers
 {
-    private readonly IProductService _productService;
-
-    public ProductController(IProductService productService)
+    public class ProductController : Controller
     {
-        _productService = productService;
-    }
+        private readonly IProductService _productService;
 
-    public IActionResult Index()
-    {
-        var products = _productService.GetAll();
-        return View(products);
-    }
-
-    public IActionResult Add()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult Add(ProductEntity product)
-    {
-        try
+        public ProductController(IProductService productService)
         {
-            _productService.Create(product);
-            return RedirectToAction("Index");
+            _productService = productService;
         }
-        catch (Exception ex)
+
+        private bool IsAdmin()
         {
-            TempData["Error"] = ex.Message;
+            return HttpContext.Session.GetString("UserRole") == "Admin";
+        }
+
+        // ✅ Ürün Listeleme
+        public IActionResult Index()
+        {
+            var products = _productService.GetAll();
+            return View(products);
+        }
+
+        // ✅ Yeni Ürün Sayfası (Admin Only)
+        public IActionResult Add()
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Index");
+
+            return View();
+        }
+
+        // ✅ Yeni Ürün Ekle (Admin Only)
+        [HttpPost]
+        public IActionResult Add(ProductEntity product)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Index");
+
+            try
+            {
+                _productService.Create(product);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return View(product);
+            }
+        }
+
+        // ✅ Ürün Düzenleme Sayfası (Admin Only)
+        public IActionResult Edit(string id)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Index");
+
+            var product = _productService.GetById(id);
+
+            if (product == null)
+                return RedirectToAction("Index");
+
             return View(product);
         }
-    }
 
-    public IActionResult Edit(string id)
-    {
-        var product = _productService.GetById(id);
-        return View(product);
-    }
-
-    [HttpPost]
-    public IActionResult Edit(ProductEntity product)
-    {
-        try
+        // ✅ Ürün Güncelleme (Admin Only)
+        [HttpPost]
+        public IActionResult Edit(ProductEntity product)
         {
-            _productService.Update(product);
+            if (!IsAdmin())
+                return RedirectToAction("Index");
+
+            try
+            {
+                _productService.Update(product);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return View(product);
+            }
+        }
+
+        // ✅ Ürün Silme (Admin Only)
+        public IActionResult Delete(string id)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Index");
+
+            _productService.Delete(id);
             return RedirectToAction("Index");
         }
-        catch (Exception ex)
-        {
-            TempData["Error"] = ex.Message;
-            return View(product);
-        }
-    }
 
-    public IActionResult Delete(string id)
-    {
-        _productService.Delete(id);
-        return RedirectToAction("Index");
+        // ✅ Stok Arttır (Admin Only)
+        public IActionResult IncreaseStock(string id)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Index");
+
+            try
+            {
+                _productService.IncreaseStock(id);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        // ✅ Stok Azalt (Admin Only)
+        public IActionResult DecreaseStock(string id)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("Index");
+
+            try
+            {
+                _productService.DecreaseStock(id);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

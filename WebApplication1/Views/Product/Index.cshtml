@@ -7,6 +7,15 @@
 
 <h2 class="fw-bold mb-4">📦 Ürünler</h2>
 
+@if (Context.Session.GetString("UserRole") == "Admin")
+{
+    <div class="mb-4">
+        <a href="/Product/Add" class="btn btn-success">
+            ➕ Yeni Ürün Ekle
+        </a>
+    </div>
+}
+
 <div class="row">
     @foreach (var item in Model)
     {
@@ -24,8 +33,7 @@
                     @item.Price ₺
                 </h5>
 
-                @* LOGIN & ROLE CONTROL *@
-
+                @* USER NOT LOGGED IN *@
                 @if (Context.Session.GetString("UserId") == null)
                 {
                     <a href="/Auth/Login"
@@ -33,12 +41,40 @@
                         Giriş Yap
                     </a>
                 }
+
+                @* ADMIN *@
                 else if (Context.Session.GetString("UserRole") == "Admin")
                 {
-                    <button class="btn btn-dark btn-sm w-100" disabled>
-                        Admin alışveriş yapamaz
-                    </button>
+                    <div class="d-flex flex-column gap-2">
+
+                        <div class="d-flex gap-2">
+                            <a href="/Product/IncreaseStock/@item.Id"
+                               class="btn btn-success btn-sm w-50">
+                                ➕ Stok
+                            </a>
+
+                            <a href="/Product/DecreaseStock/@item.Id"
+                               class="btn btn-secondary btn-sm w-50">
+                                ➖ Stok
+                            </a>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a href="/Product/Edit/@item.Id"
+                               class="btn btn-warning btn-sm w-50">
+                                ✏️ Düzenle
+                            </a>
+
+                            <a href="/Product/Delete/@item.Id"
+                               class="btn btn-danger btn-sm w-50">
+                                🗑 Sil
+                            </a>
+                        </div>
+
+                    </div>
                 }
+
+                @* NORMAL USER *@
                 else
                 {
                     if (item.Stock > 0)

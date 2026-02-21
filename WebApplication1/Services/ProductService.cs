@@ -55,5 +55,36 @@ namespace WebApplication1.Services
         {
             _productRepo.Delete(id);
         }
+
+        // 🔥 DOĞRU YER BURASI
+
+        public void IncreaseStock(string id)
+        {
+            var product = _productRepo.GetById(id);
+
+            if (product == null)
+                throw new Exception("Ürün bulunamadı.");
+
+            product.Stock += 1;
+            product.UpdatedAt = DateTime.Now;
+
+            _productRepo.Update(product.Id, product);
+        }
+
+        public void DecreaseStock(string id)
+        {
+            var product = _productRepo.GetById(id);
+
+            if (product == null)
+                throw new Exception("Ürün bulunamadı.");
+
+            if (product.Stock <= 0)
+                throw new Exception("Stok zaten 0.");
+
+            product.Stock -= 1;
+            product.UpdatedAt = DateTime.Now;
+
+            _productRepo.Update(product.Id, product);
+        }
     }
 }

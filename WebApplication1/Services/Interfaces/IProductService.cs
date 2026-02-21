@@ -10,5 +10,9 @@ namespace WebApplication1.Services.Interfaces
         void Create(ProductEntity product);
         void Update(ProductEntity product);
         void Delete(string id);
+
+        // 🔥 EKLENMESİ GEREKENLER
+        void IncreaseStock(string id);
+        void DecreaseStock(string id);
     }
 }
