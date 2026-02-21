@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -11,8 +12,35 @@
     <style>
         body.auth-body {
             margin: 0;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #0f172a, #020617);
             min-height: 100vh;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .nav-link-custom {
+            color: #cbd5e1;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+            .nav-link-custom:hover {
+                color: #38bdf8;
+                transform: translateY(-2px);
+            }
+
+        .user-badge {
+            background: rgba(56,189,248,0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
         }
 
         .auth-container {
@@ -46,55 +74,72 @@
                 background-color: #1d4ed8;
             }
 
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 38px;
-            cursor: pointer;
-            font-size: 18px;
-            color: #94a3b8;
+        #google_translate_element {
+            margin-right: 15px;
         }
 
-            .password-toggle:hover {
-                color: #ffffff;
-            }
     </style>
 </head>
 
 <body class="auth-body">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+    <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
+        <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
             🛍 MyShop
         </a>
 
-        <div class="ms-auto d-flex gap-3 align-items-center">
+        <div class="ms-auto d-flex gap-4 align-items-center">
 
-            <a asp-controller="Cart" asp-action="Index" class="text-light text-decoration-none">
+            <!-- GOOGLE TRANSLATE -->
+            <div id="google_translate_element"></div>
+
+            <a asp-controller="Name" asp-action="Index" class="nav-link-custom">
+                İsim Yönetimi
+            </a>
+
+            <a asp-controller="Product" asp-action="Index" class="nav-link-custom">
+                Ürünler
+            </a>
+
+            <a asp-controller="Cart" asp-action="Index" class="nav-link-custom">
                 Sepetim
             </a>
 
-            <a asp-controller="Order" asp-action="MyOrders" class="text-light text-decoration-none">
+            <a asp-controller="Order" asp-action="MyOrders" class="nav-link-custom">
                 Siparişlerim
+            </a>
+
+            <a asp-controller="Home" asp-action="Technologies" class="nav-link-custom">
+                Teknolojiler
+            </a>
+
+            <a asp-controller="Home" asp-action="Privacy" class="nav-link-custom">
+                Privacy
             </a>
 
             @if (Context.Session.GetString("Username") == null)
             {
-                <a class="btn btn-outline-light ms-2" asp-controller="Auth" asp-action="Login">
+                <a class="btn btn-primary btn-sm px-3"
+                   asp-controller="Auth"
+                   asp-action="Login">
                     Giriş
                 </a>
 
-                <a class="btn btn-success" asp-controller="Auth" asp-action="Register">
+                <a class="btn btn-success btn-sm px-3"
+                   asp-controller="Auth"
+                   asp-action="Register">
                     Kayıt
                 </a>
             }
             else
             {
-                <span class="text-info fw-bold">
-                    @Context.Session.GetString("Username")
+                <span class="user-badge">
+                    👋 @Context.Session.GetString("Username")
                 </span>
 
-                <a class="btn btn-danger" asp-controller="Auth" asp-action="Logout">
+                <a class="btn btn-danger btn-sm px-3"
+                   asp-controller="Auth"
+                   asp-action="Logout">
                     Çıkış
                 </a>
             }
@@ -106,7 +151,17 @@
         @RenderBody()
     </div>
 
-    <!-- GLOBAL ALERT SYSTEM -->
+    <!-- GOOGLE SCRIPT -->
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'tr'
+            }, 'google_translate_element');
+        }
+    </script>
+
+    <!-- ALERT SYSTEM -->
     @if (TempData["Success"] != null)
     {
         <script>

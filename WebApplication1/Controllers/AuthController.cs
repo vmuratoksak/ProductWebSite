@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Models.Entities;
 using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Controllers
@@ -37,6 +38,39 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        // ================= REGISTER =================
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Register(string Username, string Email, string Password)
+        {
+            try
+            {
+                var newUser = new UserEntity
+                {
+                    Username = Username,
+                    Email = Email,
+                    Password = Password
+                };
+
+                _authService.Register(newUser);
+
+                TempData["Success"] = "Kayıt başarılı! Giriş yapabilirsiniz.";
+                return RedirectToAction("Login");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return View();
+            }
+        }
+
 
         public IActionResult Logout()
         {
