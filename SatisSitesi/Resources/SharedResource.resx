@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Home" xml:space="preserve">
+    <value>Ana Sayfa</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Ürünler</value>
+  </data>
+  <data name="Cart" xml:space="preserve">
+    <value>Sepet</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Giriş Yap</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Kayıt Ol</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="Add_To_Cart" xml:space="preserve">
+    <value>Sepete Ekle</value>
+  </data>
+  <data name="Name_Management" xml:space="preserve">
+    <value>İsim Yönetimi</value>
+  </data>
+  <data name="My_Orders" xml:space="preserve">
+    <value>Siparişlerim</value>
+  </data>
+  <data name="Technologies" xml:space="preserve">
+    <value>Teknolojiler</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Çıkış</value>
+  </data>
+  <data name="telefon" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="pc" xml:space="preserve">
+    <value>Bilgisayar</value>
+  </data>
+  <data name="Murat" xml:space="preserve">
+    <value>Murat</value>
+  </data>
+  <data name="sabun" xml:space="preserve">
+    <value>Sabun</value>
+  </data>
+  <data name="tshirt" xml:space="preserve">
+    <value>Tişört</value>
+  </data>
+  <data name="pantolon" xml:space="preserve">
+    <value>Pantolon</value>
+  </data>
+  <data name="mouse" xml:space="preserve">
+    <value>Fare</value>
+  </data>
+  <data name="konsol" xml:space="preserve">
+    <value>Konsol</value>
+  </data>
+  <data name="Manage_Orders" xml:space="preserve">
+    <value>Siparişleri Yönet</value>
+  </data>
+  <data name="All_Orders" xml:space="preserve">
+    <value>Tüm Siparişler</value>
+  </data>
+  <data name="All_Orders_Admin" xml:space="preserve">
+    <value>Tüm Siparişler (Admin)</value>
+  </data>
+  <data name="User_Email" xml:space="preserve">
+    <value>Kullanıcı (E-Mail)</value>
+  </data>
+  <data name="Current_Status" xml:space="preserve">
+    <value>Güncel Durum</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Güncelle</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Bekliyor</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Onaylandı</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>İptal Edildi</value>
+  </data>
+  <data name="Add_New_Product" xml:space="preserve">
+    <value>Yeni Ürün Ekle</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Stok</value>
+  </data>
+  <data name="Increase_Stock" xml:space="preserve">
+    <value>Stok</value>
+  </data>
+  <data name="Decrease_Stock" xml:space="preserve">
+    <value>Stok</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Düzenle</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Out_Of_Stock" xml:space="preserve">
+    <value>Stok Yok</value>
+  </data>
+  <data name="Edit_Product" xml:space="preserve">
+    <value>Ürün Düzenle</value>
+  </data>
+  <data name="Product_Name" xml:space="preserve">
+    <value>Ürün Adı</value>
+  </data>
+  <data name="Description_Label" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Fiyat</value>
+  </data>
+  <data name="Base_Data" xml:space="preserve">
+    <value>Ana Bilgiler</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="Save_Changes" xml:space="preserve">
+    <value>Değişiklikleri Kaydet</value>
+  </data>
+</root>

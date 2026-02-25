@@ -1,0 +1,28 @@
+﻿@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["Privacy_Policy"];
+}
+
+<h2 class="mb-4">@Localizer["Privacy_Policy"]</h2>
+
+<div class="card-premium">
+
+    <p>
+        @Localizer["Privacy_Text_1"]
+    </p>
+
+    <p>
+        @Localizer["Privacy_Text_2"]
+    </p>
+
+    <p>
+        @Localizer["Privacy_Text_3"]
+    </p>
+
+    <p>
+        @Localizer["Privacy_Text_4"]
+    </p>
+
+</div>

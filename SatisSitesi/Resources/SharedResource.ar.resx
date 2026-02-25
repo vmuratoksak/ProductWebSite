@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Home" xml:space="preserve">
+    <value>الرئيسية</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>المنتجات</value>
+  </data>
+  <data name="Cart" xml:space="preserve">
+    <value>عربة التسوق</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>تسجيل</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="Add_To_Cart" xml:space="preserve">
+    <value>أضف إلى السلة</value>
+  </data>
+  <data name="Name_Management" xml:space="preserve">
+    <value>إدارة الأسماء</value>
+  </data>
+  <data name="My_Orders" xml:space="preserve">
+    <value>طلباتي</value>
+  </data>
+  <data name="Technologies" xml:space="preserve">
+    <value>التقنيات</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>تسجيل خروج</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>👋 أهلاً بك</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>📊 لوحة القيادة</value>
+  </data>
+  <data name="Total_Names" xml:space="preserve">
+    <value>إجمالي الأسماء</value>
+  </data>
+  <data name="Today_Names" xml:space="preserve">
+    <value>الأسماء المضافة اليوم</value>
+  </data>
+  <data name="Total_Products" xml:space="preserve">
+    <value>إجمالي المنتجات</value>
+  </data>
+  <data name="Total_Orders" xml:space="preserve">
+    <value>إجمالي الطلبات</value>
+  </data>
+  <data name="Last_Updated_Name" xml:space="preserve">
+    <value>آخر اسم تم تحديثه</value>
+  </data>
+  <data name="Name_List" xml:space="preserve">
+    <value>قائمة الأسماء</value>
+  </data>
+  <data name="New_Name" xml:space="preserve">
+    <value>+ اسم جديد</value>
+  </data>
+  <data name="Search_Name" xml:space="preserve">
+    <value>ابحث عن اسم...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="Created_At" xml:space="preserve">
+    <value>تم إنشاؤه في</value>
+  </data>
+  <data name="Updated_At" xml:space="preserve">
+    <value>تم التحديث في</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>إجراء</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Used_Technologies" xml:space="preserve">
+    <value>🧠 التقنيات المستخدمة</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="Cart_Empty" xml:space="preserve">
+    <value>عربة التسوق فارغة.</value>
+  </data>
+  <data name="Confirm_Cart" xml:space="preserve">
+    <value>✅ تأكيد سلة التسوق</value>
+  </data>
+  <data name="Order_Date" xml:space="preserve">
+    <value>تاريخ الطلب</value>
+  </data>
+  <data name="Total_Amount" xml:space="preserve">
+    <value>المبلغ الإجمالي</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>الخصوصية</value>
+  </data>
+  <data name="Tech_Session" xml:space="preserve">
+    <value>✔ مصادقة الجلسة</value>
+  </data>
+  <data name="Tech_Role" xml:space="preserve">
+    <value>✔ الوصول المستند إلى الدور (مسؤول/مستخدم)</value>
+  </data>
+  <data name="Tech_Cart" xml:space="preserve">
+    <value>✔ نظام سلة التسوق والطلبات</value>
+  </data>
+  <data name="Tech_Stock" xml:space="preserve">
+    <value>✔ آلية التحكم في المخزون</value>
+  </data>
+  <data name="Orders_Empty" xml:space="preserve">
+    <value>ليس لديك أي طلبات بعد.</value>
+  </data>
+  <data name="Tech_MVC" xml:space="preserve">
+    <value>✔ ASP.NET Core MVC</value>
+  </data>
+  <data name="Tech_Mongo" xml:space="preserve">
+    <value>✔ MongoDB (NoSQL)</value>
+  </data>
+  <data name="Tech_Bootstrap" xml:space="preserve">
+    <value>✔ واجهة مستخدم Bootstrap 5 المميزة</value>
+  </data>
+  <data name="Add_New_Name" xml:space="preserve">
+    <value>إضافة اسم جديد</value>
+  </data>
+  <data name="Privacy_Policy" xml:space="preserve">
+    <value>🔒 سياسة الخصوصية</value>
+  </data>
+  <data name="Privacy_Text_1" xml:space="preserve">
+    <value>تم تطوير هذا التطبيق لأغراض التعليم والتدريب.</value>
+  </data>
+  <data name="Privacy_Text_2" xml:space="preserve">
+    <value>يتم تخزين معلومات المستخدم في قاعدة بيانات MongoDB. يتم الاحتفاظ بكلمات المرور كنص عادي. (يجب تطبيق التجزئة في المشاريع الحقيقية.)</value>
+  </data>
+  <data name="Privacy_Text_3" xml:space="preserve">
+    <value>لا يستخدم هذا المشروع لأغراض تجارية.</value>
+  </data>
+  <data name="Privacy_Text_4" xml:space="preserve">
+    <value>البيانات لأغراض الاختبار فقط.</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="No_Account" xml:space="preserve">
+    <value>ليس لديك حساب؟</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>اسم المستخدم</value>
+  </data>
+  <data name="Name_Input" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="telefon" xml:space="preserve">
+    <value>هاتف</value>
+  </data>
+  <data name="pc" xml:space="preserve">
+    <value>حاسوب</value>
+  </data>
+  <data name="Murat" xml:space="preserve">
+    <value>مراد</value>
+  </data>
+  <data name="sabun" xml:space="preserve">
+    <value>صابون</value>
+  </data>
+  <data name="tshirt" xml:space="preserve">
+    <value>تي شيرت</value>
+  </data>
+  <data name="pantolon" xml:space="preserve">
+    <value>بنطلون</value>
+  </data>
+  <data name="mouse" xml:space="preserve">
+    <value>فأرة</value>
+  </data>
+  <data name="konsol" xml:space="preserve">
+    <value>وحدة تحكم</value>
+  </data>
+  <data name="Manage_Orders" xml:space="preserve">
+    <value>إدارة الطلبات</value>
+  </data>
+  <data name="All_Orders" xml:space="preserve">
+    <value>كل الطلبات</value>
+  </data>
+  <data name="All_Orders_Admin" xml:space="preserve">
+    <value>كل الطلبات (مسؤول)</value>
+  </data>
+  <data name="User_Email" xml:space="preserve">
+    <value>المستخدم (البريد الإلكتروني)</value>
+  </data>
+  <data name="Current_Status" xml:space="preserve">
+    <value>الحالة الحالية</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>قيد الانتظار</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>موافق عليه</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>ألغي</value>
+  </data>
+  <data name="Add_New_Product" xml:space="preserve">
+    <value>إضافة منتج جديد</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>المخزون</value>
+  </data>
+  <data name="Increase_Stock" xml:space="preserve">
+    <value>المخزون</value>
+  </data>
+  <data name="Decrease_Stock" xml:space="preserve">
+    <value>المخزون</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Out_Of_Stock" xml:space="preserve">
+    <value>نفد من المخزون</value>
+  </data>
+  <data name="Edit_Product" xml:space="preserve">
+    <value>تعديل المنتج</value>
+  </data>
+  <data name="Product_Name" xml:space="preserve">
+    <value>اسم المنتج</value>
+  </data>
+  <data name="Description_Label" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>السعر</value>
+  </data>
+  <data name="Base_Data" xml:space="preserve">
+    <value>البيانات الأساسية</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="Save_Changes" xml:space="preserve">
+    <value>حفظ التغييرات</value>
+  </data>
+</root>

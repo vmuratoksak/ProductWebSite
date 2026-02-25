@@ -1,0 +1,66 @@
+﻿@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = Localizer["Login"];
+}
+
+<div class="auth-card">
+
+    <h2 class="text-center mb-4">@Localizer["Login"]</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <form asp-controller="Auth" asp-action="Login" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">@Localizer["Email"]</label>
+            <input name="Email"
+                   type="email"
+                   class="form-control"
+                   required />
+        </div>
+
+        <div class="mb-3 position-relative">
+            <label class="form-label">@Localizer["Password"]</label>
+
+            <input name="Password"
+                   type="password"
+                   class="form-control pe-5"
+                   id="passwordInput"
+                   required />
+
+            <span class="password-toggle"
+                  onclick="togglePassword()">
+                👁
+            </span>
+        </div>
+
+        <button type="submit" class="btn btn-auth w-100">
+            @Localizer["Login"]
+        </button>
+
+    </form>
+
+    <div class="text-center mt-3">
+        <span class="text-secondary">@Localizer["No_Account"]</span>
+        <a asp-controller="Auth" asp-action="Register"
+           class="text-info fw-bold ms-1">
+            @Localizer["Register"]
+        </a>
+    </div>
+
+</div>
+
+<script>
+    function togglePassword() {
+        const input = document.getElementById("passwordInput");
+        input.type = input.type === "password" ? "text" : "password";
+    }
+</script>

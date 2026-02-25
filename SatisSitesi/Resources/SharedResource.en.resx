@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="Cart" xml:space="preserve">
+    <value>Cart</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Add_To_Cart" xml:space="preserve">
+    <value>Add to Cart</value>
+  </data>
+  <data name="Name_Management" xml:space="preserve">
+    <value>Name Management</value>
+  </data>
+  <data name="My_Orders" xml:space="preserve">
+    <value>My Orders</value>
+  </data>
+  <data name="Technologies" xml:space="preserve">
+    <value>Technologies</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>👋 Welcome</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>📊 Dashboard</value>
+  </data>
+  <data name="Total_Names" xml:space="preserve">
+    <value>Total Names</value>
+  </data>
+  <data name="Today_Names" xml:space="preserve">
+    <value>Today's Names</value>
+  </data>
+  <data name="Total_Products" xml:space="preserve">
+    <value>Total Products</value>
+  </data>
+  <data name="Total_Orders" xml:space="preserve">
+    <value>Total Orders</value>
+  </data>
+  <data name="Last_Updated_Name" xml:space="preserve">
+    <value>Last Updated Name</value>
+  </data>
+  <data name="Name_List" xml:space="preserve">
+    <value>Name List</value>
+  </data>
+  <data name="New_Name" xml:space="preserve">
+    <value>+ New Name</value>
+  </data>
+  <data name="Search_Name" xml:space="preserve">
+    <value>Search name...</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Created_At" xml:space="preserve">
+    <value>Created At</value>
+  </data>
+  <data name="Updated_At" xml:space="preserve">
+    <value>Updated At</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Used_Technologies" xml:space="preserve">
+    <value>🧠 Used Technologies</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Cart_Empty" xml:space="preserve">
+    <value>Your cart is empty.</value>
+  </data>
+  <data name="Confirm_Cart" xml:space="preserve">
+    <value>✅ Confirm Cart</value>
+  </data>
+  <data name="Order_Date" xml:space="preserve">
+    <value>Order Date</value>
+  </data>
+  <data name="Total_Amount" xml:space="preserve">
+    <value>Total Amount</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Tech_Session" xml:space="preserve">
+    <value>✔ Session Authentication</value>
+  </data>
+  <data name="Tech_Role" xml:space="preserve">
+    <value>✔ Role Based Access (Admin/User)</value>
+  </data>
+  <data name="Tech_Cart" xml:space="preserve">
+    <value>✔ Cart &amp; Order System</value>
+  </data>
+  <data name="Tech_Stock" xml:space="preserve">
+    <value>✔ Stock Control Mechanism</value>
+  </data>
+  <data name="Orders_Empty" xml:space="preserve">
+    <value>You have no orders yet.</value>
+  </data>
+  <data name="Tech_MVC" xml:space="preserve">
+    <value>✔ ASP.NET Core MVC</value>
+  </data>
+  <data name="Tech_Mongo" xml:space="preserve">
+    <value>✔ MongoDB (NoSQL)</value>
+  </data>
+  <data name="Tech_Bootstrap" xml:space="preserve">
+    <value>✔ Bootstrap 5 Premium UI</value>
+  </data>
+  <data name="Add_New_Name" xml:space="preserve">
+    <value>Add New Name</value>
+  </data>
+  <data name="Privacy_Policy" xml:space="preserve">
+    <value>🔒 Privacy Policy</value>
+  </data>
+  <data name="Privacy_Text_1" xml:space="preserve">
+    <value>This application was developed for education and internship purposes.</value>
+  </data>
+  <data name="Privacy_Text_2" xml:space="preserve">
+    <value>User information is stored in the MongoDB database. Passwords are kept as plain text. (Hashing should be applied in real projects.)</value>
+  </data>
+  <data name="Privacy_Text_3" xml:space="preserve">
+    <value>This project is not used for commercial purposes.</value>
+  </data>
+  <data name="Privacy_Text_4" xml:space="preserve">
+    <value>The data is for testing purposes only.</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="No_Account" xml:space="preserve">
+    <value>Don't have an account?</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Name_Input" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="telefon" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="pc" xml:space="preserve">
+    <value>PC</value>
+  </data>
+  <data name="Murat" xml:space="preserve">
+    <value>Murat</value>
+  </data>
+  <data name="sabun" xml:space="preserve">
+    <value>Soap</value>
+  </data>
+  <data name="tshirt" xml:space="preserve">
+    <value>T-Shirt</value>
+  </data>
+  <data name="pantolon" xml:space="preserve">
+    <value>Pants</value>
+  </data>
+  <data name="mouse" xml:space="preserve">
+    <value>Mouse</value>
+  </data>
+  <data name="konsol" xml:space="preserve">
+    <value>Console</value>
+  </data>
+  <data name="Manage_Orders" xml:space="preserve">
+    <value>Manage Orders</value>
+  </data>
+  <data name="All_Orders" xml:space="preserve">
+    <value>All Orders</value>
+  </data>
+  <data name="All_Orders_Admin" xml:space="preserve">
+    <value>All Orders (Admin)</value>
+  </data>
+  <data name="User_Email" xml:space="preserve">
+    <value>User (E-Mail)</value>
+  </data>
+  <data name="Current_Status" xml:space="preserve">
+    <value>Current Status</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="Add_New_Product" xml:space="preserve">
+    <value>Add New Product</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="Increase_Stock" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="Decrease_Stock" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Out_Of_Stock" xml:space="preserve">
+    <value>Out of Stock</value>
+  </data>
+  <data name="Edit_Product" xml:space="preserve">
+    <value>Edit Product</value>
+  </data>
+  <data name="Product_Name" xml:space="preserve">
+    <value>Product Name</value>
+  </data>
+  <data name="Description_Label" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Base_Data" xml:space="preserve">
+    <value>Base Data</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Save_Changes" xml:space="preserve">
+    <value>Save Changes</value>
+  </data>
+</root>

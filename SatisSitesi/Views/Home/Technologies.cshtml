@@ -1,0 +1,36 @@
+﻿@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["Used_Technologies"];
+}
+
+<h2 class="mb-4">@Localizer["Used_Technologies"]</h2>
+
+<div class="card-premium">
+
+    <ul class="list-group list-group-flush bg-transparent">
+        <li class="list-group-item bg-transparent text-light">
+            @Localizer["Tech_MVC"]
+        </li>
+        <li class="list-group-item bg-transparent text-light">
+            @Localizer["Tech_Mongo"]
+        </li>
+        <li class="list-group-item bg-transparent text-light">
+            @Localizer["Tech_Session"]
+        </li>
+        <li class="list-group-item bg-transparent text-light">
+            @Localizer["Tech_Role"]
+        </li>
+        <li class="list-group-item bg-transparent text-light">
+            @Localizer["Tech_Cart"]
+        </li>
+        <li class="list-group-item bg-transparent text-light">
+            @Localizer["Tech_Stock"]
+        </li>
+        <li class="list-group-item bg-transparent text-light">
+            @Localizer["Tech_Bootstrap"]
+        </li>
+    </ul>
+
+</div>

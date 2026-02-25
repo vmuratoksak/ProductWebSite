@@ -1,0 +1,83 @@
+﻿@model List<SatisSitesi.Models.Entities.OrderEntity>
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    var currentCulture = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    ViewData["Title"] = Localizer["All_Orders_Admin"];
+}
+
+<h2 class="fw-bold mb-4">ðŸ“¦ @Localizer["All_Orders"]</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">@Localizer["Orders_Empty"]</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>@Localizer["Order_Date"]</th>
+                <th>@Localizer["User_Email"]</th>
+                <th>@Localizer["Products"]</th>
+                <th>@Localizer["Total_Amount"]</th>
+                <th>@Localizer["Current_Status"]</th>
+                <th>@Localizer["Action"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.CreatedAt.ToString("g")</td>
+                    <td>@order.UserEmail</td>
+                    <td>
+                        <ul class="mb-0">
+                            @foreach (var item in order.Items)
+                            {
+                                <li>@item.Quantity x @item.GetLocalizedName(currentCulture, Localizer)</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>@order.TotalAmount.ToString("C")</td>
+                    <td>
+                        @if (order.Status == "Bekliyor")
+                        {
+                            <span class="badge bg-warning text-dark">@Localizer["Pending"]</span>
+                        }
+                        else if (order.Status == "OnaylandÄ±")
+                        {
+                            <span class="badge bg-success">@Localizer["Approved"]</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">@Localizer["Cancelled"]</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-action="UpdateStatus" method="post" class="d-flex align-items-center gap-2">
+                            <input type="hidden" name="orderId" value="@order.Id" />
+                            <select name="status" class="form-select form-select-sm" style="width: auto;">
+                                <option value="Bekliyor" selected="@(order.Status == "Bekliyor" ? "selected" : null)">@Localizer["Pending"]</option>
+                                <option value="OnaylandÄ±" selected="@(order.Status == "OnaylandÄ±" ? "selected" : null)">@Localizer["Approved"]</option>
+                                <option value="Ä°ptal Edildi" selected="@(order.Status == "Ä°ptal Edildi" ? "selected" : null)">@Localizer["Cancelled"]</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">@Localizer["Update"]</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

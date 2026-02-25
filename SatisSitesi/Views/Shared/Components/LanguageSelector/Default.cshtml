@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using SatisSitesi.ViewComponents
+
+@model SatisSitesi.ViewComponents.LanguageSelectorModel
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+}
+
+<div class="dropdown me-3">
+    <button class="btn btn-outline-light dropdown-toggle btn-sm" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        ðŸŒ @(Model.CurrentUICulture?.Name.ToUpper() ?? "TR")
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+        @foreach (var culture in Model.SupportedCultures)
+        {
+            <li>
+                <form id="selectLanguage" asp-controller="Language" asp-action="ChangeLanguage" asp-route-returnUrl="@returnUrl" method="post">
+                    <input type="hidden" name="culture" value="@culture.Name" />
+                    <button type="submit" class="dropdown-item @(requestCulture?.RequestCulture.UICulture.Name == culture.Name ? "active" : "")">
+                        @culture.NativeName (@culture.Name)
+                    </button>
+                </form>
+            </li>
+        }
+    </ul>
+</div>

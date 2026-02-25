@@ -1,0 +1,56 @@
+﻿@model SatisSitesi.Models.ViewModels.DashboardViewModel
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = Localizer["Home"];
+}
+
+@if (Context.Session.GetString("Username") != null)
+{
+    <div class="card-premium mb-4 p-3 text-light"
+         style="background:rgba(30,41,59,0.6); border-radius:15px;">
+        @Localizer["Welcome"] @Context.Session.GetString("Username")
+    </div>
+}
+
+<h2 class="mb-4">@Localizer["Dashboard"]</h2>
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card-modern">
+            <h3>@Model.TotalNames</h3>
+            <p>@Localizer["Total_Names"]</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-modern">
+            <h3>@Model.TodayNames</h3>
+            <p>@Localizer["Today_Names"]</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-modern">
+            <h3>@Model.TotalProducts</h3>
+            <p>@Localizer["Total_Products"]</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-modern">
+            <h3>@Model.TotalOrders</h3>
+            <p>@Localizer["Total_Orders"]</p>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card-modern text-start">
+            <h5>@Localizer["Last_Updated_Name"]</h5>
+            <h4 class="text-info">@Model.LastUpdatedName</h4>
+        </div>
+    </div>
+
+</div>

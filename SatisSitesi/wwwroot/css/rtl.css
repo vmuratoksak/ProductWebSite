@@ -1,0 +1,31 @@
+/* RTL (Right to Left) Basic Overrides */
+html[dir="rtl"] {
+    text-align: right;
+}
+
+html[dir="rtl"] .dropdown-menu {
+    text-align: right;
+}
+
+html[dir="rtl"] .me-3 {
+    margin-right: 0 !important;
+    margin-left: 1rem !important;
+}
+
+html[dir="rtl"] .ms-auto {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+html[dir="rtl"] .float-start {
+    float: right !important;
+}
+
+html[dir="rtl"] .float-end {
+    float: left !important;
+}
+
+html[dir="rtl"] .dropdown-menu-end {
+    right: auto !important;
+    left: 0 !important;
+}

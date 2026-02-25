@@ -1,0 +1,105 @@
+﻿@model List<SatisSitesi.Models.Entities.ProductEntity>
+@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@using SatisSitesi.Services.Interfaces
+@inject IStringLocalizer<SharedResource> Localizer
+@inject ICurrencyService CurrencyService
+
+@{
+    ViewData["Title"] = Localizer["Products"];
+    var currentCulture = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+}
+
+<h2 class="fw-bold mb-4">📦 @Localizer["Products"]</h2>
+
+@if (Context.Session.GetString("UserRole") == "Admin")
+{
+    <div class="mb-4">
+        <a asp-controller="Product" asp-action="Add" class="btn btn-success">
+            ➕ @Localizer["Add_New_Product"]
+        </a>
+    </div>
+}
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 shadow-lg h-100"
+                 style="background:#1e293b;color:#e2e8f0;border-radius:15px;">
+
+                <h4>@item.GetLocalizedName(currentCulture, Localizer)</h4>
+                <p class="text-secondary small mb-3">@item.GetLocalizedDescription(currentCulture, Localizer)</p>
+
+                <span class="badge bg-info mb-2">
+                    @Localizer["Stock"]: @item.Stock
+                </span>
+
+                <h5 class="text-success mb-3">
+                    @CurrencyService.GetFormattedPrice(item.Price)
+                </h5>
+
+                @* USER NOT LOGGED IN *@
+                @if (Context.Session.GetString("UserId") == null)
+                {
+                    <a asp-controller="Auth" asp-action="Login"
+                       class="btn btn-warning btn-sm w-100">
+                        @Localizer["Login"]
+                    </a>
+                }
+
+                @* ADMIN *@
+                else if (Context.Session.GetString("UserRole") == "Admin")
+                {
+                    <div class="d-flex flex-column gap-2">
+
+                        <div class="d-flex gap-2">
+                            <a asp-controller="Product" asp-action="IncreaseStock" asp-route-id="@item.Id"
+                               class="btn btn-success btn-sm w-50">
+                                ➕ @Localizer["Increase_Stock"]
+                            </a>
+
+                            <a asp-controller="Product" asp-action="DecreaseStock" asp-route-id="@item.Id"
+                               class="btn btn-secondary btn-sm w-50">
+                                ➖ @Localizer["Decrease_Stock"]
+                            </a>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id"
+                               class="btn btn-warning btn-sm w-50">
+                                ✏️ @Localizer["Edit"]
+                            </a>
+
+                            <a asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id"
+                               class="btn btn-danger btn-sm w-50">
+                                🗑 @Localizer["Delete"]
+                            </a>
+                        </div>
+
+                    </div>
+                }
+
+                @* NORMAL USER *@
+                else
+                {
+                    if (item.Stock > 0)
+                    {
+                        <a asp-controller="Cart" asp-action="Add" asp-route-productId="@item.Id"
+                           class="btn btn-primary btn-sm w-100">
+                            🛒 @Localizer["Add_To_Cart"]
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary btn-sm w-100" disabled>
+                            @Localizer["Out_Of_Stock"]
+                        </button>
+                    }
+                }
+
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,37 @@
+﻿@using SatisSitesi.Models.Entities
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+@model UserEntity
+@{
+    ViewData["Title"] = Localizer["Register"];
+}
+
+<div class="card-premium mx-auto" style="max-width:450px;">
+
+    <h3 class="mb-4 text-center">@Localizer["Register"]</h3>
+
+    <form method="post">
+
+        <div class="mb-3">
+            <label>@Localizer["Username"]</label>
+            <input asp-for="Username" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>@Localizer["Email"]</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>@Localizer["Password"]</label>
+            <input asp-for="Password" type="password" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">
+            @Localizer["Register"]
+        </button>
+
+    </form>
+
+</div>
