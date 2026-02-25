@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace SatisSitesi.Repositories.Interfaces
 {
@@ -6,6 +8,7 @@ namespace SatisSitesi.Repositories.Interfaces
     {
         List<T> GetAll();
         T GetById(string id);
+        T GetFirstOrDefault(Expression<Func<T, bool>> filter);
         void Insert(T entity);
         void Update(string id, T entity);
         void Delete(string id);

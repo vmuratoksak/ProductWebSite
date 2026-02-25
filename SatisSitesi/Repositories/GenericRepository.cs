@@ -3,7 +3,9 @@ using MongoDB.Bson;
 using Microsoft.Extensions.Options;
 using SatisSitesi.Repositories.Interfaces;
 using SatisSitesi.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace SatisSitesi.Repositories
 {
@@ -26,7 +28,10 @@ namespace SatisSitesi.Repositories
             return result;
         }
 
-        //sadece email ile veri çekelim
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter)
+        {
+            return _collection.Find(filter).FirstOrDefault();
+        }
 
         public T GetById(string id)
         {

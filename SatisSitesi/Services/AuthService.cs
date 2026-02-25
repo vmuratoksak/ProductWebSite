@@ -3,6 +3,7 @@ using SatisSitesi.Repositories.Interfaces;
 using SatisSitesi.Models.Entities;
 using System;
 using System.Linq;
+using BCrypt.Net;
 
 namespace SatisSitesi.Services
 {
@@ -18,13 +19,16 @@ namespace SatisSitesi.Services
         public void Register(UserEntity user)
         {
             //password hashing 
-            var users = _userRepo.GetAll();
+            var existingUser = _userRepo.GetFirstOrDefault(x => x.Email == user.Email);
 
-            if (users.Any(x => x.Email == user.Email))
+            if (existingUser != null)
                 throw new Exception("Bu email zaten kayıtlı.");
 
             if (string.IsNullOrWhiteSpace(user.Password))
                 throw new Exception("Şifre boş olamaz.");
+
+            // Hash password before saving
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             user.Role = "User"; // default role
             user.CreatedAt = DateTime.Now;
@@ -34,10 +38,18 @@ namespace SatisSitesi.Services
 
         public UserEntity Login(string email, string password)
         {
-            var result =  _userRepo.GetAll()
-                .FirstOrDefault(x => x.Email == email && x.Password == password);
+            var user = _userRepo.GetFirstOrDefault(x => x.Email == email);
 
-            return result;
+            if (user == null)
+                return null;
+
+            // Verify password against stored hash
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
+
+            if (!isPasswordValid)
+                return null;
+
+            return user;
         }
     }
 }
