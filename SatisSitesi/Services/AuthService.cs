@@ -43,7 +43,24 @@ namespace SatisSitesi.Services
             if (user == null)
                 return null;
 
-            // Verify password against stored hash
+            // Check if it's an old plain-text password account
+            if (!user.Password.StartsWith("$2"))
+            {
+                if (user.Password == password)
+                {
+                    // It's a match! The user entered the correct old password.
+                    // Automatically fix their account by hashing the password and updating DB.
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(password);
+                    _userRepo.Update(user.Id, user);
+                    return user;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            // Otherwise, it's a new (or already migrated) account. Verify password against stored hash.
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
 
             if (!isPasswordValid)
