@@ -17,7 +17,7 @@ namespace SatisSitesi.Services
 
         public void Register(UserEntity user)
         {
-            //password hashing
+            //password hashing 
             var users = _userRepo.GetAll();
 
             if (users.Any(x => x.Email == user.Email))
