@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using SatisSitesi.Services.Interfaces;
+using SatisSitesi.Application.Interfaces.Services;
 
 namespace SatisSitesi.Controllers
 {
@@ -33,19 +33,19 @@ namespace SatisSitesi.Controllers
             }
         }
 
-        public IActionResult MyOrders()
+        public IActionResult MyOrders(string search, string sortBy, int page = 1)
         {
             var userId = HttpContext.Session.GetString("UserId");
 
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Auth");
 
-            var orders = _orderService.GetUserOrders(userId);
+            var model = _orderService.GetPagedUserOrders(userId, search, sortBy, page, 8); // sayfa başı 8 sipariş
 
-            return View(orders);
+            return View(model);
         }
 
-        public IActionResult AdminOrders()
+        public IActionResult AdminOrders(string search, string sortBy, int page = 1)
         {
             var role = HttpContext.Session.GetString("UserRole");
 
@@ -55,8 +55,8 @@ namespace SatisSitesi.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var orders = _orderService.GetAllOrders();
-            return View(orders);
+            var model = _orderService.GetPagedAdminOrders(search, sortBy, page, 8); // sayfa başı 8 sipariş
+            return View(model);
         }
 
         [HttpPost]

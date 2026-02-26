@@ -13,4 +13,9 @@
     <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SatisSitesi.Application\SatisSitesi.Application.csproj" />
+    <ProjectReference Include="..\SatisSitesi.Infrastructure\SatisSitesi.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

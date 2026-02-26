@@ -1,4 +1,4 @@
-﻿namespace SatisSitesi.Resources;
+namespace SatisSitesi.Resources;
 
 /// <summary>
 /// This class is used to group shared resources.

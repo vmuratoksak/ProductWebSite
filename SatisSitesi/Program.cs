@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using SatisSitesi.Models;
-using SatisSitesi.Models.Entities;
-using SatisSitesi.Repositories;
-using SatisSitesi.Repositories.Interfaces;
-using SatisSitesi.Services;
-using SatisSitesi.Services.Interfaces;
+using SatisSitesi.Domain.Entities;
+using SatisSitesi.Infrastructure.Repositories;
+using SatisSitesi.Application.Interfaces.Repositories;
+using SatisSitesi.Application.Services;
+using SatisSitesi.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
 
 var builder = WebApplication.CreateBuilder(args);

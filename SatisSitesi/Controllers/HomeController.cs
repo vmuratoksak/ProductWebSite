@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SatisSitesi.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using SatisSitesi.Application.Interfaces.Services;
 
 public class HomeController : Controller
 {

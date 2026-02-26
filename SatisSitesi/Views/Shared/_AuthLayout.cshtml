@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http
 @using Microsoft.Extensions.Localization
 @using SatisSitesi.Resources
 @inject IStringLocalizer<SharedResource> Localizer
@@ -84,7 +84,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
         <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
-            🛍 MyShop
+            ?? MyShop
         </a>
 
         <div class="ms-auto d-flex gap-4 align-items-center">
@@ -133,7 +133,7 @@
             else
             {
                 <span class="user-badge">
-                    👋 @Context.Session.GetString("Username")
+                    ?? @Context.Session.GetString("Username")
                 </span>
 
                 <a class="btn btn-danger btn-sm px-3"

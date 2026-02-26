@@ -261,4 +261,22 @@
   <data name="Save_Changes" xml:space="preserve">
     <value>حفظ التغييرات</value>
   </data>
+  <data name="Newest" xml:space="preserve">
+    <value>الأحدث</value>
+  </data>
+  <data name="Oldest" xml:space="preserve">
+    <value>الأقدم</value>
+  </data>
+  <data name="Price_Asc" xml:space="preserve">
+    <value>السعر (تصاعدي)</value>
+  </data>
+  <data name="Price_Desc" xml:space="preserve">
+    <value>السعر (تنازلي)</value>
+  </data>
+  <data name="TotalDesc" xml:space="preserve">
+    <value>الإجمالي (تنازلي)</value>
+  </data>
+  <data name="TotalAsc" xml:space="preserve">
+    <value>الإجمالي (تصاعدي)</value>
+  </data>
 </root>

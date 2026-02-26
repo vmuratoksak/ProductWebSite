@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SatisSitesi.Models.Entities;
-using SatisSitesi.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using SatisSitesi.Domain.Entities;
+using SatisSitesi.Application.Interfaces.Services;
 
 namespace SatisSitesi.Controllers
 {

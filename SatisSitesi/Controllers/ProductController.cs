@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using SatisSitesi.Services.Interfaces;
-using SatisSitesi.Models.Entities;
+using SatisSitesi.Application.Interfaces.Services;
+using SatisSitesi.Domain.Entities;
 
 namespace SatisSitesi.Controllers
 {
@@ -20,10 +20,10 @@ namespace SatisSitesi.Controllers
         }
 
         // ✅ Ürün Listeleme
-        public IActionResult Index()
+        public IActionResult Index(string search, string sortBy, decimal? minPrice, decimal? maxPrice, bool inStockOnly, int page = 1)
         {
-            var products = _productService.GetAll();
-            return View(products);
+            var model = _productService.GetPagedProducts(search, sortBy, page, 8, minPrice, maxPrice, inStockOnly); // sayfa başı 8 ürün
+            return View(model);
         }
 
         // ✅ Yeni Ürün Sayfası (Admin Only)

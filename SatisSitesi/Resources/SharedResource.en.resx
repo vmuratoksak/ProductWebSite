@@ -261,4 +261,22 @@
   <data name="Save_Changes" xml:space="preserve">
     <value>Save Changes</value>
   </data>
+  <data name="Newest" xml:space="preserve">
+    <value>Newest</value>
+  </data>
+  <data name="Oldest" xml:space="preserve">
+    <value>Oldest</value>
+  </data>
+  <data name="Price_Asc" xml:space="preserve">
+    <value>Price (Low to High)</value>
+  </data>
+  <data name="Price_Desc" xml:space="preserve">
+    <value>Price (High to Low)</value>
+  </data>
+  <data name="TotalDesc" xml:space="preserve">
+    <value>Total (High to Low)</value>
+  </data>
+  <data name="TotalAsc" xml:space="preserve">
+    <value>Total (Low to High)</value>
+  </data>
 </root>

@@ -1,5 +1,5 @@
-﻿@model List<SatisSitesi.Models.Entities.OrderEntity>
-@using SatisSitesi.Services.Interfaces
+@model SatisSitesi.Application.Models.OrderIndexModel
+@using SatisSitesi.Application.Interfaces.Services
 @using Microsoft.Extensions.Localization
 @using SatisSitesi.Resources
 @inject ICurrencyService CurrencyService
@@ -12,7 +12,20 @@
 
 <h2 class="fw-bold mb-4">@Localizer["My_Orders"]</h2>
 
-@if (!Model.Any())
+<form method="get" class="mb-4 d-flex gap-2">
+    <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="@Localizer["Search"] (Sipariş ID)" style="max-width:300px;" />
+    
+    <select name="sortBy" class="form-select" style="max-width:200px;">
+        <option value="Newest" selected="@(Model.SortBy == "Newest")">@Localizer["Newest"]</option>
+        <option value="Oldest" selected="@(Model.SortBy == "Oldest")">@Localizer["Oldest"]</option>
+        <option value="TotalDesc" selected="@(Model.SortBy == "TotalDesc")">@Localizer["TotalDesc"]</option>
+        <option value="TotalAsc" selected="@(Model.SortBy == "TotalAsc")">@Localizer["TotalAsc"]</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary">@Localizer["Search"]</button>
+</form>
+
+@if (Model.Orders == null || !Model.Orders.Any())
 {
     <div class="alert alert-warning">
         @Localizer["Orders_Empty"]
@@ -20,7 +33,7 @@
 }
 else
 {
-    foreach (var order in Model)
+    foreach (var order in Model.Orders)
     {
         <div class="card shadow-lg mb-4"
              style="background:#1e293b;color:#e2e8f0;border:none;border-radius:18px;">
@@ -36,6 +49,8 @@ else
                         <h5 class="fw-bold mb-2">
                             @order.CreatedAt.ToString("dd.MM.yyyy HH:mm:ss")
                         </h5>
+
+                        <div class="small text-muted mb-2">ID: @order.Id</div>
 
                         @if (order.Status == "Bekliyor")
                         {
@@ -88,4 +103,17 @@ else
             </div>
         </div>
     }
+}
+
+@if (Model.TotalPages > 1)
+{
+    <div class="mt-4">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <a asp-action="MyOrders" asp-route-page="@i" asp-route-search="@Model.Search" asp-route-sortBy="@Model.SortBy"
+               class="btn btn-secondary @(i == Model.CurrentPage ? "active" : "")">
+                @i
+            </a>
+        }
+    </div>
 }
