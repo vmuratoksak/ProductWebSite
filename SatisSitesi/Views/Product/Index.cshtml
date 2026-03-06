@@ -3,153 +3,199 @@
 @using Microsoft.Extensions.Localization
 @using SatisSitesi.Resources
 @using SatisSitesi.Application.Interfaces.Services
-@inject IStringLocalizer<SharedResource> Localizer
 @inject ICurrencyService CurrencyService
+@inject IStringLocalizer<SharedResource> Localizer
 
 @{
     ViewData["Title"] = Localizer["Products"];
-    var currentCulture = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 }
 
-<h2 class="fw-bold mb-4">📦 @Localizer["Products"]</h2>
 
-@if (Context.Session.GetString("UserRole") == "Admin")
-{
-    <div class="mb-4">
-        <a asp-controller="Product" asp-action="Add" class="btn btn-success">
-            ➕ @Localizer["Add_New_Product"]
+<div class="page-header mb-0">
+    <div>
+        <h1 class="page-title">@Localizer["Products"]</h1>
+        <p class="page-subtitle">@Localizer["Total_Products"]: @Model.TotalProducts</p>
+    </div>
+    @if (Context.Session.GetString("UserRole") == "Admin")
+    {
+        <a asp-controller="Product" asp-action="Add" class="btn-primary d-flex align-items-center gap-2" style="border-radius: 12px; padding: 0.6rem 1.2rem;">
+            <i class="bi bi-plus-circle fs-5"></i> 
+            <span style="font-weight: 600;">@Localizer["Add_New_Product"]</span>
         </a>
-    </div>
-}
+    }
+</div>
 
-<form method="get" class="mb-4 d-flex flex-wrap gap-2 align-items-center">
-    <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="@Localizer["Search_Name"]" style="max-width:250px;" />
-    
-    <input type="number" step="0.01" name="minPrice" value="@Model.MinPrice" class="form-control" placeholder="Min ₺" style="max-width:100px;" />
-    
-    <input type="number" step="0.01" name="maxPrice" value="@Model.MaxPrice" class="form-control" placeholder="Max ₺" style="max-width:100px;" />
+<!-- Unified Filters Bar -->
+<div class="py-4 border-bottom border-light border-opacity-10 mb-5">
+    <form method="get" class="row g-3 align-items-center">
+        <div class="col-md-4">
+            <div class="search-bar w-100" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05);">
+                <i class="bi bi-search text-secondary"></i>
+                <input type="text" name="search" value="@Model.Search" placeholder="@Localizer["Search"] @Localizer["Products"]..." />
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="d-flex align-items-center gap-2">
+                <input type="number" step="0.01" name="minPrice" value="@Model.MinPrice" class="form-control bg-dark text-light border-secondary border-opacity-25" placeholder="Min @CurrencyService.GetCurrencySymbol()" style="border-radius: 10px; font-size: 0.85rem;" />
+                <span class="text-secondary">@Localizer["to"]</span>
+                <input type="number" step="0.01" name="maxPrice" value="@Model.MaxPrice" class="form-control bg-dark text-light border-secondary border-opacity-25" placeholder="Max @CurrencyService.GetCurrencySymbol()" style="border-radius: 10px; font-size: 0.85rem;" />
+            </div>
+        </div>
 
-    <div class="form-check text-white ms-2">
-        <input class="form-check-input" type="checkbox" name="inStockOnly" value="true" id="inStockCheck" @(Model.InStockOnly ? "checked" : "")>
-        <label class="form-check-label" for="inStockCheck">
-            @Localizer["Stock"] > 0
-        </label>
-    </div>
+        <div class="col-md-2">
+            <div class="form-check form-switch d-flex align-items-center gap-2">
+                <input class="form-check-input" type="checkbox" role="switch" name="inStockOnly" value="true" id="inStockCheck" @(Model.InStockOnly ? "checked" : "")>
+                <label class="form-check-label text-secondary small" for="inStockCheck">@Localizer["Stock"]</label>
+            </div>
+        </div>
 
-    <select name="sortBy" class="form-select ms-2" style="max-width:200px;">
-        <option value="Newest" selected="@(Model.SortBy == "Newest")">@Localizer["Newest"]</option>
-        <option value="Oldest" selected="@(Model.SortBy == "Oldest")">@Localizer["Oldest"]</option>
-        <option value="PriceAsc" selected="@(Model.SortBy == "PriceAsc")">@Localizer["Price_Asc"]</option>
-        <option value="PriceDesc" selected="@(Model.SortBy == "PriceDesc")">@Localizer["Price_Desc"]</option>
-    </select>
+        <div class="col-md-3 d-flex gap-2">
+            <select name="sortBy" class="form-select bg-dark text-light border-secondary border-opacity-25" style="border-radius: 10px; font-size: 0.85rem;">
+                <option value="Newest" selected="@(Model.SortBy == "Newest")">@Localizer["Newest"]</option>
+                <option value="Oldest" selected="@(Model.SortBy == "Oldest")">@Localizer["Oldest"]</option>
+                <option value="PriceAsc" selected="@(Model.SortBy == "PriceAsc")">@Localizer["Price_Asc"]</option>
+                <option value="PriceDesc" selected="@(Model.SortBy == "PriceDesc")">@Localizer["Price_Desc"]</option>
+            </select>
+            <button type="submit" class="btn-secondary px-3" style="border-radius: 10px;">
+                <i class="bi bi-funnel"></i>
+            </button>
+        </div>
+    </form>
+</div>
 
-    <button type="submit" class="btn btn-primary ms-2">@Localizer["Search"]</button>
-</form>
-
-<div class="row">
+<!-- Products Grid -->
+<div class="row g-4 mb-4">
     @if(Model.Products == null || !Model.Products.Any())
     {
-        <div class="col-12"><p class="text-warning">Sonuç bulunamadı.</p></div>
+        <div class="col-12 text-center py-5 animate-fade-in">
+            <div class="saas-card mx-auto py-5" style="max-width: 500px; background: rgba(30, 41, 59, 0.4); border: 1px dashed rgba(255,255,255,0.1); border-radius: 24px;">
+                <div class="mb-4" style="font-size: 4rem; opacity: 0.2;">
+                    <i class="bi bi-search-heart"></i>
+                </div>
+                <h4 class="fw-bold mb-2">Ürün Bulunamadı</h4>
+                <p class="text-secondary mb-0">Aradığınız kriterlere uygun ürün bulunmuyor. Lütfen filtrelerinizi kontrol edin.</p>
+            </div>
+        </div>
     }
     else
     {
         @foreach (var item in Model.Products)
         {
-            <div class="col-md-3 mb-4">
-                <div class="card p-4 shadow-lg h-100"
-                     style="background:#1e293b;color:#e2e8f0;border-radius:15px;">
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="saas-card p-0 h-100 d-flex flex-column" style="overflow: hidden; transition: transform 0.2s; cursor: pointer;">
+                    
+                    <!-- Product Image -->
+                    <div style="height: 180px; background-color: rgba(255,255,255,0.02); position: relative; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        @if(!string.IsNullOrEmpty(item.BadgeText))
+                        {
+                            <span class="badge badge-premium @item.BadgeClass" style="position: absolute; top: 12px; right: 12px;">
+                                <i class="bi @(item.BadgeClass.Contains("out") ? "bi-exclamation-octagon" : "bi-lightning-charge") me-1"></i>
+                                @Localizer[item.BadgeText]
+                            </span>
+                        }
+                        <img src="@item.ImageUrl" alt="@item.Name" style="max-height: 100%; max-width: 100%; object-fit: contain; padding: 1rem; opacity: 0.8; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5));" />
+                    </div>
 
-                    <h4>@item.GetLocalizedName(currentCulture, Localizer)</h4>
-                    <p class="text-secondary small mb-3 flex-grow-1">@item.GetLocalizedDescription(currentCulture, Localizer)</p>
-
-                    <span class="badge bg-info mb-2 w-50">
-                        @Localizer["Stock"]: @item.Stock
-                    </span>
-
-                    <h5 class="text-success mb-3">
-                        @CurrencyService.GetFormattedPrice(item.Price)
-                    </h5>
-
-                    @* USER NOT LOGGED IN *@
-                    @if (Context.Session.GetString("UserId") == null)
-                    {
-                        <a asp-controller="Auth" asp-action="Login"
-                           class="btn btn-warning btn-sm w-100 mt-auto">
-                            @Localizer["Login"]
-                        </a>
-                    }
-
-                    @* ADMIN *@
-                    else if (Context.Session.GetString("UserRole") == "Admin")
-                    {
-                        <div class="d-flex flex-column gap-2 mt-auto">
-
-                            <div class="d-flex gap-2">
-                                <a asp-controller="Product" asp-action="IncreaseStock" asp-route-id="@item.Id"
-                                   class="btn btn-success btn-sm w-50">
-                                    ➕ @Localizer["Increase_Stock"]
-                                </a>
-
-                                <a asp-controller="Product" asp-action="DecreaseStock" asp-route-id="@item.Id"
-                                   class="btn btn-secondary btn-sm w-50">
-                                    ➖ @Localizer["Decrease_Stock"]
-                                </a>
-                            </div>
-
-                            <div class="d-flex gap-2">
-                                <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id"
-                                   class="btn btn-warning btn-sm w-50">
-                                    ✏️ @Localizer["Edit"]
-                                </a>
-
-                                <a asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id"
-                                   class="btn btn-danger btn-sm w-50">
-                                    🗑 @Localizer["Delete"]
-                                </a>
-                            </div>
-
+                    <!-- Product Info -->
+                    <div class="p-3 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 style="font-size: 1rem; font-weight: 600; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                @item.Name
+                            </h5>
+                            <span style="font-weight: 700; color: var(--text-primary); margin-left: 10px;">
+                                @CurrencyService.GetFormattedPrice(item.Price)
+                            </span>
                         </div>
-                    }
+                        
+                        <p class="text-secondary" style="font-size: 0.8rem; margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            @item.Description
+                        </p>
+                        
+                        <div class="mt-auto pt-3" style="border-top: 1px solid var(--border-color);">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                @if (Context.Session.GetString("UserRole") == "Admin")
+                                {
+                                    <div class="d-flex align-items-center gap-2">
+                                        <a asp-action="DecreaseStock" asp-route-id="@item.Id" class="btn-secondary p-0 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; border-radius: 8px; text-decoration: none;">
+                                            <i class="bi bi-dash"></i>
+                                        </a>
+                                        <span class="fw-bold" style="font-size: 0.9rem; min-width: 20px; text-align: center;">@item.Stock</span>
+                                        <a asp-action="IncreaseStock" asp-route-id="@item.Id" class="btn-secondary p-0 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; border-radius: 8px; text-decoration: none;">
+                                            <i class="bi bi-plus"></i>
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-secondary" style="font-size: 13px;">
+                                        <i class="bi bi-box-seam me-1"></i> @Localizer["Stock"]: @item.Stock
+                                    </span>
+                                }
+                            </div>
 
-                    @* NORMAL USER *@
-                    else
-                    {
-                        if (item.Stock > 0)
-                        {
-                            <a asp-controller="Cart" asp-action="Add" asp-route-productId="@item.Id"
-                               class="btn btn-primary btn-sm w-100 mt-auto">
-                                🛒 @Localizer["Add_To_Cart"]
-                            </a>
-                        }
-                        else
-                        {
-                            <button class="btn btn-secondary btn-sm w-100 mt-auto" disabled>
-                                @Localizer["Out_Of_Stock"]
-                            </button>
-                        }
-                    }
-
+                            @if (Context.Session.GetString("UserId") == null)
+                            {
+                                <a asp-controller="Auth" asp-action="Login" class="btn-secondary w-100 text-center d-block">
+                                    Sign in to Buy
+                                </a>
+                            }
+                            else if (Context.Session.GetString("UserRole") == "Admin")
+                            {
+                                <div class="d-flex gap-2">
+                                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id" class="btn-secondary flex-grow-1 text-center" style="padding: 0.4rem;">
+                                        @Localizer["Edit"]
+                                    </a>
+                                    <a asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id" class="btn-secondary text-center text-danger" style="padding: 0.4rem; background-color: rgba(239, 68, 68, 0.1);" onclick="return confirm('@Localizer["Delete"]?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            }
+                            else
+                            {
+                                if (item.Stock > 0)
+                                {
+                                    <form method="post" action="/Cart/Add">
+                                        <input type="hidden" name="productId" value="@item.Id" />
+                                        <button type="submit" class="btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
+                                            <i class="bi bi-cart-plus"></i> @Localizer["Add_To_Cart"]
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <button class="btn-secondary w-100" disabled style="opacity: 0.5;">
+                                        @Localizer["Out_Of_Stock"]
+                                    </button>
+                                }
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
         }
     }
 </div>
 
+<!-- Pagination -->
 @if (Model.TotalPages > 1)
 {
-    <div class="mt-4">
-        @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-            <a asp-action="Index" 
-               asp-route-page="@i" 
-               asp-route-search="@Model.Search" 
-               asp-route-sortBy="@Model.SortBy"
-               asp-route-minPrice="@Model.MinPrice"
-               asp-route-maxPrice="@Model.MaxPrice"
-               asp-route-inStockOnly="@Model.InStockOnly"
-               class="btn btn-secondary @(i == Model.CurrentPage ? "active" : "")">
-                @i
-            </a>
-        }
+    <div class="d-flex justify-content-center">
+        <div class="d-flex gap-1 bg-dark p-2 rounded" style="border: 1px solid var(--border-color);">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <a asp-action="Index" 
+                   asp-route-page="@i" 
+                   asp-route-search="@Model.Search" 
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-minPrice="@Model.MinPrice"
+                   asp-route-maxPrice="@Model.MaxPrice"
+                   asp-route-inStockOnly="@Model.InStockOnly"
+                   class="btn-secondary px-3 py-1 @(i == Model.CurrentPage ? "" : "text-secondary")"
+                   style="border: none; font-size: 0.875rem; @(i == Model.CurrentPage ? "background-color: rgba(37,99,235,0.1); color: var(--primary);" : "background-color: transparent;")">
+                    @i
+                </a>
+            }
+        </div>
     </div>
 }

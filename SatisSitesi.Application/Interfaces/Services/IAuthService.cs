@@ -6,5 +6,9 @@ namespace SatisSitesi.Application.Interfaces.Services
     {
         void Register(UserEntity user);
         UserEntity Login(string email, string password);
+        UserEntity GetUserById(string userId);
+        void UpdateProfile(string userId, string username, string email);
+        void ChangePassword(string userId, string currentPassword, string newPassword);
+        void DeleteAccount(string userId);
     }
 }

@@ -1,0 +1,30 @@
+﻿  Determining projects to restore...
+  All projects are up-to-date for restore.
+  SatisSitesi.Domain -> C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi.Domain\bin\Debug\net8.0\SatisSitesi.Domain.dll
+  SatisSitesi.Application -> C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi.Application\bin\Debug\net8.0\SatisSitesi.Application.dll
+  SatisSitesi.Infrastructure -> C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi.Infrastructure\bin\Debug\net8.0\SatisSitesi.Infrastructure.dll
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(22,59): warning CS8604: Possible null reference argument for parameter 'role' in 'DashboardModel IHomeService.GetDashboardData(string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(32,66): warning CS8604: Possible null reference argument for parameter 'userId' in 'GlobalSearchViewModel IHomeService.GetGlobalSearchResults(string query, string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(32,74): warning CS8604: Possible null reference argument for parameter 'role' in 'GlobalSearchViewModel IHomeService.GetGlobalSearchResults(string query, string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\OrderController.cs(35,48): warning CS8604: Possible null reference argument for parameter 'userEmail' in 'void IOrderService.Checkout(string userId, string userEmail)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(91,66): warning CS8604: Possible null reference argument for parameter 'userId' in 'GlobalSearchViewModel IHomeService.GetGlobalSearchResults(string query, string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(91,74): warning CS8604: Possible null reference argument for parameter 'role' in 'GlobalSearchViewModel IHomeService.GetGlobalSearchResults(string query, string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Views\Customer\Edit.cshtml(23,89): error CS0103: The name 'Localizer' does not exist in the current context [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Views\Customer\Edit.cshtml(34,89): error CS0103: The name 'Localizer' does not exist in the current context [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+
+Build FAILED.
+
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(22,59): warning CS8604: Possible null reference argument for parameter 'role' in 'DashboardModel IHomeService.GetDashboardData(string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(32,66): warning CS8604: Possible null reference argument for parameter 'userId' in 'GlobalSearchViewModel IHomeService.GetGlobalSearchResults(string query, string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(32,74): warning CS8604: Possible null reference argument for parameter 'role' in 'GlobalSearchViewModel IHomeService.GetGlobalSearchResults(string query, string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\OrderController.cs(35,48): warning CS8604: Possible null reference argument for parameter 'userEmail' in 'void IOrderService.Checkout(string userId, string userEmail)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(91,66): warning CS8604: Possible null reference argument for parameter 'userId' in 'GlobalSearchViewModel IHomeService.GetGlobalSearchResults(string query, string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Controllers\HomeController.cs(91,74): warning CS8604: Possible null reference argument for parameter 'role' in 'GlobalSearchViewModel IHomeService.GetGlobalSearchResults(string query, string userId, string role)'. [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Views\Customer\Edit.cshtml(23,89): error CS0103: The name 'Localizer' does not exist in the current context [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\Views\Customer\Edit.cshtml(34,89): error CS0103: The name 'Localizer' does not exist in the current context [C:\Users\vmura\source\repos\ProductWebSite\SatisSitesi\SatisSitesi.csproj]
+    6 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:01.34
+
+Workload updates are available. Run `dotnet workload list` for more information.

@@ -10,5 +10,6 @@ namespace SatisSitesi.Application.Models
         public string SortBy { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+        public int TotalOrders { get; set; }
     }
 }

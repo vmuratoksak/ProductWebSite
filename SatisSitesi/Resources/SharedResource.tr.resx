@@ -22,7 +22,7 @@
     <value>Sepete Ekle</value>
   </data>
   <data name="Name_Management" xml:space="preserve">
-    <value>İsim Yönetimi</value>
+    <value>Müşteri Yönetimi</value>
   </data>
   <data name="My_Orders" xml:space="preserve">
     <value>Siparişlerim</value>
@@ -40,10 +40,10 @@
     <value>📊 Dashboard</value>
   </data>
   <data name="Total_Names" xml:space="preserve">
-    <value>Toplam İsim</value>
+    <value>Toplam Müşteri</value>
   </data>
   <data name="Today_Names" xml:space="preserve">
-    <value>Bugün Eklenen İsim</value>
+    <value>Bugün Eklenen Müşteri</value>
   </data>
   <data name="Total_Products" xml:space="preserve">
     <value>Toplam Ürün</value>
@@ -52,22 +52,22 @@
     <value>Toplam Sipariş</value>
   </data>
   <data name="Last_Updated_Name" xml:space="preserve">
-    <value>Son Güncellenen İsim</value>
+    <value>Son Güncellenen Müşteri</value>
   </data>
   <data name="Name_List" xml:space="preserve">
-    <value>İsim Listesi</value>
+    <value>Müşteri Listesi</value>
   </data>
   <data name="New_Name" xml:space="preserve">
-    <value>+ Yeni İsim</value>
+    <value>+ Yeni Müşteri</value>
   </data>
   <data name="Search_Name" xml:space="preserve">
-    <value>İsim ara...</value>
+    <value>Müşteri ara...</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Ara</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>İsim</value>
+    <value>Müşteri</value>
   </data>
   <data name="Created_At" xml:space="preserve">
     <value>Oluşturma</value>
@@ -136,7 +136,7 @@
     <value>✔ Bootstrap 5 Premium UI</value>
   </data>
   <data name="Add_New_Name" xml:space="preserve">
-    <value>Yeni İsim Ekle</value>
+    <value>Yeni Müşteri Ekle</value>
   </data>
   <data name="Privacy_Policy" xml:space="preserve">
     <value>🔒 Gizlilik Politikası</value>
@@ -166,7 +166,7 @@
     <value>Kullanıcı Adı</value>
   </data>
   <data name="Name_Input" xml:space="preserve">
-    <value>İsim</value>
+    <value>Müşteri</value>
   </data>
   <data name="telefon" xml:space="preserve">
     <value>Telefon</value>
@@ -240,6 +240,9 @@
   <data name="Out_Of_Stock" xml:space="preserve">
     <value>Stok Yok</value>
   </data>
+  <data name="Low_Stock" xml:space="preserve">
+    <value>Azalan Stok</value>
+  </data>
   <data name="Edit_Product" xml:space="preserve">
     <value>Ürün Düzenle</value>
   </data>
@@ -278,5 +281,38 @@
   </data>
   <data name="TotalAsc" xml:space="preserve">
     <value>Tutar (Artan)</value>
+  </data>
+  <data name="Shipped" xml:space="preserve">
+    <value>Yolda</value>
+  </data>
+  <data name="Delivered" xml:space="preserve">
+    <value>İletildi</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profilim</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="Change_Password" xml:space="preserve">
+    <value>Şifre Değiştir</value>
+  </data>
+  <data name="Delete_Account" xml:space="preserve">
+    <value>Hesabımı Sil</value>
+  </data>
+  <data name="Current_Password" xml:space="preserve">
+    <value>Mevcut Şifre</value>
+  </data>
+  <data name="New_Password" xml:space="preserve">
+    <value>Yeni Şifre</value>
+  </data>
+  <data name="Confirm_Password" xml:space="preserve">
+    <value>Şifreyi Onayla</value>
+  </data>
+  <data name="Update_Password" xml:space="preserve">
+    <value>Şifreyi Güncelle</value>
+  </data>
+  <data name="Danger_Zone" xml:space="preserve">
+    <value>Tehlikeli Bölge</value>
   </data>
 </root>

@@ -240,6 +240,9 @@
   <data name="Out_Of_Stock" xml:space="preserve">
     <value>Out of Stock</value>
   </data>
+  <data name="Low_Stock" xml:space="preserve">
+    <value>Low Stock</value>
+  </data>
   <data name="Edit_Product" xml:space="preserve">
     <value>Edit Product</value>
   </data>
@@ -278,5 +281,38 @@
   </data>
   <data name="TotalAsc" xml:space="preserve">
     <value>Total (Low to High)</value>
+  </data>
+  <data name="Shipped" xml:space="preserve">
+    <value>On the Way</value>
+  </data>
+  <data name="Delivered" xml:space="preserve">
+    <value>Delivered</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Change_Password" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Delete_Account" xml:space="preserve">
+    <value>Delete Account</value>
+  </data>
+  <data name="Current_Password" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+  <data name="New_Password" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="Confirm_Password" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Update_Password" xml:space="preserve">
+    <value>Update Password</value>
+  </data>
+  <data name="Danger_Zone" xml:space="preserve">
+    <value>Danger Zone</value>
   </data>
 </root>

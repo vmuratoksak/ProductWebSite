@@ -1,0 +1,155 @@
+@using SatisSitesi.Application.Models
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+@model CustomerIndexModel
+@{
+    ViewData["Title"] = "Müşteri Yönetimi";
+}
+
+<div class="page-header mb-4">
+    <div>
+        <h1 class="page-title"><i class="bi bi-people-fill me-2 text-primary"></i> Müşteri Yönetimi</h1>
+        <p class="page-subtitle">Sistemde kayıtlı toplam @Model.TotalUsers müşteri bulunuyor</p>
+    </div>
+    <div class="header-actions">
+        <a asp-action="Add" class="btn-auth-primary px-4 py-2 d-inline-flex align-items-center gap-2" style="text-decoration: none; border-radius: 12px; font-weight: 500;">
+            <i class="bi bi-person-plus-fill"></i>
+            Yeni Müşteri Ekle
+        </a>
+    </div>
+</div>
+
+<!-- Unified Search & Filter Bar -->
+<div class="py-4 border-bottom border-light border-opacity-10 mb-4">
+    <form method="get" class="row align-items-center g-3">
+        <div class="col-md-4">
+            <div class="search-bar w-100" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05);">
+                <i class="bi bi-search text-secondary"></i>
+                <input type="text" name="search" value="@Model.Search" placeholder="Müşteri ara (isim veya e-posta)..." />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select name="role" class="form-select bg-dark text-light border-secondary border-opacity-25" onchange="this.form.submit()" style="border-radius: 10px; padding: 0.6rem;">
+                <option value="All" selected="@(Model.RoleFilter == "All")">Tüm Roller</option>
+                <option value="Admin" selected="@(Model.RoleFilter == "Admin")">Yöneticiler</option>
+                <option value="User" selected="@(Model.RoleFilter == "User")">Müşteriler</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="status" class="form-select bg-dark text-light border-secondary border-opacity-25" onchange="this.form.submit()" style="border-radius: 10px; padding: 0.6rem;">
+                <option value="Active" selected="@(Model.StatusFilter == "Active")">Durum: Aktif</option>
+                <option value="Inactive" selected="@(Model.StatusFilter == "Inactive")">Durum: Pasif</option>
+            </select>
+        </div>
+        <div class="col-md-2 text-md-end">
+             <button type="submit" class="btn-primary w-100" style="border-radius: 10px; padding: 0.6rem;">Filtrele</button>
+        </div>
+    </form>
+</div>
+
+<div class="saas-card p-0 overflow-hidden border-0">
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-borderless table-hover mb-0" style="color: var(--text-primary);">
+            <thead style="border-bottom: 1px solid var(--border-color); font-size: 0.75rem; letter-spacing: 0.05em; color: var(--text-secondary); text-transform: uppercase;">
+                <tr>
+                    <th class="ps-4 fw-semibold py-3">ID</th>
+                    <th class="fw-semibold py-3">Müşteri</th>
+                    <th class="fw-semibold py-3 text-center">Rol</th>
+                    <th class="fw-semibold py-3 text-center">Durum</th>
+                    <th class="fw-semibold py-3">Kayıt Tarihi</th>
+                    <th class="text-end pe-4 fw-semibold py-3">İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int counter = (Model.CurrentPage - 1) * 8 + 1; }
+                @foreach (var user in Model.Users)
+                {
+                    <tr style="border-bottom: 1px solid var(--border-color); vertical-align: middle; transition: background-color 0.2s;">
+                        <td class="ps-4 text-secondary" style="font-size: 0.875rem;">@counter</td>
+                        <td class="py-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center text-white bg-primary bg-opacity-10" 
+                                     style="width: 38px; height: 38px; font-weight: 600; font-size: 0.875rem;">
+                                    @user.Initials
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500; font-size: 0.95rem;">@user.Name</div>
+                                    <div class="text-secondary" style="font-size: 0.8rem;">@user.Email</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge" style="background-color: rgba(99,102,241,0.1); color: #818cf8; font-weight: 500; padding: 6px 12px; border-radius: 8px;">
+                                @(user.Role == "Admin" ? "Yönetici" : "Müşteri")
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-inline-flex align-items-center gap-2 @user.StatusColor" style="font-size: 0.875rem; font-weight: 500;">
+                                <span style="width: 7px; height: 7px; border-radius: 50%; background-color: currentColor;"></span>
+                                @user.Status
+                            </div>
+                        </td>
+                        <td class="text-secondary" style="font-size: 0.875rem;">
+                            @user.AddedDate.ToString("dd.MM.yyyy HH:mm")
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a asp-action="Edit" asp-route-id="@user.Id" class="icon-btn" title="Düzenle">
+                                    <i class="bi bi-pencil-square text-primary"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@user.Id" class="icon-btn" title="Sil" onclick="return confirm('Müşteri kaydını silmek istediğinize emin misiniz?');">
+                                    <i class="bi bi-trash3 text-danger"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    counter++;
+                }
+                @if (!Model.Users.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-secondary">
+                            <i class="bi bi-person-exclamation fs-1 d-block mb-2 opacity-25"></i>
+                            Kayıtlı müşteri bulunamadı.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <div class="p-4 d-flex align-items-center justify-content-between" style="border-top: 1px solid var(--border-color); font-size: 0.875rem;">
+            <span class="text-secondary opacity-75">
+                Gösterilen: @((Model.CurrentPage - 1) * 8 + 1) - @Math.Min(Model.CurrentPage * 8, Model.TotalUsers) / @Model.TotalUsers
+            </span>
+            
+            <div class="d-flex gap-1">
+                @if(Model.CurrentPage > 1)
+                {
+                    <a asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-search="@Model.Search" asp-route-role="@Model.RoleFilter" asp-route-status="@Model.StatusFilter"
+                       class="btn-secondary px-3 py-1 text-secondary" style="font-size: 0.875rem; border: none;">Önceki</a>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a asp-action="Index" asp-route-page="@i" asp-route-search="@Model.Search" asp-route-role="@Model.RoleFilter" asp-route-status="@Model.StatusFilter"
+                       class="btn-secondary px-3 py-1 @(i == Model.CurrentPage ? "border border-primary bg-primary bg-opacity-10" : "text-secondary")" 
+                       style="font-size: 0.875rem; border: none; @(i == Model.CurrentPage ? "color: var(--primary);" : "")">
+                        @i
+                    </a>
+                }
+                
+                @if(Model.CurrentPage < Model.TotalPages)
+                {
+                    <a asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-search="@Model.Search" asp-route-role="@Model.RoleFilter" asp-route-status="@Model.StatusFilter"
+                       class="btn-secondary px-3 py-1 text-secondary" style="font-size: 0.875rem; border: none;">Sonraki</a>
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -9,137 +9,157 @@
     ViewData["Title"] = Localizer["All_Orders_Admin"];
 }
 
-<h2 class="fw-bold mb-4">📦 @Localizer["All_Orders"]</h2>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
-
-@if (Model.Orders == null || !Model.Orders.Any())
-{
-    <div class="alert alert-info">@Localizer["Orders_Empty"]</div>
-    ViewData["Title"] = Localizer["My_Orders"];
-}
-
-<h2 class="fw-bold mb-4">@Localizer["My_Orders"]</h2>
-
-<form method="get" class="mb-4 d-flex gap-2">
-    <input type="text" name="search" value="@Model.Search" class="form-control" placeholder="@Localizer["Search"] (Sipariş ID)" style="max-width:300px;" />
-    
-    <select name="sortBy" class="form-select" style="max-width:200px;">
-        <option value="Newest" selected="@(Model.SortBy == "Newest")">@Localizer["Newest"]</option>
-        <option value="Oldest" selected="@(Model.SortBy == "Oldest")">@Localizer["Oldest"]</option>
-        <option value="TotalDesc" selected="@(Model.SortBy == "TotalDesc")">@Localizer["TotalDesc"]</option>
-        <option value="TotalAsc" selected="@(Model.SortBy == "TotalAsc")">@Localizer["TotalAsc"]</option>
-    </select>
-
-    <button type="submit" class="btn btn-primary">@Localizer["Search"]</button>
-</form>
+<div class="page-header mb-4">
+    <div>
+        <h1 class="page-title"><i class="bi bi-clipboard-check me-2 text-primary"></i> @Localizer["All_Orders_Admin"]</h1>
+        <p class="page-subtitle">@Model.TotalOrders adet sipariş sistemde kayıtlı</p>
+    </div>
+    <!-- Integrated Search -->
+    <div class="d-flex gap-3 align-items-center flex-wrap">
+        <form method="get" class="d-flex gap-2 align-items-center">
+            <div class="search-bar" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); min-width: 300px;">
+                <i class="bi bi-search text-secondary"></i>
+                <input type="text" name="search" value="@Model.Search" placeholder="Sipariş ID veya e-posta ara..." />
+            </div>
+            <select name="sortBy" class="form-select bg-dark text-light border-secondary border-opacity-25" style="width: 160px; font-size: 0.85rem; border-radius: 10px;">
+                <option value="Newest" selected="@(Model.SortBy == "Newest")">@Localizer["Newest"]</option>
+                <option value="Oldest" selected="@(Model.SortBy == "Oldest")">@Localizer["Oldest"]</option>
+                <option value="TotalDesc" selected="@(Model.SortBy == "TotalDesc")">@Localizer["TotalDesc"]</option>
+                <option value="TotalAsc" selected="@(Model.SortBy == "TotalAsc")">@Localizer["TotalAsc"]</option>
+            </select>
+            <button type="submit" class="btn-primary" style="border-radius: 10px; padding: 0.6rem 1.25rem;">@Localizer["Search"]</button>
+        </form>
+    </div>
+</div>
 
 @if (Model.Orders == null || !Model.Orders.Any())
 {
-    <div class="alert alert-warning">
-        @Localizer["Orders_Empty"]
+    <div class="saas-card text-center py-5 animate-fade-in" style="background: rgba(30, 41, 59, 0.4); border: 1px dashed rgba(255,255,255,0.1); border-radius: 24px;">
+        <div class="mb-4" style="font-size: 4rem; opacity: 0.1;">
+            <i class="bi bi-inbox"></i>
+        </div>
+        <h3 class="fw-bold mb-2">@Localizer["Orders_Empty"]</h3>
+        <p class="text-secondary mb-0 mx-auto" style="max-width: 400px; font-size: 0.95rem;">
+            Sisteme kayıtlı herhangi bir sipariş bulunamadı. Aktif siparişler burada listelenecektir.
+        </p>
     </div>
 }
 else
 {
-    foreach (var order in Model.Orders)
-    {
-        <div class="card shadow-lg mb-4"
-             style="background:#1e293b;color:#e2e8f0;border:none;border-radius:18px;">
-
-            <div class="card-body">
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-
-                    <div>
-                        <h6 class="text-secondary mb-1">
-                            @Localizer["Order_Date"]
-                        </h6>
-                        <h5 class="fw-bold mb-2">
-                            @order.CreatedAt.ToString("dd.MM.yyyy HH:mm:ss")
-                        </h5>
-
-                        <div class="small text-muted mb-2">ID: @order.Id</div>
-
-                        @if (order.Status == "Bekliyor")
-                        {
-                            <span class="badge bg-warning text-dark">@Localizer["Pending"]</span>
-                        }
-                        else if (order.Status == "Onaylandı")
-                        {
-                            <span class="badge bg-success">@Localizer["Approved"]</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">@Localizer["Cancelled"]</span>
-                        }
-                    </div>
-
-                    <div class="text-end">
-                        <h6 class="text-secondary mb-1">
-                            @Localizer["Total_Amount"]
-                        </h6>
-                        <h4 class="fw-bold text-success mb-3">
-                            @CurrencyService.GetFormattedPrice(order.TotalAmount)
-                        </h4>
-                        
-                        <form asp-action="UpdateStatus" method="post" class="d-flex align-items-center gap-2 justify-content-end">
-                            <input type="hidden" name="orderId" value="@order.Id" />
-                            <select name="status" class="form-select form-select-sm" style="width: auto;">
-                                <option value="Bekliyor" selected="@(order.Status == "Bekliyor" ? "selected" : null)">@Localizer["Pending"]</option>
-                                <option value="Onaylandı" selected="@(order.Status == "Onaylandı" ? "selected" : null)">@Localizer["Approved"]</option>
-                                <option value="İptal Edildi" selected="@(order.Status == "İptal Edildi" ? "selected" : null)">@Localizer["Cancelled"]</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary btn-sm">@Localizer["Update"]</button>
-                        </form>
-                    </div>
-
-                </div>
-
-                <hr style="border-color:#334155;" />
-
-                <div class="mt-3">
-
-                    @foreach (var item in order.Items)
+    <!-- Table View for Admin -->
+    <div class="saas-card p-0 overflow-hidden mb-4">
+        <div class="table-responsive">
+            <table class="table table-borderless table-hover mb-0" style="color: var(--text-primary);">
+                <thead style="border-bottom: 1px solid var(--border-color); font-size: 0.75rem; letter-spacing: 0.05em; color: var(--text-secondary); text-transform: uppercase;">
+                    <tr>
+                        <th class="ps-4 py-3 fw-semibold">ID</th>
+                        <th class="py-3 fw-semibold">@Localizer["User_Email"]</th>
+                        <th class="py-3 fw-semibold">@Localizer["Order_Date"]</th>
+                        <th class="py-3 fw-semibold">@Localizer["Total_Amount"]</th>
+                        <th class="py-3 fw-semibold">@Localizer["Current_Status"]</th>
+                        <th class="py-3 fw-semibold text-end pe-4">@Localizer["Action"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.Orders)
                     {
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-
-                            <div>
-                                <span class="fw-semibold">
-                                    @item.GetLocalizedName(currentCulture, Localizer)
-                                </span>
-                            </div>
-
-                            <div class="text-end text-info">
-                                @item.Quantity x @CurrencyService.GetFormattedPrice(item.Price)
-                            </div>
-
-                        </div>
+                        <tr style="border-bottom: 1px solid var(--border-color); vertical-align: middle;">
+                            <td class="ps-4 text-secondary" style="font-size: 0.78rem; font-family: monospace; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                @order.Id
+                            </td>
+                            <td style="font-size: 0.875rem;">@order.UserEmail</td>
+                            <td class="text-secondary" style="font-size: 0.875rem;">@order.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td style="font-weight: 600; color: #4ade80;">@CurrencyService.GetFormattedPrice(order.TotalAmount)</td>
+                            <td>
+                                @if (order.Status == "Bekliyor")
+                                {
+                                    <span class="badge" style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); padding: 4px 10px; border-radius: 8px; font-size: 0.78rem;">
+                                        <i class="bi bi-clock me-1"></i>@Localizer["Pending"]
+                                    </span>
+                                }
+                                else if (order.Status == "Onaylandı")
+                                {
+                                    <span class="badge" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); padding: 4px 10px; border-radius: 8px; font-size: 0.78rem;">
+                                        <i class="bi bi-check-circle me-1"></i>@Localizer["Approved"]
+                                    </span>
+                                }
+                                else if (order.Status == "Yolda")
+                                {
+                                    <span class="badge" style="background: rgba(14,165,233,0.15); color: #0ea5e9; border: 1px solid rgba(14,165,233,0.3); padding: 4px 10px; border-radius: 8px; font-size: 0.78rem;">
+                                        <i class="bi bi-truck me-1"></i>@Localizer["Shipped"]
+                                    </span>
+                                }
+                                else if (order.Status == "İletildi")
+                                {
+                                    <span class="badge" style="background: rgba(37,99,235,0.15); color: #2563eb; border: 1px solid rgba(37,99,235,0.3); padding: 4px 10px; border-radius: 8px; font-size: 0.78rem;">
+                                        <i class="bi bi-check2-all me-1"></i>@Localizer["Delivered"]
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge" style="background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); padding: 4px 10px; border-radius: 8px; font-size: 0.78rem;">
+                                        <i class="bi bi-x-circle me-1"></i>@Localizer["Cancelled"]
+                                    </span>
+                                }
+                            </td>
+                            <td class="pe-4 text-end">
+                                <div class="d-flex justify-content-end align-items-center gap-2">
+                                    <a asp-controller="Order" asp-action="Details" asp-route-id="@order.Id"
+                                       class="icon-btn p-1" title="Detay" style="font-size: 1.1rem;">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <!-- Inline Status Update -->
+                                    <form asp-action="UpdateStatus" method="post" class="d-flex align-items-center gap-2">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <select name="status" class="form-select form-select-sm" style="width: auto;">
+                                            <option value="Bekliyor" selected="@(order.Status == "Bekliyor" ? "selected" : null)">@Localizer["Pending"]</option>
+                                            <option value="Onaylandı" selected="@(order.Status == "Onaylandı" ? "selected" : null)">@Localizer["Approved"]</option>
+                                            <option value="Yolda" selected="@(order.Status == "Yolda" ? "selected" : null)">@Localizer["Shipped"]</option>
+                                            <option value="İletildi" selected="@(order.Status == "İletildi" ? "selected" : null)">@Localizer["Delivered"]</option>
+                                            <option value="İptal Edildi" selected="@(order.Status == "İptal Edildi" ? "selected" : null)">@Localizer["Cancelled"]</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary btn-sm">@Localizer["Update"]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                </div>
-
+    <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <div class="d-flex justify-content-between align-items-center" style="font-size: 0.875rem;">
+            <span class="text-secondary">
+                @((Model.CurrentPage - 1) * 8 + 1)-@(Math.Min(Model.CurrentPage * 8, Model.TotalOrders)) / @Model.TotalOrders sipariş
+            </span>
+            <div class="d-flex gap-1">
+                @if (Model.CurrentPage > 1)
+                {
+                    <a asp-action="AdminOrders" asp-route-page="@(Model.CurrentPage - 1)" asp-route-search="@Model.Search" asp-route-sortBy="@Model.SortBy"
+                       class="btn-secondary px-3 py-1 text-secondary" style="border: none; font-size: 0.875rem;">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                }
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a asp-action="AdminOrders" asp-route-page="@i" asp-route-search="@Model.Search" asp-route-sortBy="@Model.SortBy"
+                       class="btn-secondary px-3 py-1 @(i == Model.CurrentPage ? "" : "text-secondary")"
+                       style="border: none; font-size: 0.875rem; @(i == Model.CurrentPage ? "background-color: rgba(37,99,235,0.15); color: var(--primary);" : "")">
+                        @i
+                    </a>
+                }
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a asp-action="AdminOrders" asp-route-page="@(Model.CurrentPage + 1)" asp-route-search="@Model.Search" asp-route-sortBy="@Model.SortBy"
+                       class="btn-secondary px-3 py-1 text-secondary" style="border: none; font-size: 0.875rem;">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                }
             </div>
         </div>
     }
-}
-
-@if (Model.TotalPages > 1)
-{
-    <div class="mt-4">
-        @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-            <a asp-action="MyOrders" asp-route-page="@i" asp-route-search="@Model.Search" asp-route-sortBy="@Model.SortBy"
-               class="btn btn-secondary @(i == Model.CurrentPage ? "active" : "")">
-                @i
-            </a>
-        }
-    </div>
 }

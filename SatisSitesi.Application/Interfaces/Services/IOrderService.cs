@@ -12,5 +12,8 @@ namespace SatisSitesi.Application.Interfaces.Services
         List<OrderEntity> GetAllOrders();
         OrderIndexModel GetPagedAdminOrders(string search, string sortBy, int page, int pageSize);
         void UpdateOrderStatus(string orderId, string newStatus);
+        OrderViewModel GetOrderById(string orderId);
+        int GetPendingOrdersCount();
+        int GetUserNotificationCount(string userId);
     }
 }

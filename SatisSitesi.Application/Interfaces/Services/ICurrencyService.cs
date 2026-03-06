@@ -11,4 +11,9 @@ public interface ICurrencyService
     /// Returns the converted raw decimal value for calculation purposes.
     /// </summary>
     decimal GetConvertedPrice(decimal basePriceTry);
+
+    /// <summary>
+    /// Returns the symbol for the current local currency (e.g., $, ₺).
+    /// </summary>
+    string GetCurrencySymbol();
 }

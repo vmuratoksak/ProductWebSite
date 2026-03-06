@@ -24,6 +24,8 @@ namespace SatisSitesi.Domain.Entities
         [Range(0, 100000)]
         public int Stock { get; set; }
 
+        public string? ImageUrl { get; set; }
+
         public Dictionary<string, string> NameTranslations { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> DescriptionTranslations { get; set; } = new Dictionary<string, string>();
 
@@ -53,6 +55,31 @@ namespace SatisSitesi.Domain.Entities
             }
 
             return Description ?? "";
+        }
+
+        public string GetResolvedImageUrl()
+        {
+            const string placeholder = "/images/placeholder.png";
+            string source = !string.IsNullOrEmpty(ImageUrl) ? ImageUrl : Name;
+
+            if (string.IsNullOrEmpty(source)) return placeholder;
+
+            if (source.Contains("/") || source.Contains("."))
+            {
+                return source.StartsWith("/") ? source : $"/{source}";
+            }
+
+            // Map simple names to our new professional images
+            var cleanName = source.ToLower()
+                .Replace(" ", "-")
+                .Replace("ş", "s")
+                .Replace("ı", "i")
+                .Replace("ğ", "g")
+                .Replace("ü", "u")
+                .Replace("ç", "c")
+                .Replace("ö", "o");
+
+            return $"/images/products/{cleanName}.png";
         }
     }
 }

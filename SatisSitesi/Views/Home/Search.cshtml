@@ -1,0 +1,155 @@
+
+@using SatisSitesi.Application.Models
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Http
+@using SatisSitesi.Resources
+@model GlobalSearchViewModel
+@using SatisSitesi.Application.Interfaces.Services
+@inject ICurrencyService CurrencyService
+@inject IStringLocalizer<SharedResource> Localizer
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Arama Sonuçları";
+    var userRole = HttpContextAccessor.HttpContext?.Session.GetString("UserRole");
+}
+
+<div class="page-header mb-4">
+    <div>
+        <h1 class="page-title">
+            <i class="bi bi-search text-primary me-2"></i> Arama Sonuçları
+        </h1>
+        <p class="page-subtitle">"<strong>@Model.Query</strong>" için toplam @Model.TotalResults sonuç bulundu.</p>
+    </div>
+    <a href="javascript:history.back()" class="btn-secondary">
+        <i class="bi bi-arrow-left"></i> Geri Dön
+    </a>
+</div>
+
+@if (Model.TotalResults == 0)
+{
+    <div class="saas-card text-center py-5">
+        <div class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 80px; height: 80px;">
+            <i class="bi bi-search text-secondary fs-1"></i>
+        </div>
+        <h3>Eşleşme Bulunamadı</h3>
+        <p class="text-secondary max-w-500 mx-auto">Aradığınız kriterlere uygun ürün, müşteri veya sipariş kaydı bulunmuyor. Farklı anahtar kelimelerle tekrar deneyebilirsiniz.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn-primary mt-3">Kontrol Paneline Dön</a>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        <!-- Products Results -->
+        @if (Model.Products != null && Model.Products.Any())
+        {
+            <div class="col-12">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="bi bi-box-seam text-primary fs-4"></i>
+                    <h4 class="mb-0">Ürünler (@Model.Products.Count)</h4>
+                </div>
+                <div class="row g-3">
+                    @foreach (var prod in Model.Products)
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            <a asp-controller="Product" asp-action="Index" asp-route-search="@prod.Name" class="saas-card d-block hover-lift text-decoration-none h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded bg-primary bg-opacity-10 p-0 overflow-hidden d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; position: relative;">
+                                        @if (prod.Stock == 0)
+                                        {
+                                            <span class="badge badge-premium badge-premium-out" style="position: absolute; top: 2px; right: 2px; padding: 2px 5px; font-size: 0.5rem;">
+                                                <i class="bi bi-exclamation-octagon"></i>
+                                            </span>
+                                        }
+                                        else if (prod.Stock < 10)
+                                        {
+                                            <span class="badge badge-premium badge-premium-low" style="position: absolute; top: 2px; right: 2px; padding: 2px 5px; font-size: 0.5rem;">
+                                                <i class="bi bi-lightning-charge"></i>
+                                            </span>
+                                        }
+                                        <img src="@prod.GetResolvedImageUrl()" alt="@prod.Name" style="max-height: 100%; max-width: 100%; object-fit: contain; padding: 4px;" />
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h6 class="text-white mb-1 text-truncate">@prod.Name</h6>
+                                        <div class="text-secondary small d-flex align-items-center gap-2">
+                                            <span>@CurrencyService.GetFormattedPrice(prod.Price)</span>
+                                            <span class="opacity-50">•</span>
+                                            <span class="@(prod.Stock == 0 ? "text-danger" : (prod.Stock < 10 ? "text-warning" : "text-secondary"))">
+                                                @prod.Stock @Localizer["Stock"]
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- User Results (Admin only results effectively) -->
+        @if (Model.Users != null && Model.Users.Any())
+        {
+            <div class="col-12 mt-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="bi bi-people text-success fs-4"></i>
+                    <h4 class="mb-0">Müşteriler (@Model.Users.Count)</h4>
+                </div>
+                <div class="row g-3">
+                    @foreach (var user in Model.Users)
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            <a asp-controller="Name" asp-action="Index" asp-route-search="@user.Username" class="saas-card d-block hover-lift text-decoration-none h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="user-avatar" style="width: 45px; height: 45px; font-size: 1rem;">
+                                        @user.Username.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h6 class="text-white mb-1 text-truncate">@user.Username</h6>
+                                        <div class="text-secondary small">@user.Email</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Order Results -->
+        @if (Model.Orders != null && Model.Orders.Any())
+        {
+            <div class="col-12 mt-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="bi bi-receipt text-warning fs-4"></i>
+                    <h4 class="mb-0">Siparişler (@Model.Orders.Count)</h4>
+                </div>
+                <div class="row g-3">
+                    @foreach (var order in Model.Orders)
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            @{
+                                var action = userRole == "Admin" ? "AdminOrders" : "MyOrders";
+                            }
+                            <a asp-controller="Order" asp-action="@action" asp-route-search="@order.Id" class="saas-card d-block hover-lift text-decoration-none h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded bg-warning bg-opacity-10 p-3">
+                                        <i class="bi bi-hash text-warning fs-4"></i>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h6 class="text-white mb-1 text-truncate">Sipariş #@(order.Id?.Length > 6 ? order.Id.Substring(order.Id.Length - 6) : order.Id)</h6>
+                                        <div class="d-flex gap-2">
+                                            <span class="text-secondary small">@CurrencyService.GetFormattedPrice(order.TotalAmount)</span>
+                                            <span class="badge @(order.Status == "Onaylandı" ? "bg-success" : (order.Status == "İptal Edildi" ? "bg-danger" : "bg-warning")) p-1" style="font-size: 0.65rem;">
+                                                @order.Status
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

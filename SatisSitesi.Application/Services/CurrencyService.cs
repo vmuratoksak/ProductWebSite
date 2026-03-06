@@ -35,6 +35,14 @@ public class CurrencyService : ICurrencyService
         return ConvertTryToCurrency(basePriceTry, targetCurrency);
     }
 
+    public string GetCurrencySymbol()
+    {
+        var currentCulture = CultureInfo.CurrentUICulture.Name;
+        var targetCurrency = GetCurrencyForCulture(currentCulture);
+        var formatCulture = GetFormatCultureForCurrency(targetCurrency);
+        return formatCulture.NumberFormat.CurrencySymbol;
+    }
+
     private string GetCurrencyForCulture(string cultureName)
     {
         return cultureName.ToLowerInvariant() switch

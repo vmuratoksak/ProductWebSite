@@ -67,16 +67,46 @@ namespace SatisSitesi.Application.Services
                 .Take(pageSize)
                 .ToList();
 
+            var viewModels = new List<ProductViewModel>();
+            foreach (var p in products)
+            {
+                string badgeText = string.Empty;
+                string badgeClass = string.Empty;
+                if (p.Stock == 0)
+                {
+                    badgeText = "Out_Of_Stock";
+                    badgeClass = "badge-premium-out";
+                }
+                else if (p.Stock < 10)
+                {
+                    badgeText = "Low_Stock";
+                    badgeClass = "badge-premium-low";
+                }
+
+                viewModels.Add(new ProductViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name ?? "Unnamed Product",
+                    Description = p.Description ?? "No description available.",
+                    Price = p.Price,
+                    Stock = p.Stock,
+                    ImageUrl = p.GetResolvedImageUrl(),
+                    BadgeText = badgeText,
+                    BadgeClass = badgeClass
+                });
+            }
+
             return new ProductIndexModel
             {
-                Products = products,
+                Products = viewModels,
                 Search = search,
                 SortBy = sortBy,
                 MinPrice = minPrice,
                 MaxPrice = maxPrice,
                 InStockOnly = inStockOnly,
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+                TotalProducts = totalCount
             };
         }
 

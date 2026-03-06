@@ -2,35 +2,122 @@
 @using SatisSitesi.Resources
 @inject IStringLocalizer<SharedResource> Localizer
 @{
-    ViewData["Title"] = Localizer["Used_Technologies"];
+    ViewData["Title"] = Localizer["Technologies"];
 }
 
-<h2 class="mb-4">@Localizer["Used_Technologies"]</h2>
+<div class="page-header mb-4">
+    <div>
+        <h1 class="page-title">@Localizer["Used_Technologies"]</h1>
+        <p class="page-subtitle">@Localizer["Tech_MVC"] &mdash; @Localizer["Tech_Mongo"] &mdash; @Localizer["Tech_Bootstrap"]</p>
+    </div>
+</div>
 
-<div class="card-premium">
+<div class="row g-4">
+    <!-- ASP.NET Core MVC -->
+    <div class="col-md-6 col-lg-4">
+        <div class="saas-card h-100 p-4" style="border-top: 3px solid #512BD4;">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 48px; height: 48px; background-color: rgba(81,43,212,0.1); color: #512BD4;">
+                    <i class="bi bi-braces fs-4"></i>
+                </div>
+                <h5 style="margin: 0; font-weight: 600;">ASP.NET Core MVC</h5>
+            </div>
+            <p class="text-secondary" style="font-size: 0.9rem;">
+                @Localizer["Tech_Session"] &mdash; @Localizer["Tech_Role"].<br>
+                Clean Architecture, Controllers → Services → Repositories.
+            </p>
+            <span class="badge" style="background-color: rgba(81,43,212,0.15); color: #9d7bf0; font-size: 0.75rem;">.NET 8</span>
+        </div>
+    </div>
 
-    <ul class="list-group list-group-flush bg-transparent">
-        <li class="list-group-item bg-transparent text-light">
-            @Localizer["Tech_MVC"]
-        </li>
-        <li class="list-group-item bg-transparent text-light">
-            @Localizer["Tech_Mongo"]
-        </li>
-        <li class="list-group-item bg-transparent text-light">
-            @Localizer["Tech_Session"]
-        </li>
-        <li class="list-group-item bg-transparent text-light">
-            @Localizer["Tech_Role"]
-        </li>
-        <li class="list-group-item bg-transparent text-light">
-            @Localizer["Tech_Cart"]
-        </li>
-        <li class="list-group-item bg-transparent text-light">
-            @Localizer["Tech_Stock"]
-        </li>
-        <li class="list-group-item bg-transparent text-light">
-            @Localizer["Tech_Bootstrap"]
-        </li>
-    </ul>
+    <!-- MongoDB -->
+    <div class="col-md-6 col-lg-4">
+        <div class="saas-card h-100 p-4" style="border-top: 3px solid #47A248;">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 48px; height: 48px; background-color: rgba(71,162,72,0.1); color: #47A248;">
+                    <i class="bi bi-database fs-4"></i>
+                </div>
+                <h5 style="margin: 0; font-weight: 600;">MongoDB</h5>
+            </div>
+            <p class="text-secondary" style="font-size: 0.9rem;">
+                @Localizer["Tech_Mongo"] — NoSQL.<br>
+                Users, Products, Orders, Carts collections.
+            </p>
+            <span class="badge" style="background-color: rgba(71,162,72,0.15); color: #47A248; font-size: 0.75rem;">NoSQL</span>
+        </div>
+    </div>
 
+    <!-- CSS & Chart.js -->
+    <div class="col-md-6 col-lg-4">
+        <div class="saas-card h-100 p-4" style="border-top: 3px solid #2563EB;">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 48px; height: 48px; background-color: rgba(37,99,235,0.1); color: #2563EB;">
+                    <i class="bi bi-window-sidebar fs-4"></i>
+                </div>
+                <h5 style="margin: 0; font-weight: 600;">Vanilla CSS &amp; Chart.js</h5>
+            </div>
+            <p class="text-secondary" style="font-size: 0.9rem;">
+                @Localizer["Tech_Bootstrap"].<br>
+                Dark SaaS UI, Flexbox/Grid, AJAX chart data.
+            </p>
+            <span class="badge" style="background-color: rgba(37,99,235,0.15); color: #2563EB; font-size: 0.75rem;">CSS + JS</span>
+        </div>
+    </div>
+
+    <!-- Session & Auth -->
+    <div class="col-md-6 col-lg-4">
+        <div class="saas-card h-100 p-4" style="border-top: 3px solid #F59E0B;">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 48px; height: 48px; background-color: rgba(245,158,11,0.1); color: #F59E0B;">
+                    <i class="bi bi-shield-lock fs-4"></i>
+                </div>
+                <h5 style="margin: 0; font-weight: 600;">Session &amp; Identity</h5>
+            </div>
+            <p class="text-secondary" style="font-size: 0.9rem;">
+                @Localizer["Tech_Session"].<br>
+                @Localizer["Tech_Role"].
+            </p>
+            <span class="badge" style="background-color: rgba(245,158,11,0.15); color: #F59E0B; font-size: 0.75rem;">Auth</span>
+        </div>
+    </div>
+
+    <!-- E-Commerce -->
+    <div class="col-md-6 col-lg-4">
+        <div class="saas-card h-100 p-4" style="border-top: 3px solid #E11D48;">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 48px; height: 48px; background-color: rgba(225,29,72,0.1); color: #E11D48;">
+                    <i class="bi bi-cart-check fs-4"></i>
+                </div>
+                <h5 style="margin: 0; font-weight: 600;">Shop &amp; @Localizer["Stock"]</h5>
+            </div>
+            <p class="text-secondary" style="font-size: 0.9rem;">
+                @Localizer["Tech_Cart"].<br>
+                @Localizer["Tech_Stock"].
+            </p>
+            <span class="badge" style="background-color: rgba(225,29,72,0.15); color: #E11D48; font-size: 0.75rem;">E-Commerce</span>
+        </div>
+    </div>
+
+    <!-- Localization -->
+    <div class="col-md-6 col-lg-4">
+        <div class="saas-card h-100 p-4" style="border-top: 3px solid #10B981;">
+            <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 48px; height: 48px; background-color: rgba(16,185,129,0.1); color: #10B981;">
+                    <i class="bi bi-translate fs-4"></i>
+                </div>
+                <h5 style="margin: 0; font-weight: 600;">@Localizer["Language"] (i18n)</h5>
+            </div>
+            <p class="text-secondary" style="font-size: 0.9rem;">
+                ASP.NET Core Localization with .resx files.<br>
+                TR / EN / DE / FR / AR — RTL support.
+            </p>
+            <span class="badge" style="background-color: rgba(16,185,129,0.15); color: #10B981; font-size: 0.75rem;">5 Languages</span>
+        </div>
+    </div>
 </div>

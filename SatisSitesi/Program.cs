@@ -102,7 +102,7 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
-builder.Services.AddScoped<INameService, NameService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ICurrencyService, CurrencyService>();
 
 // TRANSLATION API (DI)
@@ -114,15 +114,15 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// LOCALIZATION MIDDLEWARE — must be before UseRouting
+app.UseRequestLocalization();
+
 app.UseRouting();
 
-// 🔥 SIRASI ÖNEMLİ
-app.UseAuthentication();   // EKLENDİ
+// Auth pipeline
+app.UseAuthentication();
 app.UseSession();
 app.UseAuthorization();
-
-// LOCALIZATION MIDDLEWARE
-app.UseRequestLocalization();
 
 app.MapControllerRoute(
     name: "default",

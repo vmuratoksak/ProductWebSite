@@ -1,40 +1,179 @@
 @using SatisSitesi.Domain.Entities
 @model ProductEntity
+@using SatisSitesi.Application.Interfaces.Services
+@inject ICurrencyService CurrencyService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SatisSitesi.Resources.SharedResource> Localizer
 
-<h2>âœï¸ @Localizer["Edit_Product"]</h2>
+@{
+    ViewData["Title"] = Localizer["Edit_Product"];
+}
 
-<form method="post">
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="CreatedAt" />
-    <!-- TR (Base Data) -->
-    <div class="card mb-3 border-warning">
-        <div class="card-header bg-warning text-dark fw-bold">ðŸ‡¹ðŸ‡· TÃ¼rkÃ§e (@Localizer["Base_Data"])</div>
-        <div class="card-body">
-            <div class="mb-3">
-                <label>@Localizer["Product_Name"]</label>
-                <input asp-for="Name" class="form-control" required />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label>@Localizer["Description_Label"]</label>
-                <textarea asp-for="Description" class="form-control" required></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label>@Localizer["Price"]</label>
-                    <input asp-for="Price" type="number" step="0.01" class="form-control" required />
-                    <span asp-validation-for="Price" class="text-danger"></span>
+<div class="page-header mb-5">
+    <div>
+        <h1 class="page-title fs-2">
+            <i class="bi bi-sliders2-vertical me-2"></i> @Localizer["Edit_Product"]
+        </h1>
+        <p class="page-subtitle">ID: <span class="text-info">@Model.Id</span></p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Index" class="btn-secondary px-4 py-2" style="text-decoration: none; border-radius: 12px;">
+            <i class="bi bi-arrow-left me-2"></i> @Localizer["Cancel"]
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Quick Stats / Status Column -->
+    <div class="col-lg-4">
+        <div class="saas-card p-4 animate-fade-in mb-4" style="background: rgba(30, 41, 59, 0.4);">
+            <h5 class="fw-bold mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+                <i class="bi bi-lightning-charge me-2 text-warning"></i> Durum Özeti
+            </h5>
+            
+            <div class="mb-4">
+                <label class="text-secondary small d-block mb-1">Mevcut Stok</label>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="fs-2 fw-bold @(Model.Stock < 5 ? "text-danger" : "text-primary")">@Model.Stock</span>
+                    @if(Model.Stock < 5) {
+                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">Kritik Seviye</span>
+                    }
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label>@Localizer["Stock"]</label>
-                    <input asp-for="Stock" type="number" class="form-control" required />
-                    <span asp-validation-for="Stock" class="text-danger"></span>
-                </div>
             </div>
+
+            <div class="mb-4">
+                <label class="text-secondary small d-block mb-1">Birim Fiyat</label>
+                <span class="fs-3 fw-semibold text-success">@CurrencyService.GetFormattedPrice(Model.Price)</span>
+            </div>
+
+            <div class="auth-divider my-4"><span>Hızlı İşlemler</span></div>
+
+            <div class="d-grid gap-2">
+                <a asp-action="IncreaseStock" asp-route-id="@Model.Id" class="btn-secondary text-primary py-2 d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-plus-lg"></i> Stok Arttır (+1)
+                </a>
+                <a asp-action="DecreaseStock" asp-route-id="@Model.Id" class="btn-secondary text-warning py-2 d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-dash-lg"></i> Stok Azalt (-1)
+                </a>
+            </div>
+        </div>
+
+        <div class="saas-card p-4 animate-fade-in" style="background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.2);">
+             <h5 class="fw-bold text-danger mb-3">Tehlikeli Bölge</h5>
+             <p class="text-secondary small mb-3">Bu ürünü silmek kalıcı bir işlemdir ve geri alınamaz.</p>
+             <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger w-100 py-2" onclick="return confirm('Emin misiniz?');">
+                 <i class="bi bi-trash me-2"></i> Ürünü Envanterden Sil
+             </a>
         </div>
     </div>
 
-    <button type="submit" class="btn btn-warning btn-lg w-100 mt-4">ðŸ’¾ @Localizer["Save_Changes"]</button>
-</form>
+    <!-- Edit Form Column -->
+    <div class="col-lg-8">
+        <div class="saas-card animate-fade-in p-4 p-md-5">
+            <h5 class="fw-bold mb-4">Ürün Bilgilerini Güncelle</h5>
+            
+            <form method="post" class="needs-validation" novalidate>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedAt" />
+                <input type="hidden" asp-for="CreatedAt" />
+
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="auth-group">
+                            <label class="form-label text-secondary fs-6 mb-2">@Localizer["Product_Name"]</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-tag auth-icon"></i>
+                                <input asp-for="Name" class="auth-input" placeholder="Ürün adı..." required />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small mt-2 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="auth-group">
+                            <label class="form-label text-secondary fs-6 mb-2">@Localizer["Description_Label"]</label>
+                            <div class="auth-input-wrapper" style="align-items: flex-start; padding-top: 12px;">
+                                <i class="bi bi-textarea-t auth-icon"></i>
+                                <textarea asp-for="Description" class="auth-input" style="height: 120px; resize: none; padding-top: 5px;" placeholder="Ürün detayları..." required></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger small mt-2 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="auth-group">
+                            <label class="form-label text-secondary fs-6 mb-2">@Localizer["Price"] (@CurrencyService.GetCurrencySymbol())</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-currency-dollar auth-icon"></i>
+                                <input asp-for="Price" type="number" step="0.01" class="auth-input" required />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger small mt-2 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="auth-group">
+                            <label class="form-label text-secondary fs-6 mb-2">@Localizer["Stock"]</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-box-seam auth-icon"></i>
+                                <input asp-for="Stock" type="number" class="auth-input" required />
+                            </div>
+                            <span asp-validation-for="Stock" class="text-danger small mt-2 d-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-group mb-5">
+                    <label class="form-label text-secondary fs-6 mb-3">Ürün Görselini Güncelle</label>
+                    <input type="hidden" asp-for="ImageUrl" id="selectedImageUrl" />
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <div class="image-select-card" onclick="selectImage('kitaplik')">
+                                <img src="/images/products/kitaplik.png" class="img-fluid rounded border border-2 border-transparent @(Model.ImageUrl == "kitaplik" ? "selected" : "")" alt="Kitaplık" />
+                                <div class="small text-center mt-1 text-secondary">Kitaplık</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="image-select-card" onclick="selectImage('kulaklik')">
+                                <img src="/images/products/kulaklik.png" class="img-fluid rounded border border-2 border-transparent @(Model.ImageUrl == "kulaklik" ? "selected" : "")" alt="Kulaklık" />
+                                <div class="small text-center mt-1 text-secondary">Kulaklık</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="image-select-card" onclick="selectImage('masa')">
+                                <img src="/images/products/masa.png" class="img-fluid rounded border border-2 border-transparent @(Model.ImageUrl == "masa" ? "selected" : "")" alt="Masa" />
+                                <div class="small text-center mt-1 text-secondary">Masa</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="image-select-card" onclick="selectImage('telefon-kilifi')">
+                                <img src="/images/products/telefon-kilifi.png" class="img-fluid rounded border border-2 border-transparent @(Model.ImageUrl == "telefon-kilifi" ? "selected" : "")" alt="Kılıf" />
+                                <div class="small text-center mt-1 text-secondary">Telefon Kılıfı</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    .image-select-card { cursor: pointer; transition: transform 0.2s; }
+                    .image-select-card:hover { transform: translateY(-3px); }
+                    .image-select-card img.selected { border-color: var(--primary-color) !important; background: rgba(37, 99, 235, 0.1); }
+                </style>
+
+                <script>
+                    function selectImage(name) {
+                        document.getElementById('selectedImageUrl').value = name;
+                        document.querySelectorAll('.image-select-card img').forEach(img => img.classList.remove('selected'));
+                        event.currentTarget.querySelector('img').classList.add('selected');
+                    }
+                </script>
+
+                <div class="mt-5">
+                    <button type="submit" class="btn-auth-primary w-100 py-3 d-flex align-items-center justify-content-center gap-3" style="border-radius: 16px;">
+                        <i class="bi bi-check-all fs-4"></i>
+                        <span style="font-weight: 700; letter-spacing: 0.5px;">@Localizer["Save_Changes"]</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

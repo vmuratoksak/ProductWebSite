@@ -1,0 +1,62 @@
+@model SatisSitesi.Domain.Entities.UserEntity
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["Profile"];
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="saas-card p-4">
+            <h3 class="fw-bold mb-4">👤 @Localizer["Profile"]</h3>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form asp-action="UpdateProfile" method="post">
+                <div class="mb-3">
+                    <label class="form-label">@Localizer["Username"]</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <input type="text" name="Username" class="form-control bg-dark text-light border-secondary" value="@Model.Username" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">@Localizer["Email"]</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+                        <input type="email" name="Email" class="form-control bg-dark text-light border-secondary" value="@Model.Email" required>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <button type="submit" class="btn btn-primary px-4 py-2">
+                        <i class="bi bi-check2-circle me-2"></i>@Localizer["Save_Changes"]
+                    </button>
+                    <a asp-action="Settings" class="btn btn-outline-secondary px-4 py-2">
+                        <i class="bi bi-gear me-2"></i>@Localizer["Settings"]
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

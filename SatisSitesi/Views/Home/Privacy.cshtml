@@ -2,27 +2,87 @@
 @using SatisSitesi.Resources
 @inject IStringLocalizer<SharedResource> Localizer
 @{
-    ViewData["Title"] = Localizer["Privacy_Policy"];
+    ViewData["Title"] = Localizer["Privacy"];
 }
 
-<h2 class="mb-4">@Localizer["Privacy_Policy"]</h2>
+<div class="page-header mb-5 text-center">
+    <div>
+        <h1 class="page-title fs-1 mb-2">
+            <i class="bi bi-shield-lock-fill text-primary me-2"></i> @Localizer["Privacy_Policy"]
+        </h1>
+        <p class="page-subtitle fs-5 mx-auto" style="max-width: 600px;">@Localizer["Privacy_Text_1"]</p>
+    </div>
+</div>
 
-<div class="card-premium">
+<div class="container" style="max-width: 1000px;">
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-12">
+            <!-- Educational Transparency -->
+            <div class="saas-card p-4 p-md-5 mb-4 animate-fade-in" style="background: linear-gradient(135deg, rgba(37,99,235,0.1), transparent); border-left: 4px solid var(--primary);">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-circle bg-primary bg-opacity-10 text-primary me-3">
+                        <i class="bi bi-book fs-4"></i>
+                    </div>
+                    <h3 class="h4 mb-0 fw-bold">Eğitim Amaçlı Bildirim</h3>
+                </div>
+                <div class="text-secondary fs-5" style="line-height: 1.8;">
+                    <p>@Localizer["Privacy_Text_1"]</p>
+                    <p class="mb-0">@Localizer["Privacy_Text_3"] Bu uygulama üzerinden yapılan işlemler <strong>test amaçlıdır</strong> ve herhangi bir finansal yükümlülük içermez.</p>
+                </div>
+            </div>
+        </div>
 
-    <p>
-        @Localizer["Privacy_Text_1"]
-    </p>
+        <div class="col-md-6">
+            <div class="saas-card h-100 p-4 p-md-5 animate-fade-in" style="animation-delay: 0.1s;">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-circle bg-success bg-opacity-10 text-success me-3">
+                        <i class="bi bi-database fs-4"></i>
+                    </div>
+                    <h3 class="h4 mb-0 fw-bold">Veri Saklama</h3>
+                </div>
+                <p class="text-secondary mb-4" style="line-height: 1.7;">
+                    @Localizer["Privacy_Text_2"]
+                </p>
+                <div class="alert bg-dark border-secondary bg-opacity-50 p-3 rounded-4 d-flex align-items-center gap-3">
+                    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                    <small class="text-secondary">@Localizer["Privacy_Text_4"]</small>
+                </div>
+            </div>
+        </div>
 
-    <p>
-        @Localizer["Privacy_Text_2"]
-    </p>
-
-    <p>
-        @Localizer["Privacy_Text_3"]
-    </p>
-
-    <p>
-        @Localizer["Privacy_Text_4"]
-    </p>
-
+        <div class="col-md-6">
+            <div class="saas-card h-100 p-4 p-md-5 animate-fade-in" style="animation-delay: 0.2s;">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-circle bg-info bg-opacity-10 text-info me-3">
+                        <i class="bi bi-incognito fs-4"></i>
+                    </div>
+                    <h3 class="h4 mb-0 fw-bold">Güvenlik &amp; Erişim</h3>
+                </div>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3 d-flex gap-3">
+                        <i class="bi bi-check2-circle text-info"></i>
+                        <span class="text-secondary">@Localizer["Tech_Session"]</span>
+                    </li>
+                    <li class="mb-3 d-flex gap-3">
+                        <i class="bi bi-check2-circle text-info"></i>
+                        <span class="text-secondary">@Localizer["Tech_Role"]</span>
+                    </li>
+                    <li class="mb-3 d-flex gap-3">
+                        <i class="bi bi-check2-circle text-info"></i>
+                        <span class="text-secondary">@Localizer["Tech_Stock"]</span>
+                    </li>
+                    <li class="d-flex gap-3">
+                        <i class="bi bi-check2-circle text-info"></i>
+                        <span class="text-secondary">Üçüncü taraf takip yazılımı kullanılmamaktadır.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-md-12 text-center mt-4">
+            <p class="text-secondary small">
+                <i class="bi bi-clock-history me-1"></i> Son Güncelleme: @DateTime.Now.ToString("MMMM yyyy")
+            </p>
+        </div>
+    </div>
 </div>

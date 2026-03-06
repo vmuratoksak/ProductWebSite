@@ -6,59 +6,129 @@
 @inject ICurrencyService CurrencyService
 
 @{
+    ViewData["Title"] = Localizer["Cart"];
     var currentCulture = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    
+    decimal subtotal = Model.Sum(x => x.TotalPrice);
+    decimal shipping = Model.Any() ? 10.00m : 0.00m; // fixed shipping for demo
+    decimal tax = subtotal * 0.10m; // 10% tax
+    decimal total = subtotal + shipping + tax;
 }
 
-<h2 class="fw-bold mb-4">🛒 @Localizer["Cart"]</h2>
+<div class="page-header mb-4">
+    <div>
+        <h1 class="page-title">@Localizer["Cart"]</h1>
+        <p class="page-subtitle">@Model.Sum(x => x.Quantity) @Localizer["Total_Orders"]</p>
+    </div>
+</div>
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">
-        @TempData["Error"]
+    <div class="alert alert-danger mb-4" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 8px;">
+        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
     </div>
 }
 
 @if (!Model.Any())
 {
-    <div class="alert alert-info">
-        @Localizer["Cart_Empty"]
+    <div class="saas-card text-center py-5">
+        <i class="bi bi-cart-x text-secondary" style="font-size: 3rem;"></i>
+        <h4 class="mt-3" style="color: var(--text-primary); font-weight: 600;">@Localizer["Cart_Empty"]</h4>
+        <p class="text-secondary mb-4">@Localizer["Orders_Empty"]</p>
+        <a asp-controller="Product" asp-action="Index" class="btn-primary px-4 py-2" style="font-weight: 500;">
+            @Localizer["Products"]
+        </a>
     </div>
 }
 else
 {
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Ürün</th>
-                <th>Fiyat</th>
-                <th>Adet</th>
-                <th>Toplam</th>
-                <th>İşlem</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.GetLocalizedName(currentCulture, Localizer)</td>
-                    <td>@CurrencyService.GetFormattedPrice(item.Price)</td>
-                    <td>
-                        <a asp-action="Decrease" asp-route-id="@item.Id" class="btn btn-warning btn-sm">-</a>
-                        @item.Quantity
-                        <a asp-action="Increase" asp-route-id="@item.Id" class="btn btn-success btn-sm">+</a>
-                    </td>
-                    <td>@CurrencyService.GetFormattedPrice(item.TotalPrice)</td>
-                    <td>
-                        <a asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Sil</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <div class="text-end mt-3">
-        <a asp-controller="Order" asp-action="Checkout" class="btn btn-success">
-            @Localizer["Confirm_Cart"]
-        </a>
+    <div class="row g-4">
+        <!-- Cart Items List -->
+        <div class="col-lg-8">
+            <div class="saas-card p-0">
+                <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center" style="border-color: var(--border-color) !important;">
+                    <h5 style="margin:0; font-weight: 600;">@Localizer["Total_Orders"] (@Model.Sum(x => x.Quantity))</h5>
+                </div>
+                
+                <div class="p-0">
+                    @foreach (var item in Model)
+                    {
+                        <div class="d-flex align-items-center p-3 border-bottom border-secondary" style="border-color: var(--border-color) !important; transition: background-color 0.2s;">
+                            
+                            <!-- Product Image -->
+                            <div class="rounded overflow-hidden me-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: rgba(255,255,255,0.02); border: 1px solid var(--border-color);">
+                                <img src="@item.ImageUrl" alt="@item.ProductName" style="max-width: 100%; max-height: 100%; object-fit: contain; padding: 0.5rem;" />
+                            </div>
+                            
+                            <!-- Product Details -->
+                            <div class="flex-grow-1">
+                                <h6 style="margin-bottom: 4px; font-weight: 500; font-size: 1rem;">@item.GetLocalizedName(currentCulture, Localizer)</h6>
+                                <div class="text-secondary" style="font-size: 0.875rem;">
+                                    @Localizer["Price"]: @CurrencyService.GetFormattedPrice(item.Price)
+                                </div>
+                            </div>
+                            
+                            <!-- Quantity Controls -->
+                            <div class="d-flex align-items-center gap-3 me-4">
+                                <div class="btn-group" role="group" style="background-color: var(--bg-main); border-radius: 6px; border: 1px solid var(--border-color);">
+                                    <a asp-action="Decrease" asp-route-id="@item.Id" class="btn btn-sm text-secondary" style="border: none; background: transparent;"><i class="bi bi-dash"></i></a>
+                                    <span class="btn btn-sm text-light" style="border: none; background: transparent; pointer-events: none; width: 40px; font-weight: 600;">@item.Quantity</span>
+                                    <a asp-action="Increase" asp-route-id="@item.Id" class="btn btn-sm text-secondary" style="border: none; background: transparent;"><i class="bi bi-plus"></i></a>
+                                </div>
+                            </div>
+                            
+                            <!-- Total & Delete -->
+                            <div class="text-end" style="min-width: 100px;">
+                                <div style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 8px;">
+                                    @CurrencyService.GetFormattedPrice(item.TotalPrice)
+                                </div>
+                                <a asp-action="Remove" asp-route-id="@item.Id" class="text-secondary hover-text-danger" style="text-decoration: none; font-size: 0.875rem; transition: color 0.2s;">
+                                    <i class="bi bi-trash me-1"></i> @Localizer["Delete"]
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="saas-card" style="position: sticky; top: 100px;">
+                <h5 style="margin-bottom: 24px; font-weight: 600;">@Localizer["Total_Amount"]</h5>
+                
+                <div class="d-flex justify-content-between mb-3 text-secondary" style="font-size: 0.95rem;">
+                    <span>@Localizer["Price"]</span>
+                    <span style="color: var(--text-primary); font-weight: 500;">@CurrencyService.GetFormattedPrice(subtotal)</span>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-3 text-secondary" style="font-size: 0.95rem;">
+                    <span>Shipping</span>
+                    <span style="color: var(--text-primary); font-weight: 500;">@CurrencyService.GetFormattedPrice(shipping)</span>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-3 text-secondary" style="font-size: 0.95rem;">
+                    <span>Tax (10%)</span>
+                    <span style="color: var(--text-primary); font-weight: 500;">@CurrencyService.GetFormattedPrice(tax)</span>
+                </div>
+                
+                <hr style="border-color: var(--border-color); margin: 20px 0;" />
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span style="font-size: 1.1rem; font-weight: 500;">@Localizer["Total_Amount"]</span>
+                    <span style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">@CurrencyService.GetFormattedPrice(total)</span>
+                </div>
+                
+                <a asp-controller="Order" asp-action="Checkout" class="btn-primary w-100 d-flex justify-content-center align-items-center gap-2 py-3" style="font-size: 1.05rem; font-weight: 500;">
+                    @Localizer["Confirm_Cart"] <i class="bi bi-arrow-right"></i>
+                </a>
+                
+                <div class="text-center mt-3 d-flex justify-content-center gap-2 text-secondary" style="font-size: 1.5rem;">
+                    <i class="bi bi-stripe"></i>
+                    <i class="bi bi-paypal"></i>
+                    <i class="bi bi-apple"></i>
+                </div>
+            </div>
+        </div>
     </div>
 }

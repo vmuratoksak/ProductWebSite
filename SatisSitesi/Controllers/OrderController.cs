@@ -13,6 +13,15 @@ namespace SatisSitesi.Controllers
             _orderService = orderService;
         }
 
+        // Redirect /Order to the correct page based on role
+        public IActionResult Index()
+        {
+            var role = HttpContext.Session.GetString("UserRole");
+            if (role == "Admin")
+                return RedirectToAction("AdminOrders");
+            return RedirectToAction("MyOrders");
+        }
+
         public IActionResult Checkout()
         {
             var userId = HttpContext.Session.GetString("UserId");
@@ -81,6 +90,31 @@ namespace SatisSitesi.Controllers
             }
 
             return RedirectToAction("AdminOrders");
+        }
+        public IActionResult Details(string id)
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            var role = HttpContext.Session.GetString("UserRole");
+
+            if (string.IsNullOrEmpty(userId) && role != "Admin")
+                return RedirectToAction("Login", "Auth");
+
+            var order = _orderService.GetOrderById(id);
+            
+            if (order == null)
+            {
+                TempData["Error"] = "Siparis bulunamadi.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // A user can only see their own order, unless they are Admin
+            if (role != "Admin" && order.UserId != userId)
+            {
+                TempData["Error"] = "Bu siparise eisim yetkiniz yok.";
+                return RedirectToAction("MyOrders");
+            }
+
+            return View(order);
         }
     }
 }

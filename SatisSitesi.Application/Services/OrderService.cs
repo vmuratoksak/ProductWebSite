@@ -118,7 +118,8 @@ namespace SatisSitesi.Application.Services
                 Search = search,
                 SortBy = sortBy,
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize)
+                TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+                TotalOrders = totalCount
             };
         }
 
@@ -177,6 +178,47 @@ namespace SatisSitesi.Application.Services
 
             order.Status = newStatus;
             _orderRepo.Update(order.Id, order);
+        }
+
+        public OrderViewModel GetOrderById(string orderId)
+        {
+            var order = _orderRepo.GetById(orderId);
+            if (order == null) return null;
+
+            var viewModel = new OrderViewModel
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                UserEmail = order.UserEmail,
+                TotalAmount = order.TotalAmount,
+                Status = order.Status,
+                CreatedAt = order.CreatedAt,
+                Items = order.Items.Select(item => {
+                    var product = _productRepo.GetById(item.ProductId);
+                    return new OrderItemViewModel
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = item.ProductName,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+                        ImageUrl = product != null && !string.IsNullOrEmpty(product.ImageUrl) ? product.ImageUrl : "/images/placeholder.png",
+                        NameTranslations = item.NameTranslations
+                    };
+                }).ToList()
+            };
+
+            return viewModel;
+        }
+
+        public int GetPendingOrdersCount()
+        {
+            return _orderRepo.GetAll().Count(x => x.Status == "Bekliyor");
+        }
+
+        public int GetUserNotificationCount(string userId)
+        {
+            // For users, show non-pending and non-cancelled orders as "notifications" (simple logic for now)
+            return _orderRepo.GetAll().Count(x => x.UserId == userId && x.Status != "Bekliyor" && x.Status != "İptal Edildi");
         }
     }
 }

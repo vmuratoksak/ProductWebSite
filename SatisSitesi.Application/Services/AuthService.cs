@@ -68,5 +68,40 @@ namespace SatisSitesi.Application.Services
 
             return user;
         }
+
+        public UserEntity GetUserById(string userId)
+        {
+            return _userRepo.GetById(userId);
+        }
+
+        public void UpdateProfile(string userId, string username, string email)
+        {
+            var user = _userRepo.GetById(userId);
+            if (user == null) throw new Exception("Kullanıcı bulunamadı.");
+
+            var existingUser = _userRepo.GetFirstOrDefault(x => x.Email == email && x.Id != userId);
+            if (existingUser != null) throw new Exception("Bu email başka bir kullanıcı tarafından kullanılıyor.");
+
+            user.Username = username;
+            user.Email = email;
+            _userRepo.Update(userId, user);
+        }
+
+        public void ChangePassword(string userId, string currentPassword, string newPassword)
+        {
+            var user = _userRepo.GetById(userId);
+            if (user == null) throw new Exception("Kullanıcı bulunamadı.");
+
+            if (!BCrypt.Net.BCrypt.Verify(currentPassword, user.Password))
+                throw new Exception("Mevcut şifre yanlış.");
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            _userRepo.Update(userId, user);
+        }
+
+        public void DeleteAccount(string userId)
+        {
+            _userRepo.Delete(userId);
+        }
     }
 }

@@ -1,38 +1,122 @@
 @using SatisSitesi.Domain.Entities
 @model ProductEntity
+@using SatisSitesi.Application.Interfaces.Services
+@inject ICurrencyService CurrencyService
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SatisSitesi.Resources.SharedResource> Localizer
 
-<h2>@Localizer["Add_New_Product"]</h2>
+@{
+    ViewData["Title"] = Localizer["Add_New_Product"];
+}
 
-<form method="post">
-    <!-- TR (Base Data) -->
-    <div class="card mb-3 border-primary">
-        <div class="card-header bg-primary text-white fw-bold">🇹🇷 Türkçe (@Localizer["Base_Data"])</div>
-        <div class="card-body">
-            <div class="mb-3">
-                <label>@Localizer["Product_Name"]</label>
-                <input asp-for="Name" class="form-control" required />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label>@Localizer["Description_Label"]</label>
-                <textarea asp-for="Description" class="form-control" required></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label>@Localizer["Price"]</label>
-                    <input asp-for="Price" type="number" step="0.01" class="form-control" required />
-                    <span asp-validation-for="Price" class="text-danger"></span>
+<div class="page-header mb-4">
+    <div>
+        <h1 class="page-title">
+            <i class="bi bi-plus-circle me-2"></i> @Localizer["Add_New_Product"]
+        </h1>
+        <p class="page-subtitle">Envantere yeni bir ürün kaydedin</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Index" class="btn-secondary px-4 py-2" style="text-decoration: none; border-radius: 12px;">
+            <i class="bi bi-arrow-left me-2"></i> @Localizer["Cancel"]
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="saas-card animate-fade-in p-4 p-md-5">
+            <form method="post" class="needs-validation" novalidate>
+                <div class="auth-group mb-4">
+                    <label class="form-label text-secondary fs-6 mb-2">@Localizer["Product_Name"]</label>
+                    <div class="auth-input-wrapper">
+                        <i class="bi bi-tag auth-icon"></i>
+                        <input asp-for="Name" class="auth-input" placeholder="Ürün adını girin..." required />
+                    </div>
+                    <span asp-validation-for="Name" class="text-danger small mt-2 d-block"></span>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label>@Localizer["Stock"]</label>
-                    <input asp-for="Stock" type="number" class="form-control" required />
-                    <span asp-validation-for="Stock" class="text-danger"></span>
+
+                <div class="auth-group mb-4">
+                    <label class="form-label text-secondary fs-6 mb-2">@Localizer["Description_Label"]</label>
+                    <div class="auth-input-wrapper" style="align-items: flex-start; padding-top: 12px;">
+                        <i class="bi bi-textarea-t auth-icon"></i>
+                        <textarea asp-for="Description" class="auth-input" style="height: 120px; resize: none; padding-top: 5px;" placeholder="Ürün özelliklerini detaylandırın..." required></textarea>
+                    </div>
+                    <span asp-validation-for="Description" class="text-danger small mt-2 d-block"></span>
                 </div>
-            </div>
+
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <div class="auth-group">
+                            <label class="form-label text-secondary fs-6 mb-2">@Localizer["Price"] (@CurrencyService.GetCurrencySymbol())</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-currency-dollar auth-icon"></i>
+                                <input asp-for="Price" type="number" step="0.01" class="auth-input" placeholder="0.00" required />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger small mt-2 d-block"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="auth-group">
+                            <label class="form-label text-secondary fs-6 mb-2">@Localizer["Stock"]</label>
+                            <div class="auth-input-wrapper">
+                                <i class="bi bi-box-seam auth-icon"></i>
+                                <input asp-for="Stock" type="number" class="auth-input" placeholder="0" required />
+                            </div>
+                            <span asp-validation-for="Stock" class="text-danger small mt-2 d-block"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="auth-group mb-5">
+                    <label class="form-label text-secondary fs-6 mb-3">Ürün Görseli Seç</label>
+                    <input type="hidden" asp-for="ImageUrl" id="selectedImageUrl" />
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <div class="image-select-card" onclick="selectImage('kitaplik')">
+                                <img src="/images/products/kitaplik.png" class="img-fluid rounded border border-2 border-transparent" alt="Kitaplık" />
+                                <div class="small text-center mt-1 text-secondary">Kitaplık</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="image-select-card" onclick="selectImage('kulaklik')">
+                                <img src="/images/products/kulaklik.png" class="img-fluid rounded border border-2 border-transparent" alt="Kulaklık" />
+                                <div class="small text-center mt-1 text-secondary">Kulaklık</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="image-select-card" onclick="selectImage('masa')">
+                                <img src="/images/products/masa.png" class="img-fluid rounded border border-2 border-transparent" alt="Masa" />
+                                <div class="small text-center mt-1 text-secondary">Masa</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="image-select-card" onclick="selectImage('telefon-kilifi')">
+                                <img src="/images/products/telefon-kilifi.png" class="img-fluid rounded border border-2 border-transparent" alt="Kılıf" />
+                                <div class="small text-center mt-1 text-secondary">Telefon Kılıfı</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    .image-select-card { cursor: pointer; transition: transform 0.2s; }
+                    .image-select-card:hover { transform: translateY(-3px); }
+                    .image-select-card img.selected { border-color: var(--primary-color) !important; background: rgba(37, 99, 235, 0.1); }
+                </style>
+
+                <script>
+                    function selectImage(name) {
+                        document.getElementById('selectedImageUrl').value = name;
+                        document.querySelectorAll('.image-select-card img').forEach(img => img.classList.remove('selected'));
+                        event.currentTarget.querySelector('img').classList.add('selected');
+                    }
+                </script>
+
+                <button type="submit" class="btn-auth-primary w-100 py-3 d-flex align-items-center justify-content-center gap-3" style="border-radius: 16px;">
+                    <i class="bi bi-plus-lg fs-5"></i>
+                    <span style="font-weight: 600;">@Localizer["Save"]</span>
+                </button>
+            </form>
         </div>
     </div>
-
-    <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">💾 @Localizer["Save"]</button>
-</form>
+</div>

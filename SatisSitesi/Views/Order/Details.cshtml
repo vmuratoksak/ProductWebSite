@@ -1,0 +1,179 @@
+@model SatisSitesi.Application.Models.OrderViewModel
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@using SatisSitesi.Application.Interfaces.Services
+@inject IStringLocalizer<SharedResource> Localizer
+@inject ICurrencyService CurrencyService
+
+@{
+    ViewData["Title"] = Localizer["My_Orders"];
+    var currentCulture = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+    // Define timeline steps based on typical status flows
+    string currentStatus = Model.Status ?? "Hazırlanıyor";
+    
+    // Quick heuristic to calculate stepper completion
+    int stepIndex = 0;
+    if (currentStatus == "Onaylandı" || currentStatus == "Hazırlanıyor") stepIndex = 1;
+    if (currentStatus == "Yolda" || currentStatus == "Kargoya Verildi" || currentStatus == "Kargoda") stepIndex = 2;
+    if (currentStatus == "İletildi" || currentStatus == "Teslim Edildi") stepIndex = 3;
+    if (currentStatus == "İptal Edildi") stepIndex = -1;
+}
+
+<div class="page-header mb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="page-title">@Localizer["My_Orders"]</h1>
+        <p class="page-subtitle">ID: <span class="text-light">@Model.Id</span> &bull; @Localizer["Order_Date"]: @Model.CreatedAt.ToString("dd MMM yyyy")</p>
+    </div>
+    
+    @if(stepIndex == -1) {
+        <span class="badge bg-danger" style="font-size: 1rem; padding: 0.5rem 1rem;">@Localizer["Cancelled"]</span>
+    } else if (stepIndex == 3) {
+        <span class="badge bg-primary" style="font-size: 1rem; padding: 0.5rem 1rem;">@Localizer["Delivered"]</span>
+    } else if (stepIndex == 2) {
+        <span class="badge bg-info" style="font-size: 1rem; padding: 0.5rem 1rem;">@Localizer["Shipped"]</span>
+    } else if (stepIndex == 1) {
+        <span class="badge bg-success" style="font-size: 1rem; padding: 0.5rem 1rem;">@Localizer["Approved"]</span>
+    } else {
+        <span class="badge bg-warning text-dark" style="font-size: 1rem; padding: 0.5rem 1rem;">@Localizer["Pending"]</span>
+    }
+</div>
+
+<!-- Progress Timeline -->
+<div class="saas-card mb-5 p-4">
+    <div class="position-relative pt-4 pb-2 px-3">
+        <!-- Progress Line Background -->
+        <div class="position-absolute" style="height: 4px; background-color: var(--border-color); top: 38px; left: 10%; right: 10%; z-index: 1;"></div>
+        
+        <!-- Active Progress Line -->
+        <div class="position-absolute" style="height: 4px; background-color: var(--primary); top: 38px; left: 10%; z-index: 2; transition: width 0.5s;
+             width: @(stepIndex == 0 ? "0%" : stepIndex == 1 ? "33%" : stepIndex == 2 ? "66%" : stepIndex == 3 ? "100%" : "0%"); display: @(stepIndex == -1 ? "none" : "block")"></div>
+
+        <div class="row position-relative text-center" style="z-index: 3;">
+            
+            <!-- Step 0: Received -->
+            <div class="col-3">
+                <div class="d-inline-flex justify-content-center align-items-center rounded-circle mb-3 @(stepIndex >= 0 ? "bg-primary text-white" : "bg-dark text-secondary border border-secondary")" style="width: 48px; height: 48px;">
+                    <i class="bi bi-receipt fs-5"></i>
+                </div>
+                <h6 style="color: @(stepIndex >= 0 ? "var(--text-primary)" : "var(--text-secondary)"); font-weight: 500;">@Localizer["Pending"]</h6>
+            </div>
+
+            <!-- Step 1: Approved/Processing -->
+            <div class="col-3">
+                <div class="d-inline-flex justify-content-center align-items-center rounded-circle mb-3 @(stepIndex >= 1 ? "bg-primary text-white" : "bg-dark text-secondary border border-secondary")" style="width: 48px; height: 48px;">
+                    <i class="bi bi-box-seam fs-5"></i>
+                </div>
+                <h6 style="color: @(stepIndex >= 1 ? "var(--text-primary)" : "var(--text-secondary)"); font-weight: 500;">@Localizer["Approved"]</h6>
+            </div>
+
+            <!-- Step 2: Shipped -->
+            <div class="col-3">
+                <div class="d-inline-flex justify-content-center align-items-center rounded-circle mb-3 @(stepIndex >= 2 ? "bg-primary text-white" : "bg-dark text-secondary border border-secondary")" style="width: 48px; height: 48px;">
+                    <i class="bi bi-truck fs-5"></i>
+                </div>
+                <h6 style="color: @(stepIndex >= 2 ? "var(--text-primary)" : "var(--text-secondary)"); font-weight: 500;">@Localizer["Shipped"]</h6>
+            </div>
+
+            <!-- Step 3: Delivered -->
+            <div class="col-3">
+                <div class="d-inline-flex justify-content-center align-items-center rounded-circle mb-3 @(stepIndex >= 3 ? "bg-primary text-white" : "bg-dark text-secondary border border-secondary")" style="width: 48px; height: 48px;">
+                    <i class="bi bi-check2-circle fs-5"></i>
+                </div>
+                <h6 style="color: @(stepIndex >= 3 ? "var(--text-primary)" : "var(--text-secondary)"); font-weight: 500;">@Localizer["Delivered"]</h6>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Order Items -->
+    <div class="col-lg-8">
+        <div class="saas-card p-0">
+            <div class="p-4 border-bottom border-secondary d-flex justify-content-between align-items-center" style="border-color: var(--border-color) !important;">
+                <h5 style="margin:0; font-weight: 600;">@Localizer["Products"] (@Model.Items.Count)</h5>
+            </div>
+            
+            <div class="p-0">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="d-flex align-items-center p-4 border-bottom border-secondary" style="border-color: var(--border-color) !important;">
+                        
+                        <div class="rounded overflow-hidden me-4 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; background-color: rgba(255,255,255,0.02); border: 1px solid var(--border-color);">
+                            <img src="@item.ImageUrl" alt="@item.ProductName" style="max-width: 100%; max-height: 100%; object-fit: contain; padding: 0.3rem;" />
+                        </div>
+                        
+                        <div class="flex-grow-1">
+                            <h6 style="margin-bottom: 4px; font-weight: 500;">@item.GetLocalizedName(currentCulture, Localizer)</h6>
+                            <div class="text-secondary" style="font-size: 0.85rem;">
+                                @Localizer["Stock"]: @item.Quantity &nbsp; | &nbsp; @Localizer["Price"]: @CurrencyService.GetFormattedPrice(item.Price)
+                            </div>
+                        </div>
+                        
+                        <div class="text-end ps-3">
+                            <div style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary);">
+                                @CurrencyService.GetFormattedPrice(item.Price * item.Quantity)
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <!-- Order Summary Details -->
+    <div class="col-lg-4">
+        <div class="saas-card mb-4">
+            <h5 style="margin-bottom: 24px; font-weight: 600;">@Localizer["Total_Amount"]</h5>
+            
+            @{
+                decimal shipping = Model.TotalAmount > 0 ? 10m : 0m;
+                decimal subtotal = (Model.TotalAmount - shipping) / 1.10m;
+                decimal tax = Model.TotalAmount - subtotal - shipping;
+            }
+
+            <div class="d-flex justify-content-between mb-3 text-secondary" style="font-size: 0.95rem;">
+                <span>@Localizer["Price"]</span>
+                <span style="color: var(--text-primary); font-weight: 500;">@CurrencyService.GetFormattedPrice(subtotal)</span>
+            </div>
+            
+            <div class="d-flex justify-content-between mb-3 text-secondary" style="font-size: 0.95rem;">
+                <span>@Localizer["Order_Status"] (Kargo)</span>
+                <span style="color: var(--text-primary); font-weight: 500;">@CurrencyService.GetFormattedPrice(shipping)</span>
+            </div>
+            
+            <div class="d-flex justify-content-between mb-3 text-secondary" style="font-size: 0.95rem;">
+                <span>Vergi (10%)</span>
+                <span style="color: var(--text-primary); font-weight: 500;">@CurrencyService.GetFormattedPrice(tax)</span>
+            </div>
+            
+            <hr style="border-color: var(--border-color); margin: 20px 0;" />
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <span style="font-size: 1.1rem; font-weight: 500;">@Localizer["Total_Amount"]</span>
+                <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">@CurrencyService.GetFormattedPrice(Model.TotalAmount)</span>
+            </div>
+        </div>
+        
+        <div class="saas-card">
+            <h5 style="margin-bottom: 20px; font-weight: 600;">Delivery Details</h5>
+            
+            <div class="d-flex align-items-start mb-3">
+                <i class="bi bi-geo-alt mt-1 me-3 text-secondary" style="font-size: 1.2rem;"></i>
+                <div>
+                    <div style="font-weight: 500; color: var(--text-primary); margin-bottom: 2px;">@Localizer["User_Email"]</div>
+                    <div class="text-secondary" style="font-size: 0.85rem;">@Localizer["Order_Date"]: @Model.CreatedAt.ToShortDateString()</div>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-start mb-3">
+                <i class="bi bi-envelope mt-1 me-3 text-secondary" style="font-size: 1.2rem;"></i>
+                <div>
+                    <div style="font-weight: 500; color: var(--text-primary); margin-bottom: 2px;">Contact</div>
+                    <div class="text-secondary" style="font-size: 0.85rem;">@Model.UserEmail</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

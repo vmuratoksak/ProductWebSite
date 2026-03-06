@@ -1,56 +1,527 @@
+@using SatisSitesi.Application.Interfaces.Services
+@inject ICurrencyService CurrencyService
 @model SatisSitesi.Application.Models.DashboardModel
+@using Microsoft.AspNetCore.Http
 @using Microsoft.Extensions.Localization
 @using SatisSitesi.Resources
 @inject IStringLocalizer<SharedResource> Localizer
 @{
-    ViewData["Title"] = Localizer["Home"];
+    ViewData["Title"] = "Admin Panel";
+    var role = Context.Session.GetString("UserRole");
+    var username = Context.Session.GetString("Username");
 }
 
-@if (Context.Session.GetString("Username") != null)
-{
-    <div class="card-premium mb-4 p-3 text-light"
-         style="background:rgba(30,41,59,0.6); border-radius:15px;">
-        @Localizer["Welcome"] @Context.Session.GetString("Username")
+<div class="page-header">
+    <div>
+        <h1 class="page-title">
+            @if (role == "Admin")
+            {
+                <span><i class="bi bi-shield-lock text-primary me-2"></i>Admin Kontrol Merkezi</span>
+            }
+            else
+            {
+                <span><i class="bi bi-house-door text-primary me-2"></i>@Localizer["Dashboard"]</span>
+            }
+        </h1>
+        <p class="page-subtitle">@Localizer["Welcome"], <strong>@username</strong></p>
     </div>
-}
-
-<h2 class="mb-4">@Localizer["Dashboard"]</h2>
-
-<div class="row g-4">
-
-    <div class="col-md-4">
-        <div class="card-modern">
-            <h3>@Model.TotalNames</h3>
-            <p>@Localizer["Total_Names"]</p>
+    @if (role == "Admin")
+    {
+        <div class="d-flex gap-2">
+            <a asp-controller="Order" asp-action="AdminOrders" class="btn-primary">
+                <i class="bi bi-list-check"></i> @Localizer["All_Orders_Admin"]
+            </a>
+            <a asp-controller="Product" asp-action="Add" class="btn-secondary">
+                <i class="bi bi-plus-lg"></i> @Localizer["Add_New_Product"]
+            </a>
         </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card-modern">
-            <h3>@Model.TodayNames</h3>
-            <p>@Localizer["Today_Names"]</p>
+    }
+    else
+    {
+        <div class="d-flex gap-2">
+            <a asp-controller="Product" asp-action="Index" class="btn-primary">
+                <i class="bi bi-bag"></i> @Localizer["Products"]
+            </a>
+            <a asp-controller="Cart" asp-action="Index" class="btn-secondary">
+                <i class="bi bi-cart"></i> @Localizer["Cart"]
+            </a>
         </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card-modern">
-            <h3>@Model.TotalProducts</h3>
-            <p>@Localizer["Total_Products"]</p>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card-modern">
-            <h3>@Model.TotalOrders</h3>
-            <p>@Localizer["Total_Orders"]</p>
-        </div>
-    </div>
-
-    <div class="col-md-8">
-        <div class="card-modern text-start">
-            <h5>@Localizer["Last_Updated_Name"]</h5>
-            <h4 class="text-info">@Model.LastUpdatedName</h4>
-        </div>
-    </div>
-
+    }
 </div>
+
+@if (role == "Admin")
+{
+    <!-- STATS CARDS -->
+    <div class="row g-4 mb-4">
+        <!-- Total Revenue -->
+        <div class="col-md-6 col-xl-3">
+            <div class="saas-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="text-secondary text-uppercase" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;">@Localizer["Total_Amount"]</span>
+                    <i class="bi bi-currency-dollar text-primary fs-5"></i>
+                </div>
+                <h3 class="mb-2 text-truncate" style="font-size: 1.5rem; font-weight: 700; max-width: 100%;" title="@CurrencyService.GetFormattedPrice(Model.TotalRevenue)">
+                    @CurrencyService.GetFormattedPrice(Model.TotalRevenue)
+                </h3>
+                <div style="font-size: 0.8rem;">
+                    <span class="@(Model.IsRevenueUp ? "text-success" : "text-danger")">
+                        <i class="bi @(Model.IsRevenueUp ? "bi-arrow-up-right" : "bi-arrow-down-right")"></i> @Model.RevenueGrowth.Split(' ')[0]
+                    </span>
+                    <span class="text-secondary text-truncate d-inline-block align-bottom" style="max-width: 80px;"> @string.Join(" ", Model.RevenueGrowth.Split(' ').Skip(1))</span>
+                </div>
+            </div>
+        </div>
+        <!-- Active Users -->
+        <div class="col-md-6 col-xl-3">
+            <div class="saas-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="text-secondary text-uppercase" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;">@Localizer["Total_Names"]</span>
+                    <i class="bi bi-people text-success fs-5"></i>
+                </div>
+                <h3 class="mb-2" style="font-size: 1.75rem; font-weight: 700;">@Model.ActiveUsers</h3>
+                <div style="font-size: 0.8rem;">
+                    <span class="text-success"><i class="bi bi-arrow-up-right"></i> @Model.UsersGrowth</span>
+                </div>
+            </div>
+        </div>
+        <!-- Sales -->
+        <div class="col-md-6 col-xl-3">
+            <div class="saas-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="text-secondary text-uppercase" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;">@Localizer["Total_Orders"]</span>
+                    <i class="bi bi-bag-check text-warning fs-5"></i>
+                </div>
+                <h3 class="mb-2" style="font-size: 1.75rem; font-weight: 700;">@Model.Sales</h3>
+                <div style="font-size: 0.8rem;">
+                    <span class="@(Model.IsSalesUp ? "text-success" : "text-danger")">
+                        <i class="bi @(Model.IsSalesUp ? "bi-arrow-up-right" : "bi-arrow-down-right")"></i> @Model.SalesGrowth.Split(' ')[0]
+                    </span>
+                    <span class="text-secondary text-truncate d-inline-block align-bottom" style="max-width: 80px;"> @string.Join(" ", Model.SalesGrowth.Split(' ').Skip(1))</span>
+                </div>
+            </div>
+        </div>
+        <!-- Active Products -->
+        <div class="col-md-6 col-xl-3">
+            <div class="saas-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <span class="text-secondary text-uppercase" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;">@Localizer["Total_Products"]</span>
+                    <i class="bi bi-box text-danger fs-5"></i>
+                </div>
+                <h3 class="mb-2" style="font-size: 1.75rem; font-weight: 700;">@Model.ActiveProducts</h3>
+                <div style="font-size: 0.8rem;">
+                    <span class="@(Model.IsProductsUp ? "text-success" : "text-danger")">
+                        <i class="bi @(Model.IsProductsUp ? "bi-check-circle" : "bi-exclamation-circle")"></i> @Model.ProductsGrowth
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARTS SECTION -->
+    <div class="row g-4 mb-4">
+        <!-- Revenue Analytics -->
+        <div class="col-lg-7">
+            <div class="saas-card">
+                <h5 style="font-weight: 600; margin-bottom: 4px;">📈 Gelir Analizi</h5>
+                <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 24px;">Son 6 aylık sipariş gelirleri</p>
+                <div style="height: 280px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- Orders Activity -->
+        <div class="col-lg-5">
+            <div class="saas-card">
+                <h5 style="font-weight: 600; margin-bottom: 4px;">📦 Sipariş Aktivitesi</h5>
+                <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 24px;">Son 6 aylık sipariş sayısı</p>
+                <div style="height: 280px;">
+                    <canvas id="ordersChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- PREMIUM USER HUB -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-8">
+            <div class="saas-card premium-welcome">
+                <div class="welcome-content">
+                    <h2 class="mb-2 text-gradient">Hoş Geldin, @username! ✨</h2>
+                    <p class="text-secondary mb-4 opacity-75">Sizin için en yeni trendleri ve özel fırsatları hazırladık. Alışverişe devam etmek ister misiniz?</p>
+                    <div class="d-flex gap-3">
+                        <a asp-controller="Product" asp-action="Index" class="btn-premium">
+                            <i class="bi bi-magic me-2"></i>Keşfetmeye Başla
+                        </a>
+                        <a asp-controller="Order" asp-action="MyOrders" class="btn-outline-premium">
+                            <i class="bi bi-clock-history me-2"></i>Sipariş Gezgini
+                        </a>
+                    </div>
+                </div>
+                <div class="welcome-image d-none d-lg-block">
+                    <i class="bi bi-bag-heart text-primary opacity-25" style="font-size: 8rem;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="saas-card spending-card h-100 d-flex flex-column justify-content-center">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="icon-box bg-success-soft">
+                        <i class="bi bi-wallet2 text-success fs-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-secondary small d-block">Toplam Harcamanız</span>
+                        <h3 class="mb-0 fw-bold text-truncate" style="max-width: 150px;" title="@CurrencyService.GetFormattedPrice(Model.TotalRevenue)">@CurrencyService.GetFormattedPrice(Model.TotalRevenue)</h3>
+                    </div>
+                </div>
+                <div class="progress mb-2" style="height: 6px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: @(Model.TotalRevenue > 0 ? "100" : "0")%; transition: width 1s ease-in-out;" aria-valuenow="@(Model.TotalRevenue > 0 ? "100" : "0")" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="text-muted small mb-0"><i class="bi bi-info-circle me-1"></i>Bu ayki harcamanız @Model.RevenueGrowth.</p>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- COMMON SECTION: Recent Orders + (Quick Actions / Top Products) -->
+<div class="row g-4">
+    <!-- Recent Orders -->
+    <div class="col-lg-7">
+        <div class="saas-card p-0">
+            <div class="p-3 d-flex justify-content-between align-items-center" style="border-bottom: 1px solid var(--border-color);">
+                <div>
+                    <h5 style="margin: 0; font-weight: 600;">🕒 @(role == "Admin" ? "Son Siparişler" : "Sipariş Geçmişim")</h5>
+                    <p class="text-secondary mb-0" style="font-size: 0.8rem;">Toplam @Model.RecentSales.Count sipariş listeleniyor</p>
+                </div>
+                @if (role == "Admin")
+                {
+                    <a asp-controller="Order" asp-action="AdminOrders" class="btn-secondary px-3 py-1 text-secondary" style="font-size: 0.8rem; border: none;">
+                        Tümünü Gör →
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Order" asp-action="MyOrders" class="btn-secondary px-3 py-1 text-secondary" style="font-size: 0.8rem; border: none;">
+                        Tümünü Gör →
+                    </a>
+                }
+            </div>
+            <div class="d-flex flex-column">
+                @foreach (var sale in Model.RecentSales)
+                {
+                    <div class="d-flex align-items-center justify-content-between px-3 py-3" style="border-bottom: 1px solid var(--border-color);">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white @sale.ColorClass" style="width: 38px; height: 38px; font-weight: 600; font-size: 0.8rem; flex-shrink: 0;">
+                                @sale.Initials
+                            </div>
+                            <div>
+                                <div style="font-weight: 500; font-size: 0.9rem;">@sale.Name</div>
+                                <div class="text-secondary" style="font-size: 0.78rem;">@sale.Email</div>
+                            </div>
+                        </div>
+                        <div style="font-weight: 700; color: #4ade80;">+@CurrencyService.GetFormattedPrice(sale.Amount)</div>
+                    </div>
+                }
+                @if (!Model.RecentSales.Any())
+                {
+                    <div class="text-center text-secondary py-5">
+                        <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                        Henüz sipariş yok
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Quick Content / Stats -->
+    <div class="col-lg-5">
+        <div class="saas-card">
+            <h5 style="font-weight: 600; margin-bottom: 20px;">⚡ @Localizer["Quick_Actions"]</h5>
+            
+                    @if (role != "Admin")
+                    {
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-lightning-charge-fill text-warning"></i>
+                            <span class="fw-bold">Haftanın Fırsatları</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="btn-group-custom">
+                            <button class="nav-btn active" onclick="showQuickContent('orders')">
+                                <i class="bi bi-list-ol"></i>
+                                <span>Siparişler</span>
+                            </button>
+                            <button class="nav-btn" onclick="showQuickContent('products')">
+                                <i class="bi bi-box-seam"></i>
+                                <span>Ürünler</span>
+                            </button>
+                            <button class="nav-btn" onclick="showQuickContent('add')">
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Ekle</span>
+                            </button>
+                            <button class="nav-btn" onclick="showQuickContent('users')">
+                                <i class="bi bi-people"></i>
+                                <span>Müşteriler</span>
+                            </button>
+                        </div>
+                    }
+
+            <!-- Content Area Controlled by Tabs -->
+            <div id="quickActionContent">
+                <!-- Data will be loaded here via JS -->
+                @if (role == "Admin")
+                {
+                    <div id="qa-orders" class="qa-content active">
+                        <div class="p-3 bg-dark-soft rounded">
+                            <p class="small text-secondary mb-2">Tüm bekleyen siparişlere ve yeni taleplere hızlı bir bakış atın.</p>
+                            <a asp-controller="Order" asp-action="AdminOrders" class="btn btn-sm btn-primary w-100">Sipariş Yöneticisine Git</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div id="qa-shop" class="qa-content active">
+                        <div class="row g-2">
+                            <!-- Featured/Opportunity Products for User -->
+                            @foreach (var prod in Model.TopProducts.Take(2))
+                            {
+                                <div class="col-6">
+                                    <div class="bg-dark-soft rounded p-2 text-center h-100 border border-light border-opacity-10">
+                                        <div class="mb-2 d-flex justify-content-center align-items-center" style="height: 60px;">
+                                            <img src="@prod.ImageUrl" alt="@prod.Name" style="max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0px 5px 5px rgba(0,0,0,0.3));" />
+                                        </div>
+                                        <h6 class="small fw-bold mb-1 text-truncate">@prod.Name</h6>
+                                        <p class="text-secondary smaller mb-2">@CurrencyService.GetFormattedPrice(prod.Price)</p>
+                                        <a asp-controller="Product" asp-action="Index" asp-route-search="@prod.Name" class="btn btn-sm btn-outline-primary w-100 smaller">Detay</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="mt-3">
+                            <a asp-controller="Product" asp-action="Index" class="btn btn-primary w-100 btn-sm">Hepsini Keşfet</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const currencySymbol = '@Html.Raw(CurrencyService.GetCurrencySymbol())';
+
+        function formatShortNumber(num) {
+            if (num >= 1e15) return (num / 1e15).toFixed(1) + 'Q';
+            if (num >= 1e12) return (num / 1e12).toFixed(1) + 'T';
+            if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+            if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+            return num.toLocaleString('tr-TR');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            Chart.defaults.color = '#9ca3af';
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+
+            fetch('/Home/GetChartData')
+                .then(r => r.json())
+                .then(data => {
+                    // (existing chart logic omitted for brevity in chunk but will be kept)
+                    // (I'll re-add the full logic to ensure it doesn't break)
+                    renderCharts(data);
+                })
+                .catch(e => console.error('Chart data error:', e));
+        });
+
+        function showQuickContent(type) {
+            // Update active state of buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            const container = document.getElementById('quickActionContent');
+            let content = '';
+
+            switch(type) {
+                // ADMIN CASES
+                case 'orders':
+                    content = `
+                        <div class="p-3 bg-dark-soft rounded fade-in">
+                            <p class="small text-secondary mb-3">Bekleyen siparişlerinizi ve en son işlemleri buradan yönetebilirsiniz.</p>
+                            <a href="/Order/AdminOrders" class="btn btn-sm btn-primary w-100">Sipariş Yöneticisi</a>
+                        </div>`;
+                    break;
+                case 'products':
+                    content = `
+                        <div class="p-3 bg-dark-soft rounded fade-in">
+                            <h6 class="small fw-bold mb-2">Popüler Ürünler</h6>
+                            <ul class="list-unstyled small mb-3">
+                                <li class="d-flex justify-content-between mb-1"><span>iPhone 15 Pro</span> <span class="text-success">↑ 12%</span></li>
+                                <li class="d-flex justify-content-between"><span>MacBook Air M2</span> <span class="text-success">↑ 8%</span></li>
+                            </ul>
+                            <a href="/Product/Index" class="btn btn-sm btn-outline-primary w-100">Kataloğu Görüntüle</a>
+                        </div>`;
+                    break;
+                case 'add':
+                    content = `
+                        <div class="p-3 bg-dark-soft rounded text-center fade-in">
+                            <i class="bi bi-plus-circle-dotted fs-2 text-success mb-2 d-block"></i>
+                            <p class="small text-secondary mb-3">Yeni bir ürün eklemek için hızlı form.</p>
+                            <a href="/Product/Add" class="btn btn-sm btn-success w-100">Ürün Ekle</a>
+                        </div>`;
+                    break;
+                case 'users':
+                    content = `
+                        <div class="p-3 bg-dark-soft rounded fade-in">
+                            <p class="small text-secondary mb-3">Güncel müşteri listesi ve segmentasyon raporları.</p>
+                            <a href="/Customer/Index" class="btn btn-sm btn-info w-100 text-white">Müşteri Yönetimi</a>
+                        </div>`;
+                    break;
+                
+                // USER CASES
+                case 'shop':
+                    content = `
+                        <div class="text-center py-2 fade-in">
+                            <i class="bi bi-stars text-warning fs-3 mb-2 d-block"></i>
+                            <h6 class="mb-1 small">Size Özel Öneriler</h6>
+                            <p class="text-secondary smaller mb-3">Sizin için seçtiğimiz ürünleri kaçırmayın!</p>
+                            <a href="/Product/Index" class="btn btn-primary w-100 btn-sm">Göz At</a>
+                        </div>`;
+                    break;
+                case 'cart':
+                    content = `
+                        <div class="p-3 bg-dark-soft rounded text-center fade-in">
+                            <i class="bi bi-cart-check fs-2 text-warning mb-2 d-block"></i>
+                            <p class="small text-secondary mb-3">Sepetinizde ürünler sizi bekliyor.</p>
+                            <a href="/Cart/Index" class="btn btn-sm btn-warning w-100">Sepete Git</a>
+                        </div>`;
+                    break;
+                case 'history':
+                    content = `
+                        <div class="p-3 bg-dark-soft rounded fade-in">
+                            <p class="small text-secondary mb-3">Geçmişte yapmış olduğunuz tüm alışverişler.</p>
+                            <a href="/Order/MyOrders" class="btn btn-sm btn-outline-secondary w-100">Tüm Siparişlerim</a>
+                        </div>`;
+                    break;
+                case 'support':
+                    content = `
+                        <div class="p-3 bg-dark-soft rounded text-center fade-in">
+                            <i class="bi bi-headset fs-2 text-info mb-2 d-block"></i>
+                            <p class="small text-secondary mb-3">Herhangi bir sorunda yanınızdayız.</p>
+                            <a href="#" class="btn btn-sm btn-info w-100 text-white">Canlı Destek</a>
+                        </div>`;
+                    break;
+            }
+
+            container.innerHTML = content;
+        }
+
+        function renderCharts(data) {
+            const revCanvas = document.getElementById('revenueChart');
+            const ordCanvas = document.getElementById('ordersChart');
+            
+            if (!revCanvas || !ordCanvas) return;
+
+            Chart.defaults.color = '#9ca3af';
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+
+            const labels = data.chartLabels;
+
+            // Revenue Area Chart
+            const ctxRev = revCanvas.getContext('2d');
+            const grad = ctxRev.createLinearGradient(0, 0, 0, 300);
+            grad.addColorStop(0, 'rgba(37,99,235,0.4)');
+            grad.addColorStop(1, 'rgba(37,99,235,0.0)');
+
+            new Chart(ctxRev, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: `Gelir (${currencySymbol})`,
+                        data: data.revenueChartData,
+                        borderColor: '#2563EB',
+                        backgroundColor: grad,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#2563EB',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#e2e8f0',
+                            borderColor: '#374151',
+                            borderWidth: 1,
+                            padding: 10,
+                            displayColors: false,
+                            callbacks: { 
+                                label: ctx => {
+                                    const val = ctx.parsed.y;
+                                    return currencySymbol + (val >= 1000 ? formatShortNumber(val) : val.toLocaleString('tr-TR'));
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                         x: { grid: { display: false } },
+                         y: {
+                             grid: { color: 'rgba(255,255,255,0.05)', borderDash: [5, 5] },
+                             ticks: { 
+                                 callback: v => currencySymbol + formatShortNumber(v)
+                             }
+                         }
+                     }
+                }
+            });
+
+            // Orders Bar Chart
+            const ctxOrd = ordCanvas.getContext('2d');
+            new Chart(ctxOrd, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Siparişler',
+                        data: data.ordersChartData,
+                        backgroundColor: 'rgba(124,58,237,0.8)',
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#e2e8f0',
+                            borderColor: '#374151',
+                            borderWidth: 1,
+                            padding: 10,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { grid: { display: false }, display: false }
+                    }
+                }
+            });
+        }
+    </script>
+}

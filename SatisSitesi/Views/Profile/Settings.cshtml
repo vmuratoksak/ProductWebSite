@@ -1,0 +1,81 @@
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["Settings"];
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="saas-card p-4 mb-4">
+            <h3 class="fw-bold mb-4">🔐 @Localizer["Change_Password"]</h3>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <form asp-action="ChangePassword" method="post">
+                <div class="mb-3">
+                    <label class="form-label">@Localizer["Current_Password"]</label>
+                    <input type="password" name="CurrentPassword" class="form-control bg-dark text-light border-secondary" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer["New_Password"]</label>
+                    <input type="password" name="NewPassword" class="form-control bg-dark text-light border-secondary" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">@Localizer["Confirm_Password"]</label>
+                    <input type="password" name="ConfirmPassword" class="form-control bg-dark text-light border-secondary" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2">
+                    @Localizer["Update_Password"]
+                </button>
+            </form>
+        </div>
+
+        <div class="saas-card p-4 border border-danger bg-danger bg-opacity-10">
+            <h4 class="fw-bold text-danger mb-3">⚠️ @Localizer["Danger_Zone"]</h4>
+            <p class="text-secondary small mb-4">
+                Hesabınızı silmek tüm verilerinizi kalıcı olarak silecektir. Bu işlem geri alınamaz.
+            </p>
+            
+            <button type="button" class="btn btn-danger w-100 py-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                @Localizer["Delete_Account"]
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-light">Hesabını Sil?</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-secondary">
+                Hesabınızı silmek istediğinizden emin misiniz? Tüm siparişleriniz ve kullanıcı bilgileriniz sonsuza kadar kaybolacaktır.
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                <form asp-action="DeleteAccount" method="post">
+                    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

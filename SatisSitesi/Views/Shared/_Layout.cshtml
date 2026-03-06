@@ -2,147 +2,367 @@
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.Extensions.Localization
 @using SatisSitesi.Resources
+@using SatisSitesi.Application.Interfaces.Services
 @inject IStringLocalizer<SharedResource> Localizer
+@inject ICartService CartService
+@inject IOrderService OrderService
+@inject ICurrencyService CurrencyService
 @{
     var currentCulture = System.Globalization.CultureInfo.CurrentCulture;
     var isRtl = currentCulture.TextInfo.IsRightToLeft;
     var supportedCultures = new[] { "tr", "en", "de", "fr", "ar" };
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var userRole = Context.Session.GetString("UserRole");
+    var userId = Context.Session.GetString("UserId");
+    var username = Context.Session.GetString("Username") ?? "Misafir";
+    var userEmail = Context.Session.GetString("UserEmail") ?? "";
 }
 <!DOCTYPE html>
 <html lang="@currentCulture.Name" dir="@(isRtl ? "rtl" : "ltr")">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MyShop</title>
     
-    @* SEO Tags *@
-    @foreach(var cult in supportedCultures)
-    {
-        <link rel="alternate" hreflang="@cult" href="@Url.Action(ViewContext.RouteData.Values["action"]!.ToString(), ViewContext.RouteData.Values["controller"]!.ToString(), new { culture = cult })" />
-    }
-    <link rel="alternate" hreflang="x-default" href="@Url.Action(ViewContext.RouteData.Values["action"]!.ToString(), ViewContext.RouteData.Values["controller"]!.ToString(), new { culture = "tr" })" />
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    @if(isRtl)
-    {
-        <link href="~/css/rtl.css" rel="stylesheet" />
-    }
-
-    <style>
-        body {
-            background: linear-gradient(135deg, #0f172a, #020617);
-            color: #e2e8f0;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .navbar {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .nav-link-custom {
-            color: #cbd5e1;
-            font-weight: 500;
-            transition: 0.3s ease;
-        }
-
-            .nav-link-custom:hover {
-                color: #38bdf8;
-                transform: translateY(-2px);
-            }
-
-        .user-badge {
-            background: rgba(56,189,248,0.15);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-
-        .btn-danger {
-            border-radius: 20px;
-        }
-
-        .dashboard-wrapper {
-            margin-top: 60px;
-        }
-
-        .card-modern {
-            background: rgba(30,41,59,0.7);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
-
-            .card-modern:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            }
-
-            .card-modern h3 {
-                font-size: 32px;
-                color: #38bdf8;
-            }
-
-        #google_translate_element {
-            margin-right: 15px;
-        }
-
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="/css/dashboard.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="sidebar-brand premium-brand">
+                    <div class="brand-icon">
+                        <i class="bi bi-rocket-takeoff-fill"></i>
+                    </div>
+                    <span>MyShop</span>
+                </a>
+                <!-- Language Selector -->
+                <div class="dropdown ms-3">
+                    <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-translate text-primary"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow-lg border-secondary border-opacity-25" style="border-radius: 12px;">
+                        @foreach (var culture in supportedCultures)
+                        {
+                            <li>
+                                <form asp-controller="Language" asp-action="ChangeLanguage" method="post">
+                                    <input type="hidden" name="culture" value="@culture" />
+                                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                    <button type="submit" class="dropdown-item d-flex align-items-center justify-content-between @(currentCulture.Name == culture ? "active bg-primary bg-opacity-10" : "")" style="padding: 0.6rem 1rem;">
+                                        <span>@culture.ToUpper()</span>
+                                        @if (currentCulture.Name == culture)
+                                        {
+                                            <i class="bi bi-check2 ms-2 text-primary"></i>
+                                        }
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
 
-    <nav class="navbar navbar-expand-lg navbar-dark px-4 py-3">
-        <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">?? MyShop</a>
+            <div class="sidebar-menu">
+                <div class="menu-label">Ana Menü</div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentController == "Product" ? "active" : "")" asp-controller="Product" asp-action="Index">
+                            <i class="bi bi-box-seam-fill"></i>
+                            <span>Ürünler</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentController == "Order" && currentAction == "MyOrders" ? "active" : "")" asp-controller="Order" asp-action="MyOrders">
+                            <i class="bi bi-receipt-cutoff"></i>
+                            <span>Siparişlerim</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentController == "Cart" ? "active" : "")" asp-controller="Cart" asp-action="Index">
+                            <i class="bi bi-cart-fill"></i>
+                            <span>Sepetim</span>
+                        </a>
+                    </li>
+                </ul>
 
-        <div class="ms-auto d-flex gap-4 align-items-center">
-
-            <!-- LANGUAGE SELECTOR -->
-            @await Component.InvokeAsync("LanguageSelector")
-
-            @if (Context.Session.GetString("UserEmail") != null)
-            {
-                <a asp-controller="Name" asp-action="Index" class="nav-link-custom">@Localizer["Name_Management"]</a>
-                <a asp-controller="Product" asp-action="Index" class="nav-link-custom">@Localizer["Products"]</a>
-                <a asp-controller="Cart" asp-action="Index" class="nav-link-custom">@Localizer["Cart"]</a>
-                <a asp-controller="Order" asp-action="MyOrders" class="nav-link-custom">@Localizer["My_Orders"]</a>
-                
-                @if (Context.Session.GetString("UserRole") == "Admin")
+                @if (userRole == "Admin")
                 {
-                    <a asp-controller="Order" asp-action="AdminOrders" class="nav-link-custom text-warning">?? @Localizer["Manage_Orders"]</a>
+                    <div class="menu-label mt-4">Yönetim</div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "Order" && currentAction == "AdminOrders" ? "active" : "")" asp-controller="Order" asp-action="AdminOrders">
+                                <i class="bi bi-shop-window"></i>
+                                <span>Tüm Siparişler</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "Customer" ? "active" : "")" asp-controller="Customer" asp-action="Index">
+                                <i class="bi bi-people-fill"></i>
+                                <span>Müşteriler</span>
+                            </a>
+                        </li>
+                    </ul>
                 }
 
-                <a asp-controller="Home" asp-action="Technologies" class="nav-link-custom">@Localizer["Technologies"]</a>
-                <a asp-controller="Home" asp-action="Privacy" class="nav-link-custom">@Localizer["Privacy"]</a>
+                <div class="menu-label mt-4">Diğer</div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link @(currentAction == "Privacy" ? "active" : "")" asp-controller="Home" asp-action="Privacy">
+                            <i class="bi bi-shield-lock-fill"></i>
+                            <span>Gizlilik Politikası</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(currentAction == "Technologies" ? "active" : "")" asp-controller="Home" asp-action="Technologies">
+                            <i class="bi bi-cpu-fill"></i>
+                            <span>Teknolojiler</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-                <span class="user-badge">
-                    ?? @Context.Session.GetString("Username")
-                </span>
+            <div class="sidebar-footer">
+                <p class="mb-0">&copy; 2024 MyShop SaaS</p>
+                <p class="small text-secondary">Premium E-ticaret Çözümü</p>
+            </div>
+        </aside>
 
-                <a asp-controller="Auth" asp-action="Logout" class="btn btn-danger btn-sm px-3">
-                    @Localizer["Logout"]
-                </a>
-            }
-            else
-            {
-                <a asp-controller="Auth" asp-action="Login" class="btn btn-primary btn-sm px-3">@Localizer["Login"]</a>
-                <a asp-controller="Auth" asp-action="Register" class="btn btn-success btn-sm px-3">@Localizer["Register"]</a>
-            }
-        </div>
-    </nav>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <button class="mobile-toggle d-lg-none" id="sidebarToggle">
+                    <i class="bi bi-list"></i>
+                </button>
 
-    <div class="container dashboard-wrapper">
-        @RenderBody()
+                <div class="search-bar d-none d-lg-flex position-relative">
+                    <form asp-controller="Home" asp-action="Search" method="get" class="d-flex w-100" id="globalSearchForm">
+                        <i class="bi bi-search"></i>
+                        <input type="text" name="query" id="globalSearchInput" placeholder="Sitede ara (ürün, sipariş, müşteri)..." value="@ViewData["SearchQuery"]" autocomplete="off">
+                    </form>
+                    <div id="searchSuggestions" class="search-suggestions-dropdown d-none">
+                        <!-- Suggestions will be injected here -->
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <!-- Notifications -->
+                    @if (userId != null)
+                    {
+                        var isNotifActive = userRole == "Admin" ? OrderService.GetPendingOrdersCount() > 0 : OrderService.GetUserNotificationCount(userId) > 0;
+                        <div class="dropdown">
+                            <button class="icon-btn" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-bell"></i>
+                                @if (isNotifActive)
+                                {
+                                    <span class="badge-dot"></span>
+                                }
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end p-2" style="width: 280px;">
+                                <li class="p-2 border-bottom border-secondary mb-2">
+                                    <h6 class="mb-0">Bildirimler</h6>
+                                </li>
+                                @if (userRole == "Admin")
+                                {
+                                    var pendingOrders = OrderService.GetPendingOrdersCount();
+                                    if (pendingOrders > 0)
+                                    {
+                                        <li>
+                                            <a class="dropdown-item rounded p-2" asp-controller="Order" asp-action="AdminOrders">
+                                                <div class="d-flex gap-3 align-items-center">
+                                                    <div class="rounded-circle bg-primary bg-opacity-10 p-2">
+                                                        <i class="bi bi-receipt text-primary"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="small fw-bold">@pendingOrders Yeni Sipariş</div>
+                                                        <div class="text-secondary" style="font-size: 0.7rem;">Onay bekleyen siparişler var.</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    }
+                                    else { <li class="text-center p-3 text-secondary">Yeni bildirim yok.</li> }
+                                }
+                                else
+                                {
+                                    var userNotifs = OrderService.GetUserNotificationCount(userId);
+                                    if (userNotifs > 0)
+                                    {
+                                        <li>
+                                            <a class="dropdown-item rounded p-2" asp-controller="Order" asp-action="MyOrders">
+                                                <div class="d-flex gap-3 align-items-center">
+                                                    <div class="rounded-circle bg-success bg-opacity-10 p-2">
+                                                        <i class="bi bi-check2 text-success"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="small fw-bold">@userNotifs Sipariş Güncellemesi</div>
+                                                        <div class="text-secondary" style="font-size: 0.7rem;">Siparişlerinizin durumu güncellendi.</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    }
+                                    else { <li class="text-center p-3 text-secondary">Yeni bildirim yok.</li> }
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <!-- Cart Icon -->
+                    <a asp-controller="Cart" asp-action="Index" class="icon-btn">
+                        <i class="bi bi-cart3"></i>
+                        @{
+                            var cartCount = CartService.GetCartItems(userId ?? "").Count;
+                            if (cartCount > 0)
+                            {
+                                <span class="badge-count">@cartCount</span>
+                            }
+                        }
+                    </a>
+
+                    <div class="user-profile dropdown">
+                        <div class="d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                            <div class="user-avatar">@username.Substring(0, 1).ToUpper()</div>
+                            <div class="user-info d-none d-sm-flex">
+                                <span class="user-name">@username</span>
+                                <span class="user-role">@userRole</span>
+                            </div>
+                            <i class="bi bi-chevron-down small text-secondary"></i>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index"><i class="bi bi-person me-2"></i> @Localizer["Profile"]</a></li>
+                            <li><a class="dropdown-item" asp-controller="Profile" asp-action="Settings"><i class="bi bi-gear me-2"></i> @Localizer["Settings"]</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" asp-controller="Auth" asp-action="Logout"><i class="bi bi-box-arrow-right me-2"></i> @Localizer["Logout"]</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                @RenderBody()
+            </div>
+        </main>
     </div>
 
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 
-    @RenderSection("Scripts", required: false)
+    <script>
+        // Initialize dynamic updates
+        document.addEventListener('DOMContentLoaded', function() {
+            updateHeaderBadges();
+            setInterval(updateHeaderBadges, 30000); // Update every 30 seconds
 
+            // Search suggestions
+            const searchInput = document.getElementById('globalSearchInput');
+            const suggestionsBox = document.getElementById('searchSuggestions');
+            let debounceTimer;
+
+            searchInput?.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                const query = this.value.trim();
+
+                if (query.length < 2) {
+                    suggestionsBox.classList.add('d-none');
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`/Home/GetSearchSuggestions?query=${encodeURIComponent(query)}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                suggestionsBox.innerHTML = data.map(item => `
+                                    <a href="${item.url}" class="suggestion-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>${item.title}</span>
+                                            <span class="badge bg-dark-soft text-secondary smaller">${item.type}</span>
+                                        </div>
+                                    </a>
+                                `).join('');
+                                suggestionsBox.classList.remove('d-none');
+                            } else {
+                                suggestionsBox.classList.add('d-none');
+                            }
+                        });
+                }, 300);
+            });
+
+            // Close suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!searchInput?.contains(e.target) && !suggestionsBox?.contains(e.target)) {
+                    suggestionsBox?.classList.add('d-none');
+                }
+            });
+        });
+
+        function updateHeaderBadges() {
+            // Cart count
+            fetch('/Home/GetCartCount')
+                .then(r => r.json())
+                .then(count => {
+                    const cartBtn = document.querySelector('.icon-btn[href*="Cart"]');
+                    if (cartBtn) {
+                        let badge = cartBtn.querySelector('.badge-count');
+                        if (count > 0) {
+                            if (!badge) {
+                                badge = document.createElement('span');
+                                badge.className = 'badge-count';
+                                cartBtn.appendChild(badge);
+                            }
+                            badge.textContent = count;
+                            badge.classList.add('pulse');
+                            setTimeout(() => badge.classList.remove('pulse'), 1000);
+                        } else if (badge) {
+                            badge.remove();
+                        }
+                    }
+                });
+
+            // Notification dot
+            fetch('/Home/GetNotificationCount')
+                .then(r => r.json())
+                .then(count => {
+                    const bellBtn = document.querySelector('.icon-btn i.bi-bell')?.parentElement;
+                    if (bellBtn) {
+                        let dot = bellBtn.querySelector('.badge-dot');
+                        if (count > 0) {
+                            if (!dot) {
+                                dot = document.createElement('span');
+                                dot.className = 'badge-dot';
+                                bellBtn.appendChild(dot);
+                            }
+                        } else if (dot) {
+                            dot.remove();
+                        }
+                    }
+                });
+        }
+    </script>
 </body>
 </html>
