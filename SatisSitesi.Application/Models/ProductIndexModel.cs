@@ -33,6 +33,9 @@ namespace SatisSitesi.Application.Models
             
             if (!string.IsNullOrEmpty(ImageUrl))
             {
+                if (ImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    return ImageUrl;
+
                 if (ImageUrl.Contains("/") || ImageUrl.Contains("."))
                     return ImageUrl.StartsWith("/") ? ImageUrl : $"/{ImageUrl}";
             }

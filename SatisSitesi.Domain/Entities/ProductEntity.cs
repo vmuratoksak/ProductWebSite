@@ -64,6 +64,9 @@ namespace SatisSitesi.Domain.Entities
             // Priority 1: Explicitly set ImageUrl
             if (!string.IsNullOrEmpty(ImageUrl))
             {
+                if (ImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    return ImageUrl;
+
                 if (ImageUrl.Contains("/") || ImageUrl.Contains("."))
                     return ImageUrl.StartsWith("/") ? ImageUrl : $"/{ImageUrl}";
             }
