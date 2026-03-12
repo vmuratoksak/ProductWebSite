@@ -22,7 +22,18 @@ namespace SatisSitesi.Controllers
             return RedirectToAction("MyOrders");
         }
 
-        public IActionResult Checkout()
+        [HttpGet]
+        public IActionResult Address()
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+                return RedirectToAction("Login", "Auth");
+                
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Address(string addressDetails)
         {
             var userId = HttpContext.Session.GetString("UserId");
             var userEmail = HttpContext.Session.GetString("UserEmail");
@@ -30,9 +41,17 @@ namespace SatisSitesi.Controllers
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Auth");
 
+            // Basit doğrulama
+            if (string.IsNullOrWhiteSpace(addressDetails) || addressDetails.Length < 10)
+            {
+                TempData["Error"] = "Geçerli ve açık bir adres giriniz.";
+                return View();
+            }
+
             try
             {
-                _orderService.Checkout(userId, userEmail);
+                _orderService.Checkout(userId, userEmail, addressDetails);
+                TempData["Success"] = "Siparişiniz başarıyla alındı!";
                 return RedirectToAction("MyOrders");
             }
             catch (Exception ex)

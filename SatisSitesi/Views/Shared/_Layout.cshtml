@@ -143,7 +143,7 @@
             </div>
 
             <div class="sidebar-footer">
-                <p class="mb-0">&copy; 2024 MyShop SaaS</p>
+                <p class="mb-0">&copy; 2026 MyShop SaaS</p>
                 <p class="small text-secondary">Premium E-ticaret Çözümü</p>
             </div>
         </aside>
@@ -261,8 +261,30 @@
             </header>
 
             <!-- Page Content -->
-            <div class="content-wrapper">
-                @RenderBody()
+            <div class="content-wrapper d-flex flex-column" style="min-height: calc(100vh - 70px);">
+                <div class="flex-grow-1">
+                    @RenderBody()
+                </div>
+
+                <!-- Professional Footer -->
+                <footer class="mt-auto pt-4 pb-2 border-top border-light border-opacity-10 mt-5">
+                    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+                        <div class="text-secondary small">
+                            &copy; 2026 <span class="fw-bold text-light" style="letter-spacing: 0.5px;">MyShop Premium</span>. Tüm Hakları Saklıdır.
+                        </div>
+                        <div class="d-flex gap-4">
+                            <a href="https://github.com/vmuratoksak" target="_blank" class="text-secondary hover-text-white" style="font-size: 1.25rem; transition: color 0.3s ease;" title="GitHub" onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='var(--bs-secondary)'">
+                                <i class="bi bi-github"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/veysel-murat-okşak" target="_blank" class="text-secondary hover-text-white" style="font-size: 1.25rem; transition: color 0.3s ease;" title="LinkedIn" onmouseover="this.style.color='#0a66c2'" onmouseout="this.style.color='var(--bs-secondary)'">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                            <a href="mailto:vmuratoksak2003@icloud.com" class="text-secondary hover-text-white" style="font-size: 1.25rem; transition: color 0.3s ease;" title="Email" onmouseover="this.style.color='#ea4335'" onmouseout="this.style.color='var(--bs-secondary)'">
+                                <i class="bi bi-envelope-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </main>
     </div>

@@ -24,7 +24,7 @@ namespace SatisSitesi.Application.Services
             _orderRepo = orderRepo;
         }
 
-        public void Checkout(string userId, string userEmail)
+        public void Checkout(string userId, string userEmail, string address = null)
         {
             var cart = _cartRepo.GetAll().FirstOrDefault(x => x.UserId == userId);
 
@@ -61,6 +61,7 @@ namespace SatisSitesi.Application.Services
             {
                 UserId = userId,
                 UserEmail = userEmail,
+                Address = address,
                 Items = orderItems,
                 TotalAmount = total,
                 CreatedAt = DateTime.Now

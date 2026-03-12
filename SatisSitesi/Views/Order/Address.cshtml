@@ -1,0 +1,85 @@
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    ViewData["Title"] = "Teslimat Adresi / Delivery Address";
+}
+
+<div class="container py-5" style="animation: fadeInUp 0.5s ease-out;">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="saas-card" style="border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 20px; padding: 3rem 2rem;">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex justify-content-center align-items-center rounded-circle bg-primary bg-opacity-10 mb-3" style="width: 80px; height: 80px; box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);">
+                        <i class="bi bi-geo-alt-fill text-primary" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h2 class="fw-bold text-light" style="font-family: 'Outfit', sans-serif;">Teslimat Adresi</h2>
+                    <p class="text-secondary" style="font-size: 1.05rem;">Siparişinizi güvenle oluşturmak için adres detaylarınızı girin.</p>
+                </div>
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger mb-4" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 12px; font-weight: 500;">
+                        <i class="bi bi-exclamation-triangle me-2"></i> @TempData["Error"]
+                    </div>
+                }
+
+                <form asp-controller="Order" asp-action="Address" method="post" id="addressForm">
+                    <div class="mb-5 position-relative">
+                        <label for="addressDetails" class="form-label text-secondary small fw-bold text-uppercase" style="letter-spacing: 1px;">Açık Adres</label>
+                        <textarea class="form-control bg-dark text-light border-secondary border-opacity-25" 
+                                  id="addressDetails" 
+                                  name="addressDetails" 
+                                  rows="5" 
+                                  placeholder="Mahalle, sokak, bina no, daire no, ilçe/il belirterek tam adresinizi yazınız..." 
+                                  required 
+                                  style="border-radius: 16px; resize: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 1rem; font-size: 1rem;"></textarea>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
+                        <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-secondary w-100 py-3 rounded-4" style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                            <i class="bi bi-arrow-left me-2"></i> Geri Dön
+                        </a>
+                        <button type="submit" class="btn-primary w-100 py-3 rounded-4 d-flex justify-content-center align-items-center gap-2" style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border: none;">
+                            Siparişi Onayla <i class="bi bi-check2-circle fs-5"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.getElementById('addressDetails').addEventListener('focus', function() {
+            this.style.borderColor = 'var(--bs-primary)';
+            this.style.boxShadow = '0 0 0 4px rgba(37, 99, 235, 0.15)';
+        });
+        document.getElementById('addressDetails').addEventListener('blur', function() {
+            this.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+            this.style.boxShadow = 'none';
+        });
+        
+        document.getElementById('addressForm').addEventListener('submit', function(e) {
+            var btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> İşleniyor...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+        });
+    </script>
+}

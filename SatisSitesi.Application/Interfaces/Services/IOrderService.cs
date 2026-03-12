@@ -6,7 +6,7 @@ namespace SatisSitesi.Application.Interfaces.Services
 {
     public interface IOrderService
     {
-        void Checkout(string userId, string userEmail);
+        void Checkout(string userId, string userEmail, string address = null);
         List<OrderEntity> GetUserOrders(string userId);
         OrderIndexModel GetPagedUserOrders(string userId, string search, string sortBy, int page, int pageSize);
         List<OrderEntity> GetAllOrders();

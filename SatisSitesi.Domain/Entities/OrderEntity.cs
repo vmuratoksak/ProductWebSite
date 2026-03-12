@@ -13,6 +13,8 @@ namespace SatisSitesi.Domain.Entities
 
         public string UserEmail { get; set; }
 
+        public string Address { get; set; }
+
         public List<OrderItem> Items { get; set; }
 
         public decimal TotalAmount { get; set; }

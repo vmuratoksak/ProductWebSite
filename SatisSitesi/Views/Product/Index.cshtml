@@ -83,7 +83,15 @@
         @foreach (var item in Model.Products)
         {
             <div class="col-sm-6 col-lg-4 col-xl-3">
-                <div class="saas-card p-0 h-100 d-flex flex-column" style="overflow: hidden; transition: transform 0.2s; cursor: pointer;">
+                <div class="saas-card p-0 h-100 d-flex flex-column product-clickable-card" 
+                     style="overflow: hidden; transition: transform 0.2s; cursor: pointer;"
+                     data-bs-toggle="modal" data-bs-target="#productDetailModal"
+                     data-id="@item.Id"
+                     data-name="@item.Name"
+                     data-desc="@item.Description"
+                     data-price="@CurrencyService.GetFormattedPrice(item.Price)"
+                     data-img="@item.ImageUrl"
+                     data-stock="@item.Stock">
                     
                     <!-- Product Image -->
                     <div style="height: 180px; background-color: rgba(255,255,255,0.02); position: relative; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; overflow: hidden;">
@@ -112,7 +120,7 @@
                             @item.Description
                         </p>
                         
-                        <div class="mt-auto pt-3" style="border-top: 1px solid var(--border-color);">
+                        <div class="mt-auto pt-3" style="border-top: 1px solid var(--border-color);" onclick="event.stopPropagation();">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 @if (Context.Session.GetString("UserRole") == "Admin")
                                 {
@@ -199,3 +207,83 @@
         </div>
     </div>
 }
+
+<!-- Product Detail Modal -->
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-hidden="true" style="backdrop-filter: blur(5px);">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-light" style="border: 1px solid var(--border-color); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+            <div class="modal-header border-bottom border-light border-opacity-10 py-3">
+                <h5 class="modal-title fw-bold" id="modalProductName">Product Name</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-md-6 bg-dark-soft d-flex align-items-center justify-content-center p-4" style="min-height: 300px;">
+                        <img id="modalProductImage" src="" alt="Product" style="max-width: 100%; max-height: 300px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));" />
+                    </div>
+                    <div class="col-md-6 p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-end mb-3">
+                            <span class="text-secondary small fw-bold text-uppercase" style="letter-spacing: 1px;">Detaylar</span>
+                            <span id="modalProductPrice" class="fs-3 fw-bold text-primary">Price</span>
+                        </div>
+                        <p id="modalProductDesc" class="text-secondary mb-4" style="line-height: 1.6; font-size: 0.95rem; flex-grow: 1; overflow-y: auto; max-height: 150px;">
+                            Description
+                        </p>
+                        
+                        <div class="mt-auto pt-4 border-top border-light border-opacity-10 d-flex gap-3">
+                            <button type="button" class="btn btn-outline-secondary py-2 flex-grow-1 rounded-3 fw-bold" data-bs-dismiss="modal">
+                                <i class="bi bi-arrow-left me-1"></i> Geri Dön
+                            </button>
+                            
+                            @if (Context.Session.GetString("UserId") != null && Context.Session.GetString("UserRole") != "Admin")
+                            {
+                                <form method="post" action="/Cart/Add" id="modalAddToCartForm" class="flex-grow-1 m-0 p-0" onclick="event.stopPropagation();">
+                                    <input type="hidden" name="productId" id="modalProductId" value="" />
+                                    <button type="submit" id="modalAddBtn" class="btn btn-primary w-100 py-2 rounded-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+                                        <i class="bi bi-cart-plus"></i> Sepete Ekle
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var productModal = document.getElementById('productDetailModal');
+        if(productModal) {
+            productModal.addEventListener('show.bs.modal', function (event) {
+                var card = event.relatedTarget;
+                var id = card.getAttribute('data-id');
+                var name = card.getAttribute('data-name');
+                var desc = card.getAttribute('data-desc');
+                var price = card.getAttribute('data-price');
+                var img = card.getAttribute('data-img');
+                var stock = parseInt(card.getAttribute('data-stock'));
+
+                productModal.querySelector('#modalProductName').textContent = name;
+                productModal.querySelector('#modalProductDesc').textContent = desc || "Açıklama bulunmuyor.";
+                productModal.querySelector('#modalProductPrice').textContent = price;
+                productModal.querySelector('#modalProductImage').src = img;
+                
+                var idInput = productModal.querySelector('#modalProductId');
+                if(idInput) idInput.value = id;
+
+                var addBtn = productModal.querySelector('#modalAddBtn');
+                if(addBtn) {
+                    if (stock > 0) {
+                        addBtn.disabled = false;
+                        addBtn.innerHTML = '<i class="bi bi-cart-plus"></i> Sepete Ekle';
+                    } else {
+                        addBtn.disabled = true;
+                        addBtn.innerHTML = '<i class="bi bi-x-circle"></i> Stokta Yok';
+                    }
+                }
+            });
+        }
+    });
+</script>
