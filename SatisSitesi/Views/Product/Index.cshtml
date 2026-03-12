@@ -90,7 +90,7 @@
                      data-name="@item.Name"
                      data-desc="@item.Description"
                      data-price="@CurrencyService.GetFormattedPrice(item.Price)"
-                     data-img="@item.ImageUrl"
+                     data-img="@item.GetResolvedImageUrl()"
                      data-stock="@item.Stock">
                     
                     <!-- Product Image -->
@@ -102,7 +102,7 @@
                                 @Localizer[item.BadgeText]
                             </span>
                         }
-                        <img src="@item.ImageUrl" alt="@item.Name" style="max-height: 100%; max-width: 100%; object-fit: contain; padding: 1rem; opacity: 0.8; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5));" />
+                        <img src="@item.GetResolvedImageUrl()" alt="@item.Name" style="max-height: 100%; max-width: 100%; object-fit: contain; padding: 1rem; opacity: 0.8; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5));" />
                     </div>
 
                     <!-- Product Info -->

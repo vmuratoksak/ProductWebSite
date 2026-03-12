@@ -168,7 +168,7 @@ namespace SatisSitesi.Application.Services
                     Id = item.ProductId, // Ensure Id in the view corresponds to ProductId inherently
                     ProductId = item.ProductId,
                     ProductName = product?.Name ?? "Ürün silinmis",
-                    ImageUrl = product != null && !string.IsNullOrEmpty(product.ImageUrl) ? product.ImageUrl : "/images/placeholder.png",
+                    ImageUrl = product?.GetResolvedImageUrl() ?? "/images/placeholder.png",
                     Price = product?.Price ?? 0,
                     Quantity = item.Quantity,
                     NameTranslations = product?.NameTranslations ?? new Dictionary<string, string>()

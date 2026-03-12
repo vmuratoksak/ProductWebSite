@@ -60,16 +60,18 @@ namespace SatisSitesi.Domain.Entities
         public string GetResolvedImageUrl()
         {
             const string placeholder = "/images/placeholder.png";
-            string source = !string.IsNullOrEmpty(ImageUrl) ? ImageUrl : Name;
-
-            if (string.IsNullOrEmpty(source)) return placeholder;
-
-            if (source.Contains("/") || source.Contains("."))
+            
+            // Priority 1: Explicitly set ImageUrl
+            if (!string.IsNullOrEmpty(ImageUrl))
             {
-                return source.StartsWith("/") ? source : $"/{source}";
+                if (ImageUrl.Contains("/") || ImageUrl.Contains("."))
+                    return ImageUrl.StartsWith("/") ? ImageUrl : $"/{ImageUrl}";
             }
 
-            // Map simple names to our new professional images
+            // Priority 2: Try to map product name to local images
+            string source = !string.IsNullOrEmpty(Name) ? Name : "";
+            if (string.IsNullOrEmpty(source)) return placeholder;
+
             var cleanName = source.ToLower()
                 .Replace(" ", "-")
                 .Replace("ş", "s")
@@ -79,7 +81,17 @@ namespace SatisSitesi.Domain.Entities
                 .Replace("ç", "c")
                 .Replace("ö", "o");
 
-            return $"/images/products/{cleanName}.png";
+            // List of known local images (from current fs)
+            var localImages = new List<string> { "kitaplik", "kulaklik", "masa", "telefon-kilifi" };
+            
+            if (localImages.Contains(cleanName))
+            {
+                return $"/images/products/{cleanName}.png";
+            }
+
+            // Priority 3: Dynamic fallback based on name
+            // Uses LoremFlickr for professional, high-quality, relevant images
+            return $"https://loremflickr.com/640/480/{Uri.EscapeDataString(cleanName)}";
         }
     }
 }
