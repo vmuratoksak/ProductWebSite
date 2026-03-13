@@ -17,11 +17,13 @@ public class CartController : Controller
 
     public IActionResult Index()
     {
+        ViewData["Title"] = "Dashboard";
         var userId = HttpContext.Session.GetString("UserId");
 
         if (string.IsNullOrEmpty(userId))
             return RedirectToAction("Login", "Auth");
 
+        ViewData["Title"] = "Sepetim";
         var cartItems = _cartService.GetCartItems(userId);
         return View(cartItems);
     }

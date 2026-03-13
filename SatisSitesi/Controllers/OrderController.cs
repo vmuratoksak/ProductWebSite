@@ -29,6 +29,7 @@ namespace SatisSitesi.Controllers
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Auth");
                 
+            ViewData["Title"] = "Teslimat Adresi";
             return View();
         }
 
@@ -68,6 +69,7 @@ namespace SatisSitesi.Controllers
             if (string.IsNullOrEmpty(userId))
                 return RedirectToAction("Login", "Auth");
 
+            ViewData["Title"] = "Siparişlerim";
             var model = _orderService.GetPagedUserOrders(userId, search, sortBy, page, 8); // sayfa başı 8 sipariş
 
             return View(model);
@@ -83,6 +85,7 @@ namespace SatisSitesi.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            ViewData["Title"] = "Tüm Siparişler (Admin)";
             var model = _orderService.GetPagedAdminOrders(search, sortBy, page, 8); // sayfa başı 8 sipariş
             return View(model);
         }
@@ -133,6 +136,7 @@ namespace SatisSitesi.Controllers
                 return RedirectToAction("MyOrders");
             }
 
+            ViewData["Title"] = $"Sipariş Detayı #{order.Id.Substring(0, 8)}";
             return View(order);
         }
     }

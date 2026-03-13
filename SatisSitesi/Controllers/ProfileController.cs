@@ -22,6 +22,7 @@ namespace SatisSitesi.Controllers
             if (string.IsNullOrEmpty(CurrentUserId))
                 return RedirectToAction("Login", "Auth");
 
+            ViewData["Title"] = "Profilim";
             var user = _authService.GetUserById(CurrentUserId);
             return View(user);
         }
@@ -55,6 +56,7 @@ namespace SatisSitesi.Controllers
             if (string.IsNullOrEmpty(CurrentUserId))
                 return RedirectToAction("Login", "Auth");
 
+            ViewData["Title"] = "Hesap Ayarları";
             return View();
         }
 

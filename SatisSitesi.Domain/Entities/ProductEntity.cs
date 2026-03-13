@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic; // Added for Dictionary
@@ -12,6 +12,7 @@ namespace SatisSitesi.Domain.Entities
         [Required(ErrorMessage = "Ürün adi zorunludur.")]
         [StringLength(100)]
         public string Name { get; set; }
+        public bool IsVisible { get; set; } = true;
 
         [Required(ErrorMessage = "Açiklama zorunludur.")]
         public string Description { get; set; }

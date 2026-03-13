@@ -23,6 +23,7 @@ namespace SatisSitesi.Application.Models
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string ImageUrl { get; set; }
+        public bool IsVisible { get; set; }
         // Indicates if stock is low or out of stock
         public string BadgeText { get; set; }
         public string BadgeClass { get; set; }

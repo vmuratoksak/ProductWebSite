@@ -68,6 +68,15 @@
                 </div>
 
                 <div class="auth-group mb-5">
+                    <label class="form-label text-secondary fs-6 mb-2">Ürün Görünürlüğü</label>
+                    <div class="form-check form-switch p-0 d-flex align-items-center gap-3" style="background: rgba(255,255,255,0.02); padding: 12px 16px !important; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                        <input class="form-check-input ms-0" type="checkbox" role="switch" asp-for="IsVisible" checked style="width: 40px; height: 20px; cursor: pointer;">
+                        <label class="form-check-label text-light small" style="cursor: pointer;" for="IsVisible">Sitede gösterilsin mi?</label>
+                    </div>
+                    <p class="text-secondary smaller mt-2 mb-0" style="font-size: 0.75rem;">Pasif ürünler sadece yönetici panelinde görünür.</p>
+                </div>
+
+                <div class="auth-group mb-5">
                     <label class="form-label text-secondary fs-6 mb-3">Ürün Görseli Seç</label>
                     <input type="hidden" asp-for="ImageUrl" id="selectedImageUrl" />
                     <div class="row g-3">

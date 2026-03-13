@@ -22,7 +22,9 @@ namespace SatisSitesi.Controllers
         // ✅ Ürün Listeleme
         public IActionResult Index(string search, string sortBy, decimal? minPrice, decimal? maxPrice, bool inStockOnly, int page = 1)
         {
-            var model = _productService.GetPagedProducts(search, sortBy, page, 8, minPrice, maxPrice, inStockOnly); // sayfa başı 8 ürün
+            ViewData["Title"] = "Ürünler";
+            var onlyVisible = !IsAdmin(); // Admin can see all, users only visible
+            var model = _productService.GetPagedProducts(search, sortBy, page, 8, minPrice, maxPrice, inStockOnly, onlyVisible);
             return View(model);
         }
 
@@ -32,6 +34,7 @@ namespace SatisSitesi.Controllers
             if (!IsAdmin())
                 return RedirectToAction("Index");
 
+            ViewData["Title"] = "Yeni Ürün Ekle";
             return View();
         }
 
@@ -45,11 +48,13 @@ namespace SatisSitesi.Controllers
             try
             {
                 _productService.Create(product);
+                TempData["Success"] = "Ürün başarıyla eklendi.";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
+                ViewData["Title"] = "Yeni Ürün Ekle";
                 return View(product);
             }
         }
@@ -63,8 +68,12 @@ namespace SatisSitesi.Controllers
             var product = _productService.GetById(id);
 
             if (product == null)
+            {
+                TempData["Error"] = "Ürün bulunamadı.";
                 return RedirectToAction("Index");
+            }
 
+            ViewData["Title"] = $"Düzenle: {product.Name}";
             return View(product);
         }
 
@@ -78,11 +87,13 @@ namespace SatisSitesi.Controllers
             try
             {
                 _productService.Update(product);
+                TempData["Success"] = "Ürün bilgileri güncellendi.";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.Message;
+                ViewData["Title"] = $"Düzenle: {product?.Name}";
                 return View(product);
             }
         }
@@ -93,7 +104,15 @@ namespace SatisSitesi.Controllers
             if (!IsAdmin())
                 return RedirectToAction("Index");
 
-            _productService.Delete(id);
+            try 
+            {
+                _productService.Delete(id);
+                TempData["Success"] = "Ürün silindi.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
             return RedirectToAction("Index");
         }
 

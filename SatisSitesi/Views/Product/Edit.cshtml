@@ -54,16 +54,20 @@
                 <a asp-action="DecreaseStock" asp-route-id="@Model.Id" class="btn-secondary text-warning py-2 d-flex align-items-center justify-content-center gap-2">
                     <i class="bi bi-dash-lg"></i> Stok Azalt (-1)
                 </a>
+                
+                <div class="mt-3 pt-3 border-top border-secondary border-opacity-10">
+                    <a asp-action="Delete" asp-route-id="@Model.Id" 
+                       class="btn btn-link text-danger text-decoration-none small p-0 d-flex align-items-center justify-content-center gap-2 opacity-75 hover-opacity-100" 
+                       style="font-size: 0.8rem; transition: opacity 0.2s;"
+                       onmouseover="this.style.opacity='1'"
+                       onmouseout="this.style.opacity='0.75'"
+                       onclick="return confirm('Bu ürünü gerçekten silmek istiyor musunuz? Bu işlem geri alınamaz.');">
+                        <i class="bi bi-trash3"></i> Ürünü Envanterden Kaldır
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="saas-card p-4 animate-fade-in" style="background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.2);">
-             <h5 class="fw-bold text-danger mb-3">Tehlikeli Bölge</h5>
-             <p class="text-secondary small mb-3">Bu ürünü silmek kalıcı bir işlemdir ve geri alınamaz.</p>
-             <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger w-100 py-2" onclick="return confirm('Emin misiniz?');">
-                 <i class="bi bi-trash me-2"></i> Ürünü Envanterden Sil
-             </a>
-        </div>
     </div>
 
     <!-- Edit Form Column -->
@@ -120,6 +124,15 @@
                             <span asp-validation-for="Stock" class="text-danger small mt-2 d-block"></span>
                         </div>
                     </div>
+                </div>
+
+                <div class="auth-group mb-5 mt-4">
+                    <label class="form-label text-secondary fs-6 mb-2">Ürün Görünürlüğü</label>
+                    <div class="form-check form-switch p-0 d-flex align-items-center gap-3" style="background: rgba(255,255,255,0.02); padding: 12px 16px !important; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                        <input class="form-check-input ms-0" type="checkbox" role="switch" asp-for="IsVisible" style="width: 40px; height: 20px; cursor: pointer;">
+                        <label class="form-check-label text-light small" style="cursor: pointer;" for="IsVisible">Sitede gösterilsin mi?</label>
+                    </div>
+                    <p class="text-secondary smaller mt-2 mb-0" style="font-size: 0.75rem;">Pasif ürünler sadece yönetici panelinde görünür.</p>
                 </div>
 
                 <div class="auth-group mb-5">

@@ -102,6 +102,12 @@
                                 @Localizer[item.BadgeText]
                             </span>
                         }
+                        @if (Context.Session.GetString("UserRole") == "Admin" && !item.IsVisible)
+                        {
+                            <span class="badge bg-danger bg-opacity-75" style="position: absolute; top: 12px; left: 12px; font-size: 0.65rem; border-radius: 8px;">
+                                <i class="bi bi-eye-slash-fill me-1"></i> @Localizer["Hidden"]
+                            </span>
+                        }
                         <img src="@item.GetResolvedImageUrl()" alt="@item.Name" style="max-height: 100%; max-width: 100%; object-fit: contain; padding: 1rem; opacity: 0.8; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5));" />
                     </div>
 

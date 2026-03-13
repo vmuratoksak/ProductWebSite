@@ -273,13 +273,13 @@
             </header>
 
             <!-- Page Content -->
-            <div class="content-wrapper d-flex flex-column" style="min-height: calc(100vh - 70px);">
+            <div class="content-wrapper d-flex flex-column" style="min-height: calc(100vh - var(--header-height));">
                 <div class="flex-grow-1">
                     @RenderBody()
                 </div>
 
                 <!-- Professional Footer -->
-                <footer class="mt-auto pt-4 pb-2 border-top border-light border-opacity-10 mt-5">
+                <footer class="mt-auto pt-4 pb-2 border-top border-light border-opacity-10">
                     <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
                         <div class="text-secondary small">
                             &copy; 2026 <span class="fw-bold text-light" style="letter-spacing: 0.5px;">MyShop Premium</span>. Tüm Hakları Saklıdır.
@@ -307,6 +307,35 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
+        // Global Notifications from TempData
+        document.addEventListener('DOMContentLoaded', function() {
+            const successMsg = '@TempData["Success"]';
+            const errorMsg = '@TempData["Error"]';
+            const infoMsg = '@TempData["Info"]';
+
+            const toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            if (successMsg && successMsg !== '') {
+                toast.fire({ icon: 'success', title: successMsg });
+            }
+            if (errorMsg && errorMsg !== '') {
+                toast.fire({ icon: 'error', title: errorMsg });
+            }
+            if (infoMsg && infoMsg !== '') {
+                toast.fire({ icon: 'info', title: infoMsg });
+            }
+        });
+
         // Initialize dynamic updates
         document.addEventListener('DOMContentLoaded', function() {
             updateHeaderBadges();

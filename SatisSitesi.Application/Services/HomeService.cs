@@ -184,7 +184,13 @@ namespace SatisSitesi.Application.Services
             var results = new GlobalSearchViewModel { Query = query };
 
             // 1. Products
-            results.Products = _productRepo.GetAll()
+            var productQuery = _productRepo.GetAll().AsQueryable();
+            if (role != "Admin")
+            {
+                productQuery = productQuery.Where(p => p.IsVisible);
+            }
+
+            results.Products = productQuery
                 .Where(p => (p.Name != null && p.Name.ToLower().Contains(lowerQuery)) || 
                             (p.Description != null && p.Description.ToLower().Contains(lowerQuery)))
                 .ToList();

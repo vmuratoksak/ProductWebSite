@@ -16,6 +16,7 @@ namespace SatisSitesi.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            ViewData["Title"] = "Giriş Yap";
             return View();
         }
 
@@ -44,6 +45,7 @@ namespace SatisSitesi.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            ViewData["Title"] = "Kayıt Ol";
             return View();
         }
 
@@ -75,6 +77,7 @@ namespace SatisSitesi.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
+            TempData["Info"] = "Başarıyla çıkış yapıldı.";
             return RedirectToAction("Login");
         }
     }

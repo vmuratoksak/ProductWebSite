@@ -14,6 +14,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        ViewData["Title"] = "Dashboard";
         var userId = HttpContext.Session.GetString("UserId");
         var role = HttpContext.Session.GetString("UserRole");
 
@@ -27,6 +28,7 @@ public class HomeController : Controller
     [HttpGet]
     public IActionResult Search(string query)
     {
+        ViewData["Title"] = $"Arama: {query}";
         var userId = HttpContext.Session.GetString("UserId");
         var role = HttpContext.Session.GetString("UserRole");
 
@@ -36,16 +38,19 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
+        ViewData["Title"] = "Gizlilik Politikası";
         return View();
     }
 
     public IActionResult Technologies()
     {
+        ViewData["Title"] = "Teknolojiler";
         return View();
     }
 
     public IActionResult Contact()
     {
+        ViewData["Title"] = "İletişim";
         return View();
     }
 
@@ -79,6 +84,7 @@ public class HomeController : Controller
         var role = HttpContext.Session.GetString("UserRole");
         if (role != "Admin") return RedirectToAction("Index");
 
+        ViewData["Title"] = "İletişim Mesajları";
         var messages = _homeService.GetContactMessages();
         return View(messages);
     }

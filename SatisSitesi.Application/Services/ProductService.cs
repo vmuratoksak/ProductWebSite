@@ -24,7 +24,7 @@ namespace SatisSitesi.Application.Services
             return _productRepo.GetAll();
         }
 
-        public ProductIndexModel GetPagedProducts(string search, string sortBy, int page, int pageSize, decimal? minPrice = null, decimal? maxPrice = null, bool inStockOnly = false)
+        public ProductIndexModel GetPagedProducts(string search, string sortBy, int page, int pageSize, decimal? minPrice = null, decimal? maxPrice = null, bool inStockOnly = false, bool onlyVisible = false)
         {
             var query = _productRepo.GetAll().AsQueryable();
 
@@ -49,6 +49,11 @@ namespace SatisSitesi.Application.Services
             if (inStockOnly)
             {
                 query = query.Where(x => x.Stock > 0);
+            }
+
+            if (onlyVisible)
+            {
+                query = query.Where(x => x.IsVisible);
             }
 
             // Sorting
@@ -91,6 +96,7 @@ namespace SatisSitesi.Application.Services
                     Price = p.Price,
                     Stock = p.Stock,
                     ImageUrl = p.GetResolvedImageUrl(),
+                    IsVisible = p.IsVisible,
                     BadgeText = badgeText,
                     BadgeClass = badgeClass
                 });

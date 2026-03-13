@@ -17,6 +17,7 @@ namespace SatisSitesi.Controllers
 
         public IActionResult Index(string search, string role = "All", string status = "Active", int page = 1)
         {
+            ViewData["Title"] = "Müşteriler";
             var userEmail = HttpContext.Session.GetString("UserEmail");
             var userRole = HttpContext.Session.GetString("UserRole");
 
@@ -35,6 +36,7 @@ namespace SatisSitesi.Controllers
             var item = _customerService.GetById(id);
             if (item == null) return NotFound();
 
+            ViewData["Title"] = $"Müşteri Düzenle: {item.Username}";
             return View(item);
         }
 
@@ -65,6 +67,7 @@ namespace SatisSitesi.Controllers
             var userRole = HttpContext.Session.GetString("UserRole");
             if (userRole != "Admin") return RedirectToAction("Login", "Auth");
 
+            ViewData["Title"] = "Yeni Müşteri Ekle";
             return View(new UserEntity { Role = "User" });
         }
 
