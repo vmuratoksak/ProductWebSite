@@ -96,6 +96,12 @@ builder.Services.AddScoped<IRepository<TranslationCacheEntity>>(sp =>
         sp.GetRequiredService<IOptions<MongoSettings>>(),
         "TranslationCache"));
 
+builder.Services.AddScoped<IRepository<ContactMessageEntity>>(sp =>
+    new GenericRepository<ContactMessageEntity>(
+        sp.GetRequiredService<IMongoClient>(),
+        sp.GetRequiredService<IOptions<MongoSettings>>(),
+        "ContactMessages"));
+
 // SERVICES
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICartService, CartService>();

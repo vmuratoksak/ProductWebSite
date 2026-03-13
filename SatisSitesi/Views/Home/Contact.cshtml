@@ -1,0 +1,268 @@
+@using Microsoft.Extensions.Localization
+@using SatisSitesi.Resources
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    ViewData["Title"] = "İletişim";
+}
+
+<div class="contact-page fade-in">
+    <!-- HERO SECTION -->
+    <section class="contact-hero text-center py-5 mb-5">
+        <div class="container">
+            <h1 class="display-4 fw-bold text-gradient mb-3">İLETİŞİM</h1>
+            <p class="lead text-secondary mx-auto" style="max-width: 700px;">
+                Siparişler, nakliye, kargo sorunları, geri bildirimler veya iş ortaklıkları hakkında sorularınız varsa çekinmeden bizimle iletişime geçin.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 1 — CONTACT INFORMATION GRID -->
+    <section class="contact-info-grid container mb-5">
+        <div class="row g-4">
+            <!-- GitHub -->
+            <div class="col-md-6 col-lg-4">
+                <a href="https://github.com/vmuratoksak" target="_blank" class="saas-card contact-card h-100 text-decoration-none">
+                    <div class="contact-icon-box github">
+                        <i class="bi bi-github"></i>
+                    </div>
+                    <h5 class="mt-3 mb-2">GitHub</h5>
+                    <p class="text-secondary small mb-0">Projelerime ve katkılarıma göz atın.</p>
+                    <div class="mt-auto pt-3 text-primary small fw-bold">Profili Aç →</div>
+                </a>
+            </div>
+            <!-- LinkedIn -->
+            <div class="col-md-6 col-lg-4">
+                <a href="https://www.linkedin.com/in/veysel-murat-okşak" target="_blank" class="saas-card contact-card h-100 text-decoration-none">
+                    <div class="contact-icon-box linkedin">
+                        <i class="bi bi-linkedin"></i>
+                    </div>
+                    <h5 class="mt-3 mb-2">LinkedIn</h5>
+                    <p class="text-secondary small mb-0">Profesyonel bağlantı için ekleyin.</p>
+                    <div class="mt-auto pt-3 text-primary small fw-bold">Profili Aç →</div>
+                </a>
+            </div>
+            <!-- Email -->
+            <div class="col-md-6 col-lg-4">
+                <a href="mailto:vmuratoksak2003@icloud.com" class="saas-card contact-card h-100 text-decoration-none">
+                    <div class="contact-icon-box email">
+                        <i class="bi bi-envelope-at-fill"></i>
+                    </div>
+                    <h5 class="mt-3 mb-2">E-posta</h5>
+                    <p class="text-secondary small mb-0">vmuratoksak2003@icloud.com</p>
+                    <div class="mt-auto pt-3 text-primary small fw-bold">E-posta Gönder →</div>
+                </a>
+            </div>
+            <!-- Phone -->
+            <div class="col-md-6 col-lg-4">
+                <a href="tel:+905076386099" class="saas-card contact-card h-100 text-decoration-none">
+                    <div class="contact-icon-box phone">
+                        <i class="bi bi-telephone-fill"></i>
+                    </div>
+                    <h5 class="mt-3 mb-2">Telefon</h5>
+                    <p class="text-secondary small mb-0">+90 507 638 60 99</p>
+                    <div class="mt-auto pt-3 text-primary small fw-bold">Şimdi Ara →</div>
+                </a>
+            </div>
+            <!-- Address -->
+            <div class="col-md-6 col-lg-8">
+                <a href="https://www.google.com/maps/search/?api=1&query=Mehmet+Akif+Ersoy+Mahallesi+Hüdai+Oral+Caddesi+64.Sokak+No:23+MERKEZEFENDİ+DENİZLİ+TÜRKİYE" target="_blank" class="saas-card contact-card h-100 text-decoration-none">
+                    <div class="d-flex flex-column flex-md-row gap-4 align-items-md-center">
+                        <div class="contact-icon-box address">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-2">Adres</h5>
+                            <p class="text-secondary small mb-0">
+                                Mehmet Akif Ersoy Mahallesi, Hüdai Oral Caddesi 64.Sokak No:23<br />
+                                Doğa Apartmanı D:1, MERKEZEFENDİ / DENİZLİ, TÜRKİYE
+                            </p>
+                        </div>
+                        <div class="ms-md-auto text-primary small fw-bold">Haritada Aç →</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2 — LOCATION MAP -->
+    <section class="container mb-5">
+        <div class="saas-card p-0 overflow-hidden shadow-lg border-0">
+            <div class="ratio ratio-21x9" style="min-height: 400px;">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1576.2238384501625!2d29.0526!3d37.7797!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ2JzQ2LjkiTiAyOcKwMDMnMDkuNCJF!5e0!3m2!1str!2str!4v1710123456789!5m2!1str!2str" 
+                    style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3 — GET IN TOUCH FORM -->
+    <section class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="saas-card p-4 p-md-5 shadow-lg">
+                    <div class="row g-5">
+                        <div class="col-md-5">
+                            <h2 class="fw-bold mb-3">BİZE ULAŞIN</h2>
+                            <p class="text-secondary opacity-75 mb-4">
+                                Siparişler, kargo sorunları, geri bildirimler veya iş ortaklıkları hakkında bize mesaj gönderin.
+                            </p>
+                            <div class="d-flex flex-column gap-3 mt-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle bg-primary bg-opacity-10 p-2">
+                                        <i class="bi bi-patch-check text-primary"></i>
+                                    </div>
+                                    <span class="small text-secondary">Siparişler için 7/24 Destek</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle bg-success bg-opacity-10 p-2">
+                                        <i class="bi bi-lightning text-success"></i>
+                                    </div>
+                                    <span class="small text-secondary">Hızlı Teknik Yanıt</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <form class="row g-3" id="contactForm">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">Ad Soyad</label>
+                                    <input type="text" name="fullName" class="form-control bg-dark border-secondary border-opacity-25 text-white py-2" placeholder="Veysel Murat Okşak" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">E-posta Adresi</label>
+                                    <input type="email" name="email" class="form-control bg-dark border-secondary border-opacity-25 text-white py-2" placeholder="örnek@eposta.com" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">Telefon Numarası</label>
+                                    <input type="tel" name="phone" 
+                                           class="form-control bg-dark border-secondary border-opacity-25 text-white py-2" 
+                                           placeholder="+90 507 638 60 99" 
+                                           pattern="[+]?[0-9\s-]{10,20}" 
+                                           title="Lütfen geçerli bir telefon numarası giriniz (örn: +90 507 638 60 99)"
+                                           required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold text-secondary">Konu</label>
+                                    <select name="subject" class="form-select bg-dark border-secondary border-opacity-25 text-white py-2" required>
+                                        <option value="" disabled selected>Bir konu seçin</option>
+                                        <option>Sipariş Sorusu</option>
+                                        <option>Nakliye Sorunu</option>
+                                        <option>Kargo Problemi</option>
+                                        <option>Geri Bildirim</option>
+                                        <option>İş Ortaklığı</option>
+                                        <option>Diğer</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold text-secondary">Mesaj</label>
+                                    <textarea name="message" class="form-control bg-dark border-secondary border-opacity-25 text-white py-2" rows="5" placeholder="Size nasıl yardımcı olabiliriz?" required></textarea>
+                                </div>
+                                <div class="col-12 pt-2">
+                                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase" style="letter-spacing: 1px;">
+                                        MESAJ GÖNDER <i class="bi bi-send-fill ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const params = new URLSearchParams();
+            for (const pair of formData) {
+                params.append(pair[0], pair[1]);
+            }
+
+            fetch('/Home/Contact', {
+                method: 'POST',
+                body: params,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Mesaj Gönderildi!',
+                        text: 'Mesajınız başarıyla iletildi, en kısa sürede dönüş yapacağız.',
+                        icon: 'success',
+                        confirmButtonColor: '#2563EB',
+                        background: '#111827',
+                        color: '#f8fafc'
+                    });
+                    this.reset();
+                } else {
+                    Swal.fire({
+                        title: 'Hata!',
+                        text: data.message || 'Mesaj gönderilirken bir sorun oluştu.',
+                        icon: 'error',
+                        confirmButtonColor: '#2563EB',
+                        background: '#111827',
+                        color: '#f8fafc'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    .contact-hero {
+        background: radial-gradient(circle at center, rgba(37,99,235,0.05) 0%, transparent 70%);
+    }
+
+    .contact-card {
+        padding: 24px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(37,99,235,0.3) !important;
+        box-shadow: 0 10px 40px -10px rgba(37,99,235,0.2) !important;
+    }
+
+    .contact-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        transition: transform 0.3s ease;
+    }
+
+    .contact-card:hover .contact-icon-box {
+        transform: scale(1.1);
+    }
+
+    .github { background: rgba(240, 246, 252, 0.1); color: #f0f6fc; }
+    .linkedin { background: rgba(10, 102, 194, 0.1); color: #0a66c2; }
+    .email { background: rgba(234, 67, 53, 0.1); color: #ea4335; }
+    .phone { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+    .address { background: rgba(243, 156, 18, 0.1); color: #f39c12; }
+
+    .form-control:focus, .form-select:focus {
+        background-color: #000 !important;
+        border-color: var(--bs-primary) !important;
+        box-shadow: 0 0 0 0.25rem rgba(37,99,235,0.1) !important;
+        color: white !important;
+    }
+
+    .text-gradient {
+        background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>

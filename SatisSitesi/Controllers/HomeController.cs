@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SatisSitesi.Application.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
+using SatisSitesi.Domain.Entities;
 
 public class HomeController : Controller
 {
@@ -41,6 +42,55 @@ public class HomeController : Controller
     public IActionResult Technologies()
     {
         return View();
+    }
+
+    public IActionResult Contact()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Contact(string fullName, string email, string phone, string subject, string message)
+    {
+        try 
+        {
+            var msg = new ContactMessageEntity
+            {
+                FullName = fullName,
+                Email = email,
+                Phone = phone,
+                Subject = subject,
+                Message = message,
+                SentAt = DateTime.Now,
+                IsRead = false
+            };
+
+            _homeService.SaveContactMessage(msg);
+            return Json(new { success = true });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = ex.Message });
+        }
+    }
+
+    public IActionResult ManageMessages()
+    {
+        var role = HttpContext.Session.GetString("UserRole");
+        if (role != "Admin") return RedirectToAction("Index");
+
+        var messages = _homeService.GetContactMessages();
+        return View(messages);
+    }
+
+    [HttpPost]
+    public IActionResult DeleteMessage(string id)
+    {
+        var role = HttpContext.Session.GetString("UserRole");
+        if (role != "Admin") return Json(new { success = false });
+
+        _homeService.DeleteContactMessage(id);
+        return Json(new { success = true });
     }
 
     [HttpGet]

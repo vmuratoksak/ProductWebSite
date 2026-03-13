@@ -15,19 +15,22 @@ namespace SatisSitesi.Application.Services
         private readonly IRepository<OrderEntity> _orderRepo;
         private readonly IRepository<UserEntity> _userRepo;
         private readonly ICurrencyService _currencyService;
+        private readonly IRepository<ContactMessageEntity> _contactRepo;
 
         public HomeService(
             IRepository<NameEntity> customerRepo,
             IRepository<ProductEntity> productRepo,
             IRepository<OrderEntity> orderRepo,
             IRepository<UserEntity> userRepo,
-            ICurrencyService currencyService)
+            ICurrencyService currencyService,
+            IRepository<ContactMessageEntity> contactRepo)
         {
             _customerRepo = customerRepo;
             _productRepo = productRepo;
             _orderRepo = orderRepo;
             _userRepo = userRepo;
             _currencyService = currencyService;
+            _contactRepo = contactRepo;
         }
 
         public DashboardModel GetDashboardData(string userId, string role)
@@ -206,6 +209,42 @@ namespace SatisSitesi.Application.Services
                 .ToList();
 
             return results;
+        }
+
+        public void SaveContactMessage(ContactMessageEntity message)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+
+            // Basic validation
+            if (string.IsNullOrWhiteSpace(message.FullName)) throw new Exception("Ad Soyad boş olamaz.");
+            if (string.IsNullOrWhiteSpace(message.Email)) throw new Exception("E-posta adresi boş olamaz.");
+            if (string.IsNullOrWhiteSpace(message.Phone)) throw new Exception("Telefon numarası boş olamaz.");
+            if (string.IsNullOrWhiteSpace(message.Subject)) throw new Exception("Konu seçilmelidir.");
+            if (string.IsNullOrWhiteSpace(message.Message)) throw new Exception("Mesaj boş olamaz.");
+
+            // Email format validation
+            if (!System.Text.RegularExpressions.Regex.IsMatch(message.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                throw new Exception("Geçersiz e-posta formatı.");
+            }
+
+            // Phone format validation
+            if (!System.Text.RegularExpressions.Regex.IsMatch(message.Phone, @"^[+]?[0-9\s-]{10,20}$"))
+            {
+                throw new Exception("Geçersiz telefon numarası formatı.");
+            }
+
+            _contactRepo.Insert(message);
+        }
+
+        public List<ContactMessageEntity> GetContactMessages()
+        {
+            return _contactRepo.GetAll().OrderByDescending(m => m.SentAt).ToList();
+        }
+
+        public void DeleteContactMessage(string id)
+        {
+            _contactRepo.Delete(id);
         }
 
         private static readonly string[] Colors = { "bg-primary", "bg-success", "bg-warning", "bg-danger", "bg-info" };
